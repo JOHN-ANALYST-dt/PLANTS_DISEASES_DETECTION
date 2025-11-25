@@ -7,7 +7,7 @@ import io
 from PIL import Image
 
 # --- 1. CONFIGURATION ---
-MODEL_PATH = 'best_vegetable_model.h5'
+MODEL_PATH = 'mobileNet_model2.h5'
 IMG_SIZE = (224, 224)
 TITLE = "AI-Driven Crop Disease Detector"
 

@@ -16,33 +16,90 @@ FULL_CLASS_NAMES = [
     'Apple Scab', 
     'Apple Black Rot', 
     'Apple Cedar Rust', 
+    'cabbage black rot','cabbage healthy','cabbage clubroot','cabbage downy mildew','cabbage leaf disease',
     'Corn Common Rust', 
-    'Corn Gray Leaf Spot',
+    'Corn Northern leaf blight',
+    'Corn Cercospora Leaf Spot gray leaf spot',
     'Potato Early Blight',
     'Potato Late Blight', 
+    'potato healthy',
     'Tomato Bacterial Spot',
     'Tomato Early Blight',
     'Tomato Healthy',
+    'Tomato late blight',
+    'Tomato leaf mold',
+    'Tomato septoria leaf spot',
+    'Tomato spider mites Two-spotted spider mite',
+    'Tomato Target Spot',
+    'Tomato Yellow Leaf Curl Virus',
+    'Tomato mosaic virus',
     'Pepper Bell Bacterial Spot',
     'Pepper Bell Healthy',
     'Grape Black Rot',
+    'Grape Esca (Black Measles)',
+    'Grape Leaf Blight (Isariopsis Leaf Spot)',
     'Grape Healthy',
-    'Cherry Powdery Mildew'
+    'Cherry Powdery Mildew',
+    'Cherry Healthy',
+    'Strawberry Leaf Scorch',
+    'Strawberry Healthy',
+    'skumawiki leaf disease',
+    'skumawiki healthy',
+    'soybean healthy',
+    'soybean frog eye leaf spot',
+    'soybean rust',
+    'soybean powdery mildew',
+    'tobacco healthy leaf',
+    'tobacco black shank',
+    'tobacco leaf disease',
+    'tobacco mosaic virus',
+    'raspberry healthy',
+    'raspberry leaf spot',
+    'peach healthy',
+    'peach bacterial spot',
+    'peach leaf curl',
+    'peach powdery mildew',
+    'peach leaf curl',
+    'peach leaf disease',
+    'orange citrus greening',
+    'orange leaf curl',
+    'orange leaf disease',
+    'orange leaf spot',
+    'onion downy mildew',
+    'onion healthy leaf',
+    'onion leaf blight',
+    'onion purple blotch','onion thrips damage',
+
+
+
 ]
 
 # --- Categorization for Tabbed View ---
 # We will use this to guide the user on which section their plant belongs to.
 
 VEGETABLE_CLASSES = [
-    'Corn Common Rust', 'Corn Gray Leaf Spot',
-    'Potato Early Blight', 'Potato Late Blight', 
-    'Tomato Bacterial Spot', 'Tomato Early Blight', 'Tomato Healthy',
-    'Pepper Bell Bacterial Spot', 'Pepper Bell Healthy'
+    'Corn Common Rust', 'Corn Gray Leaf Spot','cabbage black rot','cabbage healthy','cabbage clubroot','cabbage downy mildew','cabbage leaf disease',
+    'Potato Early Blight', 'Potato Late Blight', 'Corn Common Rust', 'Corn Northern leaf blight','Corn Cercospora Leaf Spot gray leaf spot',
+    'Tomato Bacterial Spot', 'Tomato Early Blight', 'Tomato Healthy','Potato Early Blight','Potato Late Blight', 'potato healthy',
+    'Pepper Bell Bacterial Spot', 'Pepper Bell Healthy','Tomato Bacterial Spot','Tomato Early Blight','Tomato Healthy','Tomato late blight','Tomato leaf mold',
+    'Tomato septoria leaf spot','Tomato spider mites Two-spotted spider mite','Tomato Target Spot',
+    'Tomato Yellow Leaf Curl Virus','Tomato mosaic virus','Pepper Bell Bacterial Spot','Pepper Bell Healthy','onion downy mildew','onion healthy leaf','onion leaf blight','onion purple blotch','onion thrips damage',
+    'soybean healthy','soybean frog eye leaf spot','soybean rust','soybean powdery mildew',
+    'tobacco healthy leaf','tobacco black shank','tobacco leaf disease','tobacco mosaic virus',
+    'skumawiki leaf disease','skumawiki healthy'
 ]
 FRUIT_CLASSES = [
     'Apple Scab', 'Apple Black Rot', 'Apple Cedar Rust', 
     'Grape Black Rot', 'Grape Healthy', 
-    'Cherry Powdery Mildew'
+    'Cherry Powdery Mildew',
+    'Apple Scab', 'Apple Black Rot', 'Apple Cedar Rust',
+    'Grape Black Rot','Grape Esca (Black Measles)','Grape Leaf Blight (Isariopsis Leaf Spot)','Grape Healthy',
+    'Cherry Powdery Mildew','Cherry Healthy',
+    'Strawberry Leaf Scorch','Strawberry Healthy',
+    'raspberry healthy','raspberry leaf spot',
+    'peach healthy','peach bacterial spot','peach leaf curl','peach powdery mildew','peach leaf disease',
+    'orange citrus greening','orange leaf curl','orange leaf disease','orange leaf spot'
+
 ]
 
 # --- 2. STREAMLIT PAGE CONFIG (MOVED TO THE TOP) ---

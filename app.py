@@ -8,7 +8,7 @@ from PIL import Image
 
 # --- 1. CONFIGURATION ---
 MODEL_PATH = 'mobileNet_model2.h5'
-IMG_SIZE = (224, 224)
+IMG_SIZE = (128,128)
 TITLE = "AI-Driven Crop Disease Detector"
 
 # Define the full list of class names (MUST match training order)

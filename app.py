@@ -7,7 +7,7 @@ import io
 from PIL import Image
 
 # --- 1. CONFIGURATION ---
-MODEL_PATH = 'mobileNet_model2.h5'
+MODEL_PATH = 'best_vegetable_model.h5'
 IMG_SIZE = (224, 224)
 TITLE = "AI-Driven Crop Disease Detector"
 
@@ -45,7 +45,12 @@ FRUIT_CLASSES = [
     'Cherry Powdery Mildew'
 ]
 
-# --- 2. LOAD MODEL ---
+# --- 2. STREAMLIT PAGE CONFIG (MOVED TO THE TOP) ---
+# THIS MUST BE THE FIRST STREAMLIT COMMAND
+st.set_page_config(page_title=TITLE, layout="wide")
+
+
+# --- 3. LOAD MODEL (Original Section 2, Renumbered) ---
 @st.cache_resource
 def load_trained_model(path):
     """Loads the model from the .h5 file."""
@@ -58,7 +63,7 @@ def load_trained_model(path):
 
 model = load_trained_model(MODEL_PATH)
 
-# --- 3. PREDICTION FUNCTION ---
+# --- 4. PREDICTION FUNCTION (Original Section 3, Renumbered) ---
 def preprocess_and_predict(img_data, model, class_names, img_size):
     """
     Preprocesses the image data (from PIL or file_uploader) and returns the prediction.
@@ -99,9 +104,7 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
     return predicted_class, confidence, predictions
 
 
-# --- 4. STREAMLIT APP INTERFACE ---
-
-st.set_page_config(page_title=TITLE, layout="wide")
+# --- 5. STREAMLIT APP INTERFACE (Original Section 4, Renumbered) ---
 
 st.markdown(
     f"""
@@ -152,7 +155,7 @@ with tab_fruits:
     current_input = camera_fruit if camera_fruit is not None else upload_fruit
 
 
-# --- 5. PREDICTION LOGIC (Consolidated for either tab) ---
+# --- 6. PREDICTION LOGIC (Consolidated for either tab) ---
 input_data = None
 # Determine which input was used (only one can be active at a time usually)
 if camera_veg is not None:
@@ -216,7 +219,7 @@ if input_data is not None:
         with col2:
             st.markdown("### 📊 Confidence Scores (Top 5)")
             
-            # Combine class names and scores, then sort for visualization
+            # Combine class names and scores and sort for visualization
             class_scores = list(zip(FULL_CLASS_NAMES, raw_predictions))
             class_scores.sort(key=lambda x: x[1], reverse=True)
             
@@ -232,7 +235,7 @@ if input_data is not None:
             st.dataframe(chart_data)
 
 
-# --- 6. SIDEBAR INSTRUCTIONS ---
+# --- 7. SIDEBAR INSTRUCTIONS ---
 st.sidebar.markdown("### 💡 Current Model Coverage")
 st.sidebar.markdown(f"**Vegetables:** {', '.join(sorted(set([c.split(' ')[0] for c in VEGETABLE_CLASSES])))}")
 st.sidebar.markdown(f"**Fruits:** {', '.join(sorted(set([c.split(' ')[0] for c in FRUIT_CLASSES])))}")

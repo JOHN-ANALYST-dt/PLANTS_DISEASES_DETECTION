@@ -27,12 +27,12 @@
 /* Ensure sidebar text and links are visible */
 [data-testid="stSidebar"] .stMarkdown h3, [data-testid="stSidebar"] .stMarkdown p, [data-testid="stSidebar"] .stMarkdown strong {
     color: white !important;
-    text-shadow: 1px 1px 2px #000000;
+    text-shadow: 1px 1px 1px #000000;
 }
 
 /* Title Background (BACKGROUND PICTURE OF A PLANTS OF VEGETABLES) */
 [data-testid="stVerticalBlock"] > div:nth-child(1) {
-    background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.7)), url("https://images.unsplash.com/photo-1542838132-92c24c965c40?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8fGVufDB8fHx8fA%3D%3D"); /* Placeholder URL */
+    background-image: linear-gradient(rgba(15, 13, 13, 0.8), rgba(27, 22, 22, 0.7)), url("https://images.unsplash.com/photo-1542838132-92c24c965c40?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8fGVufDB8fHx8fA%3D%3D"); /* Placeholder URL */
     background-size: cover;
     background-position: center;
     padding: 40px 20px;

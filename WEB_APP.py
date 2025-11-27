@@ -331,10 +331,19 @@ if input_data is not None:
 
 
 # --- 7. SIDEBAR INSTRUCTIONS ---
+st.sidebar.markdown("""
+<div class="sidebar-instruction-box">
+""", unsafe_allow_html=True)
+
+# The content to be wrapped
 st.sidebar.markdown("### Current Model Coverage")
 st.sidebar.markdown(f"**Vegetables:** {', '.join(sorted(set([c.split(' ')[0] for c in VEGETABLE_CLASSES])))}")
 st.sidebar.markdown(f"**Fruits:** {', '.join(sorted(set([c.split(' ')[0] for c in FRUIT_CLASSES])))}")
 
-
 st.sidebar.markdown(f"**Trained on:** {len(FULL_CLASS_NAMES)} Disease Classes")
 st.sidebar.markdown(f"**Base Model:** MobileNetV2 (or EfficientNetB0)")
+
+# 👇 CLOSE the styled div
+st.sidebar.markdown("""
+</div>
+""", unsafe_allow_html=True)

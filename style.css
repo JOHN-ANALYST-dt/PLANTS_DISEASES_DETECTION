@@ -32,7 +32,7 @@
 
 /* Title Background (BACKGROUND PICTURE OF A PLANTS OF VEGETABLES) */
 [data-testid="stVerticalBlock"] > div:nth-child(1) {
-    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("https://images.unsplash.com/photo-1542838132-92c24c965c40?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8fGVufDB8fHx8fA%3D%3D"); /* Placeholder URL */
+    background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.7)), url("https://images.unsplash.com/photo-1542838132-92c24c965c40?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8fGVufDB8fHx8fA%3D%3D"); /* Placeholder URL */
     background-size: cover;
     background-position: center;
     padding: 40px 20px;
@@ -162,4 +162,20 @@ div[data-testid="stCameraInput"] > div:first-child > button {
     margin-right: 12px;
     font-size: 1.5em;
     color: #FFD166; /* Gold icon color for pop */
+}
+
+.sidebar-instruction-box {
+    background-color: #444444; /* Darker Gray background */
+    padding: 15px;
+    border-radius: 8px;
+    color: white !important; /* Force white text */
+    margin-top: 20px;
+    border: 1px solid #666666;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+/* Ensure all markdown elements (headers, paragraphs, bold) inside the box inherit white color */
+.sidebar-instruction-box h3, 
+.sidebar-instruction-box p, 
+.sidebar-instruction-box strong {
+    color: white !important;
 }

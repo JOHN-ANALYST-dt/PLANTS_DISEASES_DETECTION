@@ -332,7 +332,7 @@ if input_data is not None:
 
 # --- 7. SIDEBAR INSTRUCTIONS ---
 st.sidebar.markdown("""
-<div class="sidebar-instruction-box">
+<div class="sidebar2-instruction-box">
 """, unsafe_allow_html=True)
 
 # The content to be wrapped

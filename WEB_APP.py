@@ -15,7 +15,7 @@ BASE_DIR = pathlib.Path(__file__).parent
 # 2. Construct the full path: Joins the base directory, the folder name ('MODELS'), 
 # and the file name to create an absolute path.
 MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'mobileNet_model3.h5')
-
+REJECTION_THRESHOLD = 0.80
 
 IMG_SIZE = (224, 224)  # Model input size
 TITLE = "AgroVision AI : Crop Disease Detector"
@@ -246,7 +246,11 @@ if input_data is not None:
             predicted_class, confidence, raw_predictions = preprocess_and_predict(
                 input_data, model, FULL_CLASS_NAMES, IMG_SIZE
             )
-
+            
+            # Implement rejection mechanism based on confidence threshold
+            if confidence < REJECTION_THRESHOLD:
+                predicted_class = "Uncertain Prediction - Please try again with a clearer image."
+        
         #  Display Results
         
         st.markdown("## 🔍 Analysis Results")

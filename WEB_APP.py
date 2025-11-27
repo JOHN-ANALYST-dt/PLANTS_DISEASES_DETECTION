@@ -275,20 +275,15 @@ if input_data is not None:
             
             st.info(f"**Confidence:** {confidence*100:.2f}%")
             
-            st.markdown("---")
-            st.markdown("### 🧑‍🌾 Suggested Action")
-            # NOTE: Treatment recommendations should ideally be pulled from a database/config file 
-            # associated with the predicted class (like in your PROJECT.ipynb snippets).
-            if 'Healthy' in predicted_class:
-                 st.write("Keep monitoring the plant. Ensure optimal water and nutrient levels and good air circulation.")
-            else:
-                 st.write(f"""
-                 Immediate intervention is necessary for **{predicted_class}**.
-                 Recommended actions often include:
-                 1. **Pruning:** Remove and destroy infected leaves/branches.
-                 2. **Chemicals:** Apply targeted fungicide (if fungal) or bactericide (if bacterial).
-                 3. **Cultural Control:** Improve drainage and spacing
-                 """)
+           # 🛑 INTERVENTION LOGIC: PULLING DATA FROM EXTERNAL FILE
+            intervention_data = get_interventions(predicted_class)
+            
+            st.markdown(f"#### {intervention_data['title']}")
+            
+            # Display actions in a structured, numbered list
+            for i, action in enumerate(intervention_data['action']):
+                st.markdown(f"**{i+1}.** {action}")
+            # 🛑 END INTERVENTION LOGIC
         
         with col2:
             st.markdown("### 📊 Confidence Scores (Top 5)")

@@ -133,7 +133,7 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
         img = img_data
     else:
         # Handle the case where the input is neither
-        st.error("Invalid image input type.")
+        st.error("Invalid image input type")
         return "Invalid image.", 0.0, None
 
     # Resize to the model's expected input size

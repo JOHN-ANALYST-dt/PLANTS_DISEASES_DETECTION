@@ -20,6 +20,18 @@ REJECTION_THRESHOLD = 0.80
 IMG_SIZE = (224, 224)  # Model input size
 TITLE = "AgroVision AI : Crop Disease Detector"
 
+try:
+    # NOTE: Replace 'path/to/your/vegetable_hero_image.jpg' with your actual file path or URL
+    st.image('VEGE.jpg', 
+             caption='A Vision for Healthy Crops', 
+             use_column_width='always')
+except FileNotFoundError:
+    st.warning("⚠️ Hero image not found! Please update the path to your image file.")
+except Exception:
+    st.image('https://www.google.com/imgres?q=vegetable%20pictures&imgurl=https%3A%2F%2Fmedia.istockphoto.com%2Fid%2F1203599923%2Fphoto%2Ffood-background-with-assortment-of-fresh-organic-vegetables.jpg%3Fs%3D612x612%26w%3D0%26k%3D20%26c%3DDZy1JMfUBkllwiq1Fm_LXtxA4DMDnExuF40jD8u9Z0Q%3D&imgrefurl=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2Ffresh-vegetable&docid=uEan0fzkE43x_M&tbnid=1zK2v6qoEaHbhM&vet=12ahUKEwjAmJOy35KRAxV22wIHHUIKO_MQM3oECB8QAA..i&w=612&h=326&hcb=2&ved=2ahUKEwjAmJOy35KRAxV22wIHHUIKO_MQM3oECB8QAA', 
+             caption='Default Placeholder Image: Replace this with your own catchy vegetable image!', 
+             use_column_width='always')
+
 # Define the full list of class names (MUST match training order)
 FULL_CLASS_NAMES = [
     'Apple Scab', 

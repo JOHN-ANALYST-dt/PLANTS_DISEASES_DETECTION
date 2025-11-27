@@ -297,4 +297,4 @@ st.sidebar.markdown(f"**Fruits:** {', '.join(sorted(set([c.split(' ')[0] for c i
 
 
 st.sidebar.markdown(f"**Trained on:** {len(FULL_CLASS_NAMES)} Disease Classes")
-st.sidebar.markdown(f"**Base Model:** MobileNet (or EfficientNetB0)")
+st.sidebar.markdown(f"**Base Model:** MobileNetV2 (or EfficientNetB0)")

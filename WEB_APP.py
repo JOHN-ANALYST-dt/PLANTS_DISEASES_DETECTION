@@ -5,9 +5,18 @@ from tensorflow.keras.preprocessing import image
 import numpy as np
 import io
 from PIL import Image
+import os 
+import pathlib
 
 # --- 1. CONFIGURATION ---
-MODEL_PATH = 'mobileNet_model3.h5'
+
+BASE_DIR = pathlib.Path(__file__).parent 
+
+# 2. Construct the full path: Joins the base directory, the folder name ('MODELS'), 
+# and the file name to create an absolute path.
+MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'mobileNet_model3.h5')
+
+
 IMG_SIZE = (224, 224)  # Model input size
 TITLE = "AgroVision AI : Crop Disease Detector"
 

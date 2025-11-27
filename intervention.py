@@ -452,7 +452,7 @@ INTERVENTIONS = {
     }
 }
 
-# -------------------------- LOOKUP FUNCTION --------------------------
+# LOOKUP FUNCTION 
 
 def get_interventions(predicted_class):
     """Retrieves specific interventions based on the predicted class name."""

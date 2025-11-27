@@ -14,7 +14,7 @@ BASE_DIR = pathlib.Path(__file__).parent
 
 # 2. Construct the full path: Joins the base directory, the folder name ('MODELS'), 
 # and the file name to create an absolute path.
-MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'mobileNet_model2.h5')
+MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'inceptionv3_model2.h5')
 REJECTION_THRESHOLD = 0.80
 
 IMG_SIZE = (128, 128)  # Model input size

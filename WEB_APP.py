@@ -17,7 +17,7 @@ BASE_DIR = pathlib.Path(__file__).parent
 MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'mobileNet_model2.h5')
 REJECTION_THRESHOLD = 0.80
 
-IMG_SIZE = (224, 224)  # Model input size
+IMG_SIZE = (128, 128)  # Model input size
 TITLE = "AgroVision AI : Crop Disease Detector"
 
 

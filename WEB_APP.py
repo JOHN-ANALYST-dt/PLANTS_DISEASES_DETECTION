@@ -7,9 +7,9 @@ import io
 from PIL import Image
 
 # --- 1. CONFIGURATION ---
-MODEL_PATH = 'MODELS/mobileNet_model2.h5'
-IMG_SIZE = (128,128)
-TITLE = "AgroVision AI — Crop Disease Detector"
+MODEL_PATH = 'MODELS/mobileNet_model3.h5'
+IMG_SIZE = (224, 224)  # Model input size
+TITLE = "AgroVision AI : Crop Disease Detector"
 
 # Define the full list of class names (MUST match training order)
 FULL_CLASS_NAMES = [

@@ -29,21 +29,21 @@ SIDEBAR_IMAGE_URL = 'https://images.unsplash.com/photo-1506869640319-fe1a24fd767
 
 # Define the full list of class names (MUST match training order)
 FULL_CLASS_NAMES = [
-'Apple Scab', 
-'Apple Black Rot', 
-'Apple Cedar Rust', 
-'cabbage black rot','cabbage healthy','cabbage clubroot','cabbage downy mildew','cabbage leaf disease',
-'Corn Common Rust', 
-'Corn Northern leaf blight',
-'Corn Cercospora Leaf Spot gray leaf spot',
-'Potato Early Blight',
-'Potato Late Blight', 
-'potato healthy',
-'Tomato Bacterial Spot',
-'Tomato Early Blight',
-'Tomato Healthy',
-'Tomato late blight',
-'Tomato leaf mold',
+    'Apple Scab', 
+    'Apple Black Rot', 
+    'Apple Cedar Rust', 
+    'cabbage black rot','cabbage healthy','cabbage clubroot','cabbage downy mildew','cabbage leaf disease',
+    'Corn Common Rust', 
+    'Corn Northern leaf blight',
+    'Corn Cercospora Leaf Spot gray leaf spot',
+    'Potato Early Blight',
+    'Potato Late Blight', 
+    'potato healthy',
+    'Tomato Bacterial Spot',
+    'Tomato Early Blight',
+    'Tomato Healthy',
+    'Tomato late blight',
+    'Tomato leaf mold',
     'Tomato septoria leaf spot',
     'Tomato spider mites Two-spotted spider mite',
     'Tomato Target Spot',
@@ -94,7 +94,7 @@ VEGETABLE_CLASSES = [
 FRUIT_CLASSES = [
 'Apple', 'Grape', 'Cherry', 'Strawberry', 'Raspberry', 'Peach', 'Orange'
 ]
-
+    
 
 # --- 2. STREAMLIT PAGE CONFIG (MOVED TO THE TOP) ---
 st.set_page_config(page_title=TITLE, layout="wide")

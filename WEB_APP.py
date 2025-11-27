@@ -121,7 +121,7 @@ model = load_trained_model(MODEL_PATH)
 # --- 4. PREDICTION FUNCTION (Original Section 3, Renumbered) ---
 def preprocess_and_predict(img_data, model, class_names, img_size):
     """
-    Preprocess the image data (from PIL or file_uploader) and returns the prediction.
+    Preprocesses the image data (from PIL or file_uploader) and returns the prediction.
     """
     if model is None:
         return "Model not available.", 0.0, None

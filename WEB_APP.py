@@ -7,7 +7,7 @@ import io
 from PIL import Image
 
 # --- 1. CONFIGURATION ---
-MODEL_PATH = 'MODELS/mobileNet_model3.h5'
+MODEL_PATH = 'mobileNet_model3.h5'
 IMG_SIZE = (224, 224)  # Model input size
 TITLE = "AgroVision AI : Crop Disease Detector"
 

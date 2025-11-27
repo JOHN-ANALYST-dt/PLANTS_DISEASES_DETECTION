@@ -9,7 +9,7 @@ from PIL import Image
 # --- 1. CONFIGURATION ---
 MODEL_PATH = 'MODELS/mobileNet_model2.h5'
 IMG_SIZE = (128,128)
-TITLE = "Crop Disease Detector"
+TITLE = "AgroVision AI — Crop Disease Detector"
 
 # Define the full list of class names (MUST match training order)
 FULL_CLASS_NAMES = [
@@ -83,7 +83,6 @@ VEGETABLE_CLASSES = [
     'Tomato',
     'Pepper',
     'soybean',
-    'tobacco',
     'skumawiki',
     'onion',
     'Cabbage'

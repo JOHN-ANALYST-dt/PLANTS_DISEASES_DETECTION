@@ -1,0 +1,165 @@
+
+
+
+
+
+
+
+
+/* Link Font Awesome for the stethoscope icon */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+
+/* ---------------------------------------------------- */
+/* Global Centering and Layout Customization */
+.stApp {
+    margin: 0 auto !important;
+    max-width: 1200px; /* Adjust as needed */
+}
+
+/* Sidebar Styling (GRADIENT COLOR WITH PICTURES) */
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, rgba(76, 175, 80, 0.9), rgba(0, 128, 128, 0.9)); /* Green to Teal Gradient */
+    background-image: url("https://images.unsplash.com/photo-1506869640319-fe1a24fd767c?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"); /* Placeholder URL */
+    background-size: cover;
+    background-blend-mode: multiply; /* Blend gradient with image */
+    color: white; 
+}
+/* Ensure sidebar text and links are visible */
+[data-testid="stSidebar"] .stMarkdown h3, [data-testid="stSidebar"] .stMarkdown p, [data-testid="stSidebar"] .stMarkdown strong {
+    color: white !important;
+    text-shadow: 1px 1px 2px #000000;
+}
+
+/* Title Background (BACKGROUND PICTURE OF A PLANTS OF VEGETABLES) */
+[data-testid="stVerticalBlock"] > div:nth-child(1) {
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("https://images.unsplash.com/photo-1542838132-92c24c965c40?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8fGVufDB8fHx8fA%3D%3D"); /* Placeholder URL */
+    background-size: cover;
+    background-position: center;
+    padding: 40px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    color: white;
+}
+
+/* Font Styling (Ensure contrast against background) */
+.big-font {
+    font-size: 36px !important;
+    font-weight: 900;
+    color: white; /* White for contrast */
+    text-shadow: 2px 2px 4px #000000;
+}
+.subheader-font {
+    font-size: 24px !important;
+    color: #C8E6C9; /* Lighter green for subheader */
+    margin-bottom: 0px;
+    text-shadow: 1px 1px 2px #000000;
+}
+
+/* Responsive Diagnose Button */
+button[data-testid="baseButton-secondary"] {
+    width: 100%;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 15px 10px;
+    background-color: #008080; 
+    color: white;
+    border: none;
+    transition: 0.3s;
+}
+button[data-testid="baseButton-secondary"]:hover {
+    background-color: #4CAF50;
+}
+
+/* Camera Input Styling (Icon Look) */
+div[data-testid="stCameraInput"] > label {
+    display: none !important;
+}
+div[data-testid="stCameraInput"] > div:first-child > button {
+    background-color: #f4a261;
+    color: white;
+    padding: 10px 20px;
+    font-size: 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    display: block; 
+    width: 100%;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* ---------------------------------------------------- */
+/* NEW INTERVENTION SECTION STYLES */
+/* ---------------------------------------------------- */
+
+.intervention-box {
+    border: 2px solid #008080; /* Teal border */
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    background-color: #f7fff7; /* Very light green background */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.intervention-title {
+    /* Colorful Gradient Background */
+    background: linear-gradient(90deg, #18981d, #4caf50); 
+    color: white; /* White text for contrast */
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+}
+
+.intervention-title i {
+    margin-right: 12px;
+    font-size: 1.5em;
+    color: #FFD166; /* Gold icon color for pop */
+}
+
+/* Ensure the titles inside the box are clear */
+.intervention-box h4 {
+    color: #008080 !important;
+}
+
+
+
+/* Add a link to Font Awesome for the icon */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+
+/* Styling for the Intervention Section Container */
+.intervention-box {
+    border: 2px solid #008080; /* Teal border */
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    background-color: #f7fff7; /* Very light green background */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Stylish header acting as an "Intervention Button" visual prompt */
+.intervention-title {
+    /* Colorful Gradient Background */
+    background: linear-gradient(90deg, #18981d, #4caf50); 
+    color: white; /* White text for contrast */
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+}
+
+.intervention-title i {
+    margin-right: 12px;
+    font-size: 1.5em;
+    color: #FFD166; /* Gold icon color for pop */
+}

@@ -268,7 +268,7 @@ if input_data is not None:
                  Recommended actions often include:
                  1. **Pruning:** Remove and destroy infected leaves/branches.
                  2. **Chemicals:** Apply targeted fungicide (if fungal) or bactericide (if bacterial).
-                 3. **Cultural Control:** Improve drainage and spacing.
+                 3. **Cultural Control:** Improve drainage and spacing
                  """)
         
         with col2:
@@ -291,16 +291,10 @@ if input_data is not None:
 
 
 # --- 7. SIDEBAR INSTRUCTIONS ---
-st.sidebar.markdown("### 💡 Current Model Coverage")
+st.sidebar.markdown("### Current Model Coverage")
 st.sidebar.markdown(f"**Vegetables:** {', '.join(sorted(set([c.split(' ')[0] for c in VEGETABLE_CLASSES])))}")
 st.sidebar.markdown(f"**Fruits:** {', '.join(sorted(set([c.split(' ')[0] for c in FRUIT_CLASSES])))}")
-st.sidebar.markdown("---")
-st.sidebar.markdown("### 🚀 Deployment Instructions")
-st.sidebar.code("""
-# 1. Ensure 'best_vegetable_model.h5' is in the same folder
-# 2. Run the app:
-# streamlit run app.py
-""")
+
 
 st.sidebar.markdown(f"**Trained on:** {len(FULL_CLASS_NAMES)} Disease Classes")
 st.sidebar.markdown(f"**Base Model:** MobileNet (or EfficientNetB0)")

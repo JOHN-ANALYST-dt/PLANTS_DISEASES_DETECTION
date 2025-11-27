@@ -7,6 +7,7 @@ import io
 from PIL import Image
 import os 
 import pathlib
+from intervention import get_interventions
 
 # --- 1. CONFIGURATION ---
 
@@ -20,6 +21,10 @@ REJECTION_THRESHOLD = 0.80
 IMG_SIZE = (128, 128)  # Model input size
 TITLE = "AgroVision AI : Crop Disease Detector"
 
+
+BACKGROUND_IMAGE_URL = 'https://images.unsplash.com/photo-1542838132-92c24c965c40?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8fGVufDB8fHx8fA%3D%3D'
+# --- URL for the sidebar background image (A lighter, subtle texture) ---
+SIDEBAR_IMAGE_URL = 'https://images.unsplash.com/photo-1506869640319-fe1a24fd767c?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 
 
 # Define the full list of class names (MUST match training order)

@@ -164,3 +164,7 @@ div[data-testid="stCameraInput"] > div:first-child > button {
     color: #FFD166; /* Gold icon color for pop */
 }
 
+.text-white {
+    color: white !important; 
+    /* Ensures it overrides any default h3 or text color */
+}

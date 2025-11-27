@@ -217,7 +217,11 @@ tab_vegetables, tab_fruits = st.tabs(["🥕 Vegetable Crops", "🍎 Fruit Crops"
 
 # Helper function to place content within tabs
 def render_tab_content(crop_type, class_list):
-    st.write(f"### 📸 {crop_type} Image Input")
+    st.markdown(
+        f"### 📸 <div class='text-white' style='display:inline;'>{crop_type}</div> Image Input",
+        unsafe_allow_html=True
+    )
+    
     st.markdown(f"**This detector covers:** {', '.join(sorted(set([c.split(' ')[0] for c in class_list])))}.")
     st.warning("Use the 'Take a Photo' option provided by the camera input when on mobile.")
 

@@ -68,7 +68,7 @@ FULL_CLASS_NAMES = [
     'onion downy mildew',
     'onion healthy leaf',
     'onion leaf blight',
-    'onion purple blotch','onion thrips damage',
+    'onion purple blotch','onion thrips damage'
 
 
 

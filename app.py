@@ -9,7 +9,7 @@ from PIL import Image
 # --- 1. CONFIGURATION ---
 MODEL_PATH = 'MODELS/mobileNet_model2.h5'
 IMG_SIZE = (128,128)
-TITLE = "AI-Driven Crop Disease Detector"
+TITLE = "Crop Disease Detector"
 
 # Define the full list of class names (MUST match training order)
 FULL_CLASS_NAMES = [
@@ -78,29 +78,27 @@ FULL_CLASS_NAMES = [
 # We will use this to guide the user on which section their plant belongs to.
 
 VEGETABLE_CLASSES = [
-    'Corn Common Rust', 'Corn Gray Leaf Spot','cabbage black rot','cabbage healthy','cabbage clubroot','cabbage downy mildew','cabbage leaf disease',
-    'Potato Early Blight', 'Potato Late Blight', 'Corn Common Rust', 'Corn Northern leaf blight','Corn Cercospora Leaf Spot gray leaf spot',
-    'Tomato Bacterial Spot', 'Tomato Early Blight', 'Tomato Healthy','Potato Early Blight','Potato Late Blight', 'potato healthy',
-    'Pepper Bell Bacterial Spot', 'Pepper Bell Healthy','Tomato Bacterial Spot','Tomato Early Blight','Tomato Healthy','Tomato late blight','Tomato leaf mold',
-    'Tomato septoria leaf spot','Tomato spider mites Two-spotted spider mite','Tomato Target Spot',
-    'Tomato Yellow Leaf Curl Virus','Tomato mosaic virus','Pepper Bell Bacterial Spot','Pepper Bell Healthy','onion downy mildew','onion healthy leaf','onion leaf blight','onion purple blotch','onion thrips damage',
-    'soybean healthy','soybean frog eye leaf spot','soybean rust','soybean powdery mildew',
-    'tobacco healthy leaf','tobacco black shank','tobacco leaf disease','tobacco mosaic virus',
-    'skumawiki leaf disease','skumawiki healthy'
-]
-FRUIT_CLASSES = [
-    'Apple Scab', 'Apple Black Rot', 'Apple Cedar Rust', 
-    'Grape Black Rot', 'Grape Healthy', 
-    'Cherry Powdery Mildew',
-    'Apple Scab', 'Apple Black Rot', 'Apple Cedar Rust',
-    'Grape Black Rot','Grape Esca (Black Measles)','Grape Leaf Blight (Isariopsis Leaf Spot)','Grape Healthy',
-    'Cherry Powdery Mildew','Cherry Healthy',
-    'Strawberry Leaf Scorch','Strawberry Healthy',
-    'raspberry healthy','raspberry leaf spot',
-    'peach healthy','peach bacterial spot','peach leaf curl','peach powdery mildew','peach leaf disease',
-    'orange citrus greening','orange leaf curl','orange leaf disease','orange leaf spot'
+    'Corn',
+    'Potatoe',
+    'Tomato',
+    'Pepper',
+    'soybean',
+    'tobacco',
+    'skumawiki',
+    'onion',
+    'Cabbage'
 
 ]
+FRUIT_CLASSES = [
+    'Apple', 
+    'Grape', 
+    'Cherry',
+    'Strawberry',
+    'Raspberry',
+    'Peach',
+    'Orange'
+]
+    
 
 # --- 2. STREAMLIT PAGE CONFIG (MOVED TO THE TOP) ---
 # THIS MUST BE THE FIRST STREAMLIT COMMAND
@@ -178,7 +176,7 @@ st.markdown(
     }}
     </style>
     <div class="big-font">{TITLE}</div>
-    <div class="subheader-font">Leveraging MobileNetV2 for Real-Time Crop Disease Diagnosis</div>
+    <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
     """, 
     unsafe_allow_html=True
 )
@@ -186,7 +184,7 @@ st.markdown(
 # Create the two main tabs
 tab_vegetables, tab_fruits = st.tabs(["🥕 Vegetable Crops", "🍎 Fruit Crops"])
 
-# --- Helper function to place content within tabs ---
+# Helper function to place content within tabs
 def render_tab_content(crop_type, class_list):
     st.write(f"### 📸 {crop_type} Image Input")
     st.markdown(f"**This detector covers:** {', '.join(sorted(set([c.split(' ')[0] for c in class_list])))}.")
@@ -201,18 +199,18 @@ def render_tab_content(crop_type, class_list):
     
     return camera_img, uploaded_file
 
-# --- Tab Content: Vegetables ---
+# Tab Content: Vegetables 
 with tab_vegetables:
     camera_veg, upload_veg = render_tab_content("Vegetable", VEGETABLE_CLASSES)
     current_input = camera_veg if camera_veg is not None else upload_veg
 
-# --- Tab Content: Fruits ---
+# Tab Content: Fruits 
 with tab_fruits:
     camera_fruit, upload_fruit = render_tab_content("Fruit", FRUIT_CLASSES)
     current_input = camera_fruit if camera_fruit is not None else upload_fruit
 
 
-# --- 6. PREDICTION LOGIC (Consolidated for either tab) ---
+# 6. PREDICTION LOGIC (Consolidated for either tab) 
 input_data = None
 # Determine which input was used (only one can be active at a time usually)
 if camera_veg is not None:
@@ -241,10 +239,10 @@ if input_data is not None:
                 input_data, model, FULL_CLASS_NAMES, IMG_SIZE
             )
 
-        # --- Display Results ---
+        #  Display Results
         
         st.markdown("## 🔍 Analysis Results")
-        col1, col2 = st.columns([1, 2])
+        col1, col2 = st.columns([1, 2]) 
 
         with col1:
             st.markdown("### 🔬 Diagnosis Result")

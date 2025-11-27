@@ -27,16 +27,20 @@ BACKGROUND_IMAGE_URL = 'https://images.unsplash.com/photo-1542838132-92c24c965c4
 SIDEBAR_IMAGE_URL = 'https://images.unsplash.com/photo-1506869640319-fe1a24fd767c?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 
 
-
-file_name = 'styles.css'
-
-def load_css_file(file_name):
-    """Reads an external CSS file and injects its content into Streamlit."""
+# --- CSS INJECTION FUNCTION ---
+def inject_custom_css(file_path):
+    """Reads a local CSS file and injects it into the Streamlit app."""
     try:
-        with open(file_name) as f:
+        with open(file_path) as f:
+            # st.markdown injects the CSS wrapped in <style> tags
             st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
     except FileNotFoundError:
-        st.error(f"Error: CSS file '{file_name}' not found. Ensure it is in the same directory.")
+        st.error(f"CSS file not found at path: {file_path}")
+    except Exception as e:
+        st.error(f"Error injecting CSS: {e}")
+
+# Call the function with the correct path to apply styles immediately
+inject_custom_css("style.css")
 
 
 # Define the full list of class names (MUST match training order)

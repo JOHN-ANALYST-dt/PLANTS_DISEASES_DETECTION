@@ -169,16 +169,20 @@ div[data-testid="stCameraInput"] > div:first-child > button {
     border-radius: 5px;
     
 }
-.sidebar1{
-    font-size: 24px;
-    font-weight: bold;
-    color: white;
-    text-shadow: 1px 1px 2px #000000;
-    background-color: black;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    
 
-}
+ .sidebar1 {
+            background: linear-gradient(135deg, #4b79a1, #283e51);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            margin-bottom: 15px;
+        }
+
+        .sidebar1 h3 {
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+        }

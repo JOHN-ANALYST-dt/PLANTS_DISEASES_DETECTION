@@ -337,9 +337,13 @@ if input_data is not None:
 # --- 7. SIDEBAR INSTRUCTIONS ---
 
 # The content to be wrapped
-st.sidebar.markdown("### " <div class="sidebar1">
-"Current Model Coverage </div>",
-unsafe_allow_html=True
+st.sidebar.markdown(
+    """
+    <div class="sidebar1">
+        <h3>Current Model Coverage</h3>
+    </div>
+    """,
+    unsafe_allow_html=True
 )
 st.sidebar.markdown(f"**Vegetables:** {', '.join(sorted(set([c.split(' ')[0] for c in VEGETABLE_CLASSES])))}")
 st.sidebar.markdown(f"**Fruits:** {', '.join(sorted(set([c.split(' ')[0] for c in FRUIT_CLASSES])))}")

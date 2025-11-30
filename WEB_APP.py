@@ -339,7 +339,7 @@ if input_data is not None:
 # The content to be wrapped
 st.sidebar.markdown(
     """
-    <div class="sidebar1">
+    div class="sidebar1">
         <h3>Current Model Coverage</h3>
     </div>
     """,

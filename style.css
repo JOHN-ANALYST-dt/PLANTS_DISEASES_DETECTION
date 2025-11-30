@@ -1,11 +1,4 @@
 
-
-
-
-
-
-
-
 /* Link Font Awesome for the stethoscope icon */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
 
@@ -175,4 +168,17 @@ div[data-testid="stCameraInput"] > div:first-child > button {
     margin-top: 15px;
     border-radius: 5px;
     
+}
+.sidebar1{
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px #000000;
+    background-color: black;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    
+
 }

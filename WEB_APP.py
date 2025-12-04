@@ -171,16 +171,46 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
 
 
 # --- 7. STREAMLIT APP INTERFACE ---
+import streamlit as st
+from PIL import Image
+import base64
+from io import BytesIO
+
+# Convert image -> base64
+def get_base64(img_path):
+    img = Image.open(img_path)
+    buffer = BytesIO()
+    img.save(buffer, format="JPEG")
+    return base64.b64encode(buffer.getvalue()).decode()
+
+# Load your image
+img_path = "vege2.jpeg"
+img_base64 = get_base64(img_path)
+
+# Load the CSS file
+with open("styles.css", "r") as f:
+    css = f.read()
+
+# Replace placeholder with base64 image
+css = css.replace("BACKGROUND_IMAGE", f"data:image/jpeg;base64,{img_base64}")
+
+# Inject CSS
+st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+
 
 st.markdown(
     f"""
     <div class="title-container">
-        <div class="big-font">{TITLE}</div>
+        <div class="title-text">{TITLE}</div>
         <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
     </div>
     """, 
     unsafe_allow_html=True
 )
+
+
+
+
 
 # Create the two main tabs
 tab_vegetables, tab_fruits = st.tabs(["🥕 Vegetable Crops", "🍎 Fruit Crops"])
@@ -329,51 +359,4 @@ st.sidebar.markdown(
 )
 
 
-import streamlit as st
-from PIL import Image
-import base64
-from io import BytesIO
 
-# --------------------------------------------------------
-# Convert image -> base64
-# --------------------------------------------------------
-def get_base64(img_path):
-    img = Image.open(img_path)
-    buffer = BytesIO()
-    img.save(buffer, format="JPEG")
-    encoded = base64.b64encode(buffer.getvalue()).decode()
-    return encoded
-
-# Load your vegetable image
-img_path = "./vege2.jpeg"
-img = Image.open(img_path)
-img_base64 = get_base64(img_path)
-
-# --------------------------------------------------------
-# Inject CSS with your image as background
-# --------------------------------------------------------
-css = f"""
-<style>
-[data-testid="stVerticalBlock"] > div:nth-child(1) {{
-    background-image: 
-        linear-gradient(
-            rgba(20, 70, 30, 0.8),
-            rgba(85, 60, 30, 0.7)
-        ),
-        url("data:image/jpeg;base64,{img_base64}");
-    background-size: cover;
-    background-position: center;
-    padding: 40px 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    color: white;
-}}
-</style>
-"""
-
-st.markdown(css, unsafe_allow_html=True)
-
-# --------------------------------------------------------
-# Your normal Streamlit image display
-# --------------------------------------------------------
-st.image(img, caption="Vegetable Image Loaded")

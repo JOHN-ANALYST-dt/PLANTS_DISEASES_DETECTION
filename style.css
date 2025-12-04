@@ -18,7 +18,7 @@
             rgba(20, 70, 30, 0.65), 
             rgba(85, 60, 30, 0.65)
         ), 
-        url('./vege2.jpeg');
+        url('BACKGROUND_IMAGE');
         
         background-size: cover;
         background-position: center;
@@ -31,7 +31,7 @@
         /* Smooth shadow */
         box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
-.big-font {
+.title-text {
     font-size: 36px !important;
     font-weight: 900;
     color: white; /* White for contrast */

@@ -21,9 +21,7 @@ BASE_DIR = pathlib.Path(__file__).parent
 MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'mobileNet_model2.h5')
 REJECTION_THRESHOLD = 0.50
 
-from PIL import Image
-img=Image.open("vege2.jpeg")
-st.image(img)
+
 IMG_SIZE = (248, 248)  # Model input size
 TITLE = "AgroVision AI : Crop Disease Detector"
 
@@ -119,7 +117,9 @@ FRUIT_CLASSES = [
     'Orange'
 ]
     
-
+from PIL import Image
+img=Image.open("./vege2.jpeg")
+st.image(img)
 
 
 

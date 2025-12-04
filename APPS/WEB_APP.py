@@ -349,5 +349,18 @@ st.sidebar.markdown(f"**Vegetables:** {', '.join(sorted(set([c.split(' ')[0] for
 st.sidebar.markdown(f"**Fruits:** {', '.join(sorted(set([c.split(' ')[0] for c in FRUIT_CLASSES])))}")
 
 st.sidebar.markdown(f"**Trained on:** {len(FULL_CLASS_NAMES)} Disease Classes")
-st.sidebar.markdown(f"**Base Model:** MobileNetV2 (or EfficientNetB0)")
+st.sidebar.markdown(
+    """
+    <div class="sidebar2">
+        <h3>How to Use This App</h3>
+        <ol>
+            <li>Select the appropriate tab for your crop type (Vegetable or Fruit).</li>
+            <li>Use the camera input to take a photo of the leaf or upload an image from your device.</li>
+            <li>Click the 'Diagnose Leaf' button to analyze the image.</li>
+            <li>Review the diagnosis results and suggested interventions.</li>
+        </ol>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 

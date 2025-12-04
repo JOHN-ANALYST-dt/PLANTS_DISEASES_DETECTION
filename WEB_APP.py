@@ -322,6 +322,14 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True
 )
+st.sidebar.markdown(
+    """
+    <div class="sidebar2">
+        <h3>SELECT PLANT FOR PREDICTION</h3>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 st.sidebar.markdown(vegetable_html, unsafe_allow_html=True)
 st.sidebar.markdown(fruit_html, unsafe_allow_html=True)
 

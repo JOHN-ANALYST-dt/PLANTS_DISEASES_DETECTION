@@ -119,7 +119,7 @@ FRUIT_CLASSES = [
     
 from PIL import Image
 img=Image.open("./vege2.jpeg")
-st.image(img, use_column_width=True)
+st.image(img)
 
 
 

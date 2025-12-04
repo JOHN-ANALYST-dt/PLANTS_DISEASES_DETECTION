@@ -196,7 +196,7 @@ tab_vegetables, tab_fruits = st.tabs(["🥕 Vegetable Crops", "🍎 Fruit Crops"
 # Helper function to place content within tabs
 def render_tab_content(crop_type, class_list):
     st.markdown(
-        f"### 📸 <div style='display:inline;'>{crop_type} Image Input</div>",
+        f"### 📸 <div style='display:inline;color:white;'>{crop_type} Image Input</div>",
         unsafe_allow_html=True
     )
     

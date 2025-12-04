@@ -169,37 +169,15 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
         return "Prediction Error", 0.0, None
 
 
-st.markdown(
-    f"""
-    
-    <div id="app-header-container">
-        <div class="big-font">{TITLE}</div>
-        <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
-    </div>
-    """, 
-    unsafe_allow_html=True
-)
 
 # --- 7. STREAMLIT APP INTERFACE ---
 
 st.markdown(
     f"""
-    <style>
-    .big-font {{
-        font-size:36px !important;
-        font-weight: 800;
-        color: #008080; /* Teal */
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }}
-    .subheader-font {{
-        font-size:24px !important;
-        color: #4CAF50; /* Green */
-        margin-bottom: 20px;
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-    }}
-    </style>
-    <div class="big-font">{TITLE}</div>
-    <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
+    <div class="title-container">
+        <div class="big-font">{TITLE}</div>
+        <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
+    </div>
     """, 
     unsafe_allow_html=True
 )

@@ -320,8 +320,8 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True
 )
-st.sidebar.markdown(f"**Vegetables:** {', '.join(sorted(set([c.split(' ')[0] for c in VEGETABLE_CLASSES])))}")
-st.sidebar.markdown(f"**Fruits:** {', '.join(sorted(set([c.split(' ')[0] for c in FRUIT_CLASSES])))}")
+st.sidebar.markdown(vegetable_html, unsafe_allow_html=True)
+st.sidebar.markdown(fruit_html, unsafe_allow_html=True)
 
 st.sidebar.markdown(f"**Trained on:** {len(FULL_CLASS_NAMES)} Disease Classes")
 st.sidebar.markdown(

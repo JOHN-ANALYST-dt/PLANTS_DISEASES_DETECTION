@@ -10,8 +10,7 @@ import pathlib
 import base64
 import time
 
-# NOTE: intervention.py must exist in the same directory.
-from intervention import get_interventions 
+from intervention import get_interventions
 
 # --- 1. CONFIGURATION ---
 
@@ -19,14 +18,17 @@ BASE_DIR = pathlib.Path(__file__).parent
 
 # Paths and Constants
 MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'mobileNet_model2.h5')
-REJECTION_THRESHOLD = 0.50 
+REJECTION_THRESHOLD = 0.50 # Cleaned up whitespace here
 IMG_SIZE = (248, 248) 
+
+
 
 TITLE = "AgroVision AI : Crop Disease Detector"
 
 # Background Image Setup: Updated to your specified path
 BACKGROUND_IMAGE_PATH = './vege2.jpeg' 
-CSS_PLACEHOLDER = "BACKGROUND_IMAGE_PLACEHOLDER" # Placeholder in styles.css
+CSS_PLACEHOLDER = "BACKGROUND_IMAGE_PLACEHOLDER" # Placeholder in style.css
+
 
 # --- 2. STREAMLIT PAGE CONFIG (MUST BE FIRST) ---
 st.set_page_config(page_title=TITLE, layout="wide")
@@ -36,17 +38,16 @@ st.set_page_config(page_title=TITLE, layout="wide")
 
 def encode_image_to_base64(path):
     """Reads a local image and encodes it to a Base64 Data URL string."""
-    # Using pathlib for robust path handling
-    full_path = BASE_DIR / path
-    if not full_path.exists():
-        st.error(f"Background image file not found at expected path: {full_path}. Using solid background.")
+    if not os.path.exists(path):
+        st.error(f"Background image file not found at expected path: {path}. Using solid background.")
         return "none"
         
     try:
-        ext = full_path.suffix.lower()
+        ext = os.path.splitext(path)[1].lower()
+        # Assumes the user provided a JPEG, but checks file extension
         mime_type = "image/jpeg" if ext in ('.jpg', '.jpeg') else "image/png"
         
-        with open(full_path, "rb") as f:
+        with open(path, "rb") as f:
             data = f.read()
             encoded_string = base64.b64encode(data).decode('utf-8')
             
@@ -62,26 +63,24 @@ def inject_custom_css(file_path, base64_url):
     and injects the final styles into the Streamlit app.
     """
     try:
-        # Use full path for robust access
-        with open(BASE_DIR / file_path) as f:
+        with open(file_path) as f:
             css_content = f.read()
             # Replace the placeholder in CSS with the actual Base64 URL
             final_css = css_content.replace(CSS_PLACEHOLDER, base64_url)
             # Inject the final CSS
             st.markdown(f'<style>{final_css}</style>', unsafe_allow_html=True)
     except FileNotFoundError:
-        st.error(f"CSS file not found at path: {BASE_DIR / file_path}. Default styling applied.")
+        st.error(f"CSS file not found at path: {file_path}. Default styling applied.")
     except Exception as e:
         st.error(f"Error injecting CSS: {e}")
 
-# --- 4. BACKGROUND IMAGE AND CSS INJECTION (The correct method) ---
+# --- 4. BACKGROUND IMAGE INJECTION ---
 
-# 4.1. Perform Encoding 
+# 4.1. Perform Encoding using the new path
 img_base64_url = encode_image_to_base64(BACKGROUND_IMAGE_PATH)
 
 # 4.2. Inject Styles Immediately After Page Config
-# Corrected filename to 'styles.css' to match the path that caused the error
-inject_custom_css("styles.css", img_base64_url)
+inject_custom_css("style.css", img_base64_url)
 
 
 # Define the full list of class names (MUST match training order)
@@ -114,16 +113,9 @@ FRUIT_CLASSES = ['Apple', 'Grape', 'Cherry', 'Strawberry', 'Raspberry', 'Peach',
 @st.cache_resource
 def load_trained_model(path):
     """Loads the model from the .h5 file or simulates a load."""
-    try:
-        # Attempt to load the real model if the path is valid
-        # model = load_model(path)
-        # return model
-        time.sleep(1) # Simulate loading time
-        st.warning(f"Using mock model for demonstration as '{os.path.basename(path)}' is not available or is commented out.")
-        return "DummyModel"
-    except Exception as e:
-        st.warning(f"Could not load real model: {e}. Using mock model.")
-        return "DummyModel"
+    time.sleep(1) # Simulate loading time
+    st.warning("Using mock model for demonstration as 'mobileNet_model2.h5' is not available.")
+    return "DummyModel"
 
 model = load_trained_model(MODEL_PATH)
 
@@ -183,13 +175,12 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
 st.markdown(
     f"""
     <div class="title-container">
-        <div class="title-text">{TITLE}</div>
+        <div class="big-font">{TITLE}</div>
         <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
     </div>
     """, 
     unsafe_allow_html=True
 )
-
 
 # Create the two main tabs
 tab_vegetables, tab_fruits = st.tabs(["🥕 Vegetable Crops", "🍎 Fruit Crops"])
@@ -242,17 +233,10 @@ if input_data is not None:
     # Display the selected image 
     with st.container():
         st.subheader("Image Selected for Diagnosis")
-        # Ensure input_data is a PIL Image or compatible for st.image
-        display_img = input_data if isinstance(input_data, Image.Image) else Image.open(input_data)
-        st.image(display_img, caption='Ready for analysis.', use_column_width=True)
+        st.image(input_data, caption='Ready for analysis.', use_column_width=True)
     
     # Prediction button
     if st.button('Diagnose Leaf', key='diagnose_button'):
-        # Prepare data for prediction (must pass a file buffer or Image object)
-        if hasattr(input_data, 'getvalue'):
-             # If it's an uploaded file buffer, reset position for the prediction function
-             input_data.seek(0)
-        
         with st.spinner('Analyzing image for disease...'):
             predicted_class, confidence, raw_predictions = preprocess_and_predict(
                 input_data, model, FULL_CLASS_NAMES, IMG_SIZE
@@ -307,14 +291,12 @@ if input_data is not None:
             top_n = 5
             top_classes = [score[0] for score in class_scores[:top_n]]
             top_confidences = [score[1] for score in class_scores[:top_n]]
-            
-            # Only display scores if raw_predictions is not None (i.e., not a hard prediction error)
-            if raw_predictions is not None:
-                chart_data = {
-                    'Class': top_classes, 
-                    'Confidence': [f"{c*100:.2f}%" for c in top_confidences]
-                }
-                st.dataframe(chart_data)
+
+            chart_data = {
+                'Class': top_classes, 
+                'Confidence': [f"{c*100:.2f}%" for c in top_confidences]
+            }
+            st.dataframe(chart_data)
 
 
 # --- 9. SIDEBAR INSTRUCTIONS ---
@@ -345,3 +327,53 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True
 )
+
+
+import streamlit as st
+from PIL import Image
+import base64
+from io import BytesIO
+
+# --------------------------------------------------------
+# Convert image -> base64
+# --------------------------------------------------------
+def get_base64(img_path):
+    img = Image.open(img_path)
+    buffer = BytesIO()
+    img.save(buffer, format="JPEG")
+    encoded = base64.b64encode(buffer.getvalue()).decode()
+    return encoded
+
+# Load your vegetable image
+img_path = "./vege2.jpeg"
+img = Image.open(img_path)
+img_base64 = get_base64(img_path)
+
+# --------------------------------------------------------
+# Inject CSS with your image as background
+# --------------------------------------------------------
+css = f"""
+<style>
+[data-testid="stVerticalBlock"] > div:nth-child(1) {{
+    background-image: 
+        linear-gradient(
+            rgba(20, 70, 30, 0.8),
+            rgba(85, 60, 30, 0.7)
+        ),
+        url("data:image/jpeg;base64,{img_base64}");
+    background-size: cover;
+    background-position: center;
+    padding: 40px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    color: white;
+}}
+</style>
+"""
+
+st.markdown(css, unsafe_allow_html=True)
+
+# --------------------------------------------------------
+# Your normal Streamlit image display
+# --------------------------------------------------------
+st.image(img, caption="Vegetable Image Loaded")

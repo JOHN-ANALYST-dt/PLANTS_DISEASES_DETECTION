@@ -26,7 +26,7 @@ IMG_SIZE = (248, 248)
 TITLE = "AgroVision AI : Crop Disease Detector"
 
 # Background Image Setup: Updated to your specified path
-BACKGROUND_IMAGE_PATH = '../vege2.jpeg' 
+BACKGROUND_IMAGE_PATH = './vege2.jpeg' 
 CSS_PLACEHOLDER = "BACKGROUND_IMAGE_PLACEHOLDER" # Placeholder in style.css
 
 

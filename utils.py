@@ -55,4 +55,4 @@ def inject_custom_css(file_path, base64_url):
     except FileNotFoundError:
         st.error(f"CSS file not found at path: {file_path}. Default styling applied.")
     except Exception as e:
-        st.error(f"Error injecting CSS: {e}")
+        st.error(f"Error injecting CSS: {e}") 

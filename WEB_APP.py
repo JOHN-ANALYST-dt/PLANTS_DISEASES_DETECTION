@@ -20,7 +20,20 @@ BASE_DIR = pathlib.Path(__file__).parent
 MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'mobileNet_model2.h5')
 REJECTION_THRESHOLD = 0.50 # Cleaned up whitespace here
 IMG_SIZE = (248, 248) 
+
+
+
 TITLE = "AgroVision AI : Crop Disease Detector"
+st.markdown(
+    f"""
+    
+    <div id="app-header-container">
+        <div class="big-font">{TITLE}</div>
+        <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
+    </div>
+    """, 
+    unsafe_allow_html=True
+)
 
 # Background Image Setup: Updated to your specified path
 BACKGROUND_IMAGE_PATH = './vege2.jpeg' 

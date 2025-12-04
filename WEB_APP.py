@@ -24,16 +24,6 @@ IMG_SIZE = (248, 248)
 
 
 TITLE = "AgroVision AI : Crop Disease Detector"
-st.markdown(
-    f"""
-    
-    <div id="app-header-container">
-        <div class="big-font">{TITLE}</div>
-        <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
-    </div>
-    """, 
-    unsafe_allow_html=True
-)
 
 # Background Image Setup: Updated to your specified path
 BACKGROUND_IMAGE_PATH = './vege2.jpeg' 
@@ -178,6 +168,17 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
         st.error(f"Prediction failed: {e}")
         return "Prediction Error", 0.0, None
 
+
+st.markdown(
+    f"""
+    
+    <div id="app-header-container">
+        <div class="big-font">{TITLE}</div>
+        <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
+    </div>
+    """, 
+    unsafe_allow_html=True
+)
 
 # --- 7. STREAMLIT APP INTERFACE ---
 

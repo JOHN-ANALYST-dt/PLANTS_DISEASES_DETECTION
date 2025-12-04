@@ -227,7 +227,7 @@ div[data-testid="stCameraInput"] > div:first-child > button {
     font-size: 16px;
     text-align: center;
     color: white !important;
-    background: linear-gradient(135deg, #6e8fb1, #4f6e8d);
+    background: linear-gradient(135deg, green, #4f6e8d);
     border-radius: 10px;
     text-decoration: none;
     font-weight: 600;

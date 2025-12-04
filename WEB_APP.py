@@ -340,9 +340,7 @@ for plant in VEGETABLE_CLASSES + FRUIT_CLASSES:
         unsafe_allow_html=True
     )
 
-st.write("👈 Select a plant from the sidebar to open its training page.")
-st.sidebar.markdown(vegetable_html, unsafe_allow_html=True)
-st.sidebar.markdown(fruit_html, unsafe_allow_html=True)
+
 
 st.sidebar.markdown(f"**Trained on:** {len(FULL_CLASS_NAMES)} Disease Classes")
 st.sidebar.markdown(

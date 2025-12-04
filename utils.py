@@ -2,13 +2,19 @@ import base64
 import os
 import streamlit as st
 
+# The placeholder that the CSS file uses for the background image URL
+CSS_PLACEHOLDER = "BACKGROUND_IMAGE_PLACEHOLDER"
+
 def encode_image_to_base64(path):
     """
     Reads a local image, encodes it to Base64, and prepends the MIME type
-    to create a complete Data URL string for web use.
-    
-    This function handles .png and .jpg extensions.
+    to create a complete Data URL string for web use (e.g., in CSS).
     """
+    if not os.path.exists(path):
+        # Notify the user if the path is bad
+        st.error(f"Image file not found at expected path: {path}. Using solid background.")
+        return "none"
+        
     try:
         # 1. Determine MIME type based on file extension
         ext = os.path.splitext(path)[1].lower()
@@ -28,17 +34,9 @@ def encode_image_to_base64(path):
         # 3. Construct the Data URL
         return f"data:{mime_type};base64,{encoded_string}"
         
-    except FileNotFoundError:
-        st.error(f"Background image '{path}' not found. Using solid background.")
-        return "none"
     except Exception as e:
         st.error(f"Error during image encoding: {e}")
         return "none"
-
-# 🛑 3.1. Perform Encoding 
-# The encoder is now called with the correct path to veget.PNG
-img_base64_url = encode_image_to_base64(BACKGROUND_IMAGE_PATH)
-
 
 def inject_custom_css(file_path, base64_url):
     """
@@ -55,9 +53,6 @@ def inject_custom_css(file_path, base64_url):
             # Inject the final CSS
             st.markdown(f'<style>{final_css}</style>', unsafe_allow_html=True)
     except FileNotFoundError:
-        st.error(f"CSS file not found at path: {file_path}")
+        st.error(f"CSS file not found at path: {file_path}. Default styling applied.")
     except Exception as e:
         st.error(f"Error injecting CSS: {e}")
-
-# 🛑 3.2. Inject Styles Immediately After Page Config
-inject_custom_css("style.css", img_base64_url)

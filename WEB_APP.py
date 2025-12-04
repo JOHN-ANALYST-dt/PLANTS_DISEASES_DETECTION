@@ -17,7 +17,7 @@ from intervention import get_interventions
 BASE_DIR = pathlib.Path(__file__).parent 
 
 # Paths and Constants
-MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'mobileNet_model2.h5')
+MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'inceptionv3_model2.h5')
 REJECTION_THRESHOLD = 0.50 # Cleaned up whitespace here
 IMG_SIZE = (248, 248) 
 

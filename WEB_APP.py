@@ -7,7 +7,6 @@ import io
 from PIL import Image
 import os 
 import pathlib
-import base64
 import time
 
 from intervention import get_interventions
@@ -18,69 +17,35 @@ BASE_DIR = pathlib.Path(__file__).parent
 
 # Paths and Constants
 MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'mobileNet_model2.h5')
-REJECTION_THRESHOLD = 0.50 # Cleaned up whitespace here
+REJECTION_THRESHOLD = 0.50 
 IMG_SIZE = (248, 248) 
-
-
-
 TITLE = "AgroVision AI : Crop Disease Detector"
 
-# Background Image Setup: Updated to your specified path
+# Banner Image Path (Now used with st.image)
 BACKGROUND_IMAGE_PATH = './vege2.jpeg' 
-CSS_PLACEHOLDER = "BACKGROUND_IMAGE_PLACEHOLDER" # Placeholder in style.css
-
 
 # --- 2. STREAMLIT PAGE CONFIG (MUST BE FIRST) ---
 st.set_page_config(page_title=TITLE, layout="wide")
 
 
-# --- 3. UTILITY FUNCTIONS (Inlined for simplicity) ---
+# --- 3. UTILITY FUNCTIONS (Only simple CSS injection remains) ---
 
-def encode_image_to_base64(path):
-    """Reads a local image and encodes it to a Base64 Data URL string."""
-    if not os.path.exists(path):
-        st.error(f"Background image file not found at expected path: {path}. Using solid background.")
-        return "none"
-        
-    try:
-        ext = os.path.splitext(path)[1].lower()
-        # Assumes the user provided a JPEG, but checks file extension
-        mime_type = "image/jpeg" if ext in ('.jpg', '.jpeg') else "image/png"
-        
-        with open(path, "rb") as f:
-            data = f.read()
-            encoded_string = base64.b64encode(data).decode('utf-8')
-            
-        return f"data:{mime_type};base64,{encoded_string}"
-        
-    except Exception as e:
-        st.error(f"Error during image encoding: {e}")
-        return "none"
-
-def inject_custom_css(file_path, base64_url):
+def inject_custom_css(file_path):
     """
-    Reads local CSS, replaces the placeholder with the Base64 URL, 
-    and injects the final styles into the Streamlit app.
+    Reads local CSS and injects the styles into the Streamlit app.
     """
     try:
+        # NOTE: Using the standard 'style.css'
         with open(file_path) as f:
             css_content = f.read()
-            # Replace the placeholder in CSS with the actual Base64 URL
-            final_css = css_content.replace(CSS_PLACEHOLDER, base64_url)
-            # Inject the final CSS
-            st.markdown(f'<style>{final_css}</style>', unsafe_allow_html=True)
+            st.markdown(f'<style>{css_content}</style>', unsafe_allow_html=True)
     except FileNotFoundError:
         st.error(f"CSS file not found at path: {file_path}. Default styling applied.")
     except Exception as e:
         st.error(f"Error injecting CSS: {e}")
 
-# --- 4. BACKGROUND IMAGE INJECTION ---
-
-# 4.1. Perform Encoding using the new path
-img_base64_url = encode_image_to_base64(BACKGROUND_IMAGE_PATH)
-
-# 4.2. Inject Styles Immediately After Page Config
-inject_custom_css("style.css", img_base64_url)
+# --- 4. CSS INJECTION ---
+inject_custom_css("style.css")
 
 
 # Define the full list of class names (MUST match training order)
@@ -169,47 +134,43 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
         return "Prediction Error", 0.0, None
 
 
-
 # --- 7. STREAMLIT APP INTERFACE ---
-import streamlit as st
-from PIL import Image
-import base64
-from io import BytesIO
 
-# Convert image -> base64
-def get_base64(img_path):
-    img = Image.open(img_path)
-    buffer = BytesIO()
-    img.save(buffer, format="JPEG")
-    return base64.b64encode(buffer.getvalue()).decode()
-
-# Load your image
-img_path = "vege2.jpeg"
-img_base64 = get_base64(img_path)
-
-# Load the CSS file
-with open("styles.css", "r") as f:
-    css = f.read()
-
-# Replace placeholder with base64 image
-css = css.replace("BACKGROUND_IMAGE", f"data:image/jpeg;base64,{img_base64}")
-
-# Inject CSS
-st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
-
-
+# 7.1 Title Header (Fixed and positioned over the background)
+# NOTE: This styling is now done inline and references style.css for positioning
 st.markdown(
     f"""
-    <div class="title-container">
-        <div class="title-text">{TITLE}</div>
+    <style>
+    .big-font {{
+        font-size: 3.5rem !important; /* Larger title */
+        font-weight: 900;
+        color: white; /* White text for contrast */
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.8); /* Strong shadow for readability over image */
+    }}
+    .subheader-font {{
+        font-size: 1.8rem !important;
+        color: white; /* White text for contrast */
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    }}
+    </style>
+    <div id="app-header-container">
+        <div class="big-font">{TITLE}</div>
         <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
     </div>
     """, 
     unsafe_allow_html=True
 )
 
-
-
+# 7.2 Image Banner (Displayed immediately below the fixed header)
+# This places the image banner directly below the fixed header container.
+st.image(
+    BACKGROUND_IMAGE_PATH, 
+    caption='AI-Powered Crop Health Monitoring', 
+    use_column_width=True, 
+    output_format='auto', 
+    key='banner_image'
+)
 
 
 # Create the two main tabs
@@ -217,8 +178,9 @@ tab_vegetables, tab_fruits = st.tabs(["🥕 Vegetable Crops", "🍎 Fruit Crops"
 
 # Helper function to place content within tabs
 def render_tab_content(crop_type, class_list):
+    # Removed inline style color:white as the background is now light gray
     st.markdown(
-        f"### 📸 <div style='display:inline;color:white;text-align:center;align-items:center;'>{crop_type} Image Input</div>",
+        f"### 📸 <div style='display:inline;'>{crop_type} Image Input</div>",
         unsafe_allow_html=True
     )
     
@@ -357,6 +319,3 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True
 )
-
-
-

@@ -40,6 +40,62 @@ from utils import encode_image_to_base64, inject_custom_csss
 
 
 
+
+import base64
+
+
+uploaded_file = st.file_uploader("vege2", type=["jpg", "jpeg", "png"])
+
+if uploaded_file is not None:
+    # Encode the image to base64
+    img_bytes = uploaded_file.read()
+    img_base64 = base64.b64encode(img_bytes).decode()
+
+    # ------------------------------
+    # Step 2: Inject CSS for background
+    # ------------------------------
+    st.markdown(f"""
+    <style>
+    /* Full app background */
+    .stApp {{
+        background-image: 
+            linear-gradient(rgba(34, 139, 34, 0.5), rgba(144, 238, 144, 0.5)), /* vegetation gradient */
+            url("data:image/png;base64,{img_base64}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }}
+
+    /* Optional: add some padding and rounded corners to first block */
+    [data-testid="stVerticalBlock"] > div:nth-child(1) {{
+        padding: 40px;
+        border-radius: 15px;
+        color: white;
+        background: rgba(0,0,0,0.2); /* subtle overlay for text readability */
+    }}
+    </style>
+    """, unsafe_allow_html=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Define the full list of class names (MUST match training order)
 FULL_CLASS_NAMES = [
     'Apple Scab', 
@@ -129,7 +185,7 @@ FRUIT_CLASSES = [
     
 
 
-st.image("vege2.jpg", use_column_width=True)
+
 
 # --- CSS INJECTION FUNCTION ---
 def inject_custom_css(file_path):

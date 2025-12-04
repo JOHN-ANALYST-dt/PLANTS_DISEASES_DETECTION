@@ -28,6 +28,72 @@ TITLE = "AgroVision AI : Crop Disease Detector"
 # THIS MUST BE THE FIRST STREAMLIT COMMAND
 st.set_page_config(page_title=TITLE, layout="wide")
 
+#image ecoding
+from utils import encode_image_to_base64, inject_custom_csss
+
+#BACKGROUND_IMAGE_PATH = 'images/VEGE.jpeg' 
+#CSS_FILE_PATH = 'style.css'
+
+
+
+
+
+
+
+
+import base64
+
+
+uploaded_file = st.file_uploader("vege2", type=["jpg", "jpeg", "png"])
+
+if uploaded_file is not None:
+    # Encode the image to base64
+    img_bytes = uploaded_file.read()
+    img_base64 = base64.b64encode(img_bytes).decode()
+
+    # ------------------------------
+    # Step 2: Inject CSS for background
+    # ------------------------------
+    st.markdown(f"""
+    <style>
+    /* Full app background */
+    .stApp {{
+        background-image: 
+            linear-gradient(rgba(34, 139, 34, 0.5), rgba(144, 238, 144, 0.5)), /* vegetation gradient */
+            url("data:image/png;base64,{img_base64}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }}
+
+    /* Optional: add some padding and rounded corners to first block */
+    [data-testid="stVerticalBlock"] > div:nth-child(1) {{
+        padding: 40px;
+        border-radius: 15px;
+        color: white;
+        background: rgba(0,0,0,0.2); /* subtle overlay for text readability */
+    }}
+    </style>
+    """, unsafe_allow_html=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Define the full list of class names (MUST match training order)
@@ -349,5 +415,18 @@ st.sidebar.markdown(f"**Vegetables:** {', '.join(sorted(set([c.split(' ')[0] for
 st.sidebar.markdown(f"**Fruits:** {', '.join(sorted(set([c.split(' ')[0] for c in FRUIT_CLASSES])))}")
 
 st.sidebar.markdown(f"**Trained on:** {len(FULL_CLASS_NAMES)} Disease Classes")
-st.sidebar.markdown(f"**Base Model:** MobileNetV2 (or EfficientNetB0)")
+st.sidebar.markdown(
+    """
+    <div class="sidebar2">
+        <h3>How to Use This App</h3>
+        <ol>
+            <li>Select the appropriate tab for your crop type (Vegetable or Fruit).</li>
+            <li>Use the camera input to take a photo of the leaf or upload an image from your device.</li>
+            <li>Click the 'Diagnose Leaf' button to analyze the image.</li>
+            <li>Review the diagnosis results and suggested interventions.</li>
+        </ol>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 

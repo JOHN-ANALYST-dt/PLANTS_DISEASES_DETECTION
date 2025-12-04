@@ -17,9 +17,9 @@ from intervention import get_interventions
 BASE_DIR = pathlib.Path(__file__).parent 
 
 # Construct the full path to the model
-MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'mobileNet_model2.h5')
+MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'tobacco_mobileNet_model2.h5')
 REJECTION_THRESHOLD = 0.50 # 50% confidence minimum
-IMG_SIZE = (128, 128) # Model input size
+IMG_SIZE = (248,248) # Model input size
 TITLE = "AgroVision AI: Tobacco Leaf Detector"
 
 # --- 2. STREAMLIT PAGE CONFIG ---

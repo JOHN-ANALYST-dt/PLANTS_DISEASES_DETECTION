@@ -330,6 +330,17 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True
 )
+
+
+# ---------- Sidebar navigation ----------
+for plant in plants:
+    page_name = plant.lower() + ".py"
+    st.sidebar.markdown(
+        f"""<a class="plant-btn" href="/{plant.lower()}">{plant}</a>""",
+        unsafe_allow_html=True
+    )
+
+st.write("👈 Select a plant from the sidebar to open its training page.")
 st.sidebar.markdown(vegetable_html, unsafe_allow_html=True)
 st.sidebar.markdown(fruit_html, unsafe_allow_html=True)
 

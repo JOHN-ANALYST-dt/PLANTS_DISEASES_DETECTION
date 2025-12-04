@@ -33,7 +33,7 @@ from utils import encode_image_to_base64, inject_custom_csss
 
 #BACKGROUND_IMAGE_PATH = 'images/VEGE.jpeg' 
 #CSS_FILE_PATH = 'style.css'
-st.image("images/VEGE.jpg", use_column_width=True)
+
 
 
 
@@ -129,7 +129,7 @@ FRUIT_CLASSES = [
     
 
 
-
+st.image("vege2.jpg", use_column_width=True)
 
 # --- CSS INJECTION FUNCTION ---
 def inject_custom_css(file_path):

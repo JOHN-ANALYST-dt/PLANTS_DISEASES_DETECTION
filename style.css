@@ -7,16 +7,19 @@
 .stApp {
     margin: 0 auto !important;
     max-width: 1200px; /* Adjust as needed */
+    background-image: url("VEGE.jpeg");
+    background-size: cover;
+    background-position: center;
 }
 
 
 /* Title Background (BACKGROUND PICTURE OF A PLANTS OF VEGETABLES) */
 [data-testid="stVerticalBlock"] > div:nth-child(1) {
     background-image: linear-gradient(
-        rgba(34, 139, 34, 0.75),   /* Forest Green */
-        rgba(144, 238, 144, 0.65) 
+        rgba(20, 70, 30, 0.8),   /* Deep Leaf Green */
+        rgba(85, 60, 30, 0.7) /* Earthy Brownish Green */
     ), 
-    url("https://images.unsplash.com/photo-1542838132-92c24c965c40?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8fGVufDB8fHx8fA%3D%3D"); /* Placeholder URL */
+    url(""); /* Placeholder URL */
     background-size: cover;
     background-position: center;
     padding: 40px 20px;

@@ -19,11 +19,11 @@ BASE_DIR = pathlib.Path(__file__).parent
 # Paths and Constants
 MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'mobileNet_model2.h5')
 REJECTION_THRESHOLD = 0.50
-IMG_SIZE = (248, 248)  # Model input size
+IMG_SIZE = (248, 248) 
 TITLE = "AgroVision AI : Crop Disease Detector"
 
 # Background Image Setup
-BACKGROUND_IMAGE_PATH = 'images/VEGE.jpeg' 
+BACKGROUND_IMAGE_PATH = 'plt.jpeg' 
 CSS_PLACEHOLDER = "BACKGROUND_IMAGE_PLACEHOLDER" # Placeholder in style.css
 
 

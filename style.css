@@ -19,7 +19,7 @@
         rgba(20, 70, 30, 0.8),   /* Deep Leaf Green */
         rgba(85, 60, 30, 0.7) /* Earthy Brownish Green */
     ), 
-    url(""); /* Placeholder URL */
+    url("data:image/jpeg;base64,{img_base64}"); /* Placeholder URL */
     background-size: cover;
     background-position: center;
     padding: 40px 20px;

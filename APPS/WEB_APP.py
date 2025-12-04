@@ -28,6 +28,16 @@ TITLE = "AgroVision AI : Crop Disease Detector"
 # THIS MUST BE THE FIRST STREAMLIT COMMAND
 st.set_page_config(page_title=TITLE, layout="wide")
 
+#image ecoding
+import base64
+
+def encode_image(path):
+    with open(path, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+img_base64 = encode_image("images/VEGE.jpg")
+
 
 
 # Define the full list of class names (MUST match training order)

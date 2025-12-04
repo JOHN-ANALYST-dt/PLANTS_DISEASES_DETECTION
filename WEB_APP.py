@@ -117,9 +117,7 @@ FRUIT_CLASSES = [
     'Orange'
 ]
     
-from PIL import Image
-img=Image.open("./vege2.jpeg")
-st.image(img)
+
 
 
 

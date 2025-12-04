@@ -44,7 +44,7 @@ from utils import encode_image_to_base64, inject_custom_csss
 import base64
 
 
-uploaded_file = st.file_uploader("vege2.jpg", type=["jpg", "jpeg", "png"])
+uploaded_file = st.file_uploader("images/VEGE", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
     # Encode the image to base64

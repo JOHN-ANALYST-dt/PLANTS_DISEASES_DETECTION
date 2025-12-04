@@ -17,7 +17,7 @@ from intervention import get_interventions
 BASE_DIR = pathlib.Path(__file__).parent 
 
 # Paths and Constants
-MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'inceptionv3_model2.h5')
+MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'mobileNet_model2.h5')
 REJECTION_THRESHOLD = 0.50 # Cleaned up whitespace here
 IMG_SIZE = (248, 248) 
 
@@ -34,6 +34,53 @@ CSS_PLACEHOLDER = "BACKGROUND_IMAGE_PLACEHOLDER" # Placeholder in style.css
 st.set_page_config(page_title=TITLE, layout="wide")
 
 
+# --- 3. UTILITY FUNCTIONS (Inlined for simplicity) ---
+
+def encode_image_to_base64(path):
+    """Reads a local image and encodes it to a Base64 Data URL string."""
+    if not os.path.exists(path):
+        st.error(f"Background image file not found at expected path: {path}. Using solid background.")
+        return "none"
+        
+    try:
+        ext = os.path.splitext(path)[1].lower()
+        # Assumes the user provided a JPEG, but checks file extension
+        mime_type = "image/jpeg" if ext in ('.jpg', '.jpeg') else "image/png"
+        
+        with open(path, "rb") as f:
+            data = f.read()
+            encoded_string = base64.b64encode(data).decode('utf-8')
+            
+        return f"data:{mime_type};base64,{encoded_string}"
+        
+    except Exception as e:
+        st.error(f"Error during image encoding: {e}")
+        return "none"
+
+def inject_custom_css(file_path, base64_url):
+    """
+    Reads local CSS, replaces the placeholder with the Base64 URL, 
+    and injects the final styles into the Streamlit app.
+    """
+    try:
+        with open(file_path) as f:
+            css_content = f.read()
+            # Replace the placeholder in CSS with the actual Base64 URL
+            final_css = css_content.replace(CSS_PLACEHOLDER, base64_url)
+            # Inject the final CSS
+            st.markdown(f'<style>{final_css}</style>', unsafe_allow_html=True)
+    except FileNotFoundError:
+        st.error(f"CSS file not found at path: {file_path}. Default styling applied.")
+    except Exception as e:
+        st.error(f"Error injecting CSS: {e}")
+
+# --- 4. BACKGROUND IMAGE INJECTION ---
+
+# 4.1. Perform Encoding using the new path
+img_base64_url = encode_image_to_base64(BACKGROUND_IMAGE_PATH)
+
+# 4.2. Inject Styles Immediately After Page Config
+inject_custom_css("style.css", img_base64_url)
 
 
 # Define the full list of class names (MUST match training order)

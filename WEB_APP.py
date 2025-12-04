@@ -19,7 +19,7 @@ BASE_DIR = pathlib.Path(__file__).parent
 # Paths and Constants
 MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'mobileNet_model2.h5')
 REJECTION_THRESHOLD = 0.50 # Cleaned up whitespace here
-IMG_SIZE = (248, 248) # Model input size (Cleaned up whitespace here)
+IMG_SIZE = (248, 248) 
 TITLE = "AgroVision AI : Crop Disease Detector"
 
 # Background Image Setup: Updated to your specified path
@@ -196,7 +196,7 @@ tab_vegetables, tab_fruits = st.tabs(["🥕 Vegetable Crops", "🍎 Fruit Crops"
 # Helper function to place content within tabs
 def render_tab_content(crop_type, class_list):
     st.markdown(
-        f"### 📸 <div style='display:inline;color:white;'>{crop_type} Image Input</div>",
+        f"### 📸 <div style='display:inline;color:white;text-align:center;'>{crop_type} Image Input</div>",
         unsafe_allow_html=True
     )
     

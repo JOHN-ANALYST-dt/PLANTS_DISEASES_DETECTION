@@ -13,14 +13,10 @@
 
 /* Title Background (BACKGROUND PICTURE OF A PLANTS OF VEGETABLES) */
 [data-testid="stVerticalBlock"] > div:nth-child(1) {
-    background-image: linear-gradient(
-        rgba(20, 70, 30, 0.8),   /* Deep Leaf Green */
-        rgba(85, 60, 30, 0.7) /* Earthy Brownish Green */
-    ), 
-    url(""); /* Placeholder URL */
+   
     background-size: cover;
     background-position: center;
-    padding: 40px 20px;
+    padding: 50px 35px;
     border-radius: 10px;
     margin-bottom: 20px;
     color: white;

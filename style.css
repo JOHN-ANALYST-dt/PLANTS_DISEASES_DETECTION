@@ -58,6 +58,7 @@ button[data-testid="baseButton-secondary"]:hover {
 /* Camera Input Styling (Icon Look) */
 div[data-testid="stCameraInput"] > label {
     display: none !important;
+    color:white;
 }
 div[data-testid="stCameraInput"] > div:first-child > button {
     background-color: #f4a261;
@@ -109,7 +110,7 @@ div[data-testid="stCameraInput"] > div:first-child > button {
 
 /* Ensure the titles inside the box are clear */
 .intervention-box h4 {
-    color: #008080 !important;
+    color: white !important;
 }
 
 
@@ -151,7 +152,7 @@ div[data-testid="stCameraInput"] > div:first-child > button {
 
 .text-white {
     color: white !important; 
-    /* Ensures it overrides any default h3 or text color */
+   
 }
 .sidebar2-instruction-box {
     background-color: #e0f7fa; /* Light cyan background */
@@ -163,19 +164,22 @@ div[data-testid="stCameraInput"] > div:first-child > button {
 }
 
  .sidebar1 {
-            background: linear-gradient(135deg, #4b79a1, #283e51);
+            background: linear-gradient(135deg, #587d9e, #547a9c);
             padding: 12px;
             border-radius: 12px;
             text-align: center;
             color: white;
             font-family: 'Segoe UI', sans-serif;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             margin-bottom: 15px;
-            margin-left: -20px;
+            margin-left: -15px;
         }
 
         .sidebar1 h3 {
             font-size: 18px;
             margin: 0;
             font-weight: 600;
+            color:white;
+            font-size:bold;
+
         }

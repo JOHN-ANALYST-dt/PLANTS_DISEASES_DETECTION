@@ -335,3 +335,53 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True
 )
+
+
+import streamlit as st
+from PIL import Image
+import base64
+from io import BytesIO
+
+# --------------------------------------------------------
+# Convert image -> base64
+# --------------------------------------------------------
+def get_base64(img_path):
+    img = Image.open(img_path)
+    buffer = BytesIO()
+    img.save(buffer, format="JPEG")
+    encoded = base64.b64encode(buffer.getvalue()).decode()
+    return encoded
+
+# Load your vegetable image
+img_path = "./vege2.jpeg"
+img = Image.open(img_path)
+img_base64 = get_base64(img_path)
+
+# --------------------------------------------------------
+# Inject CSS with your image as background
+# --------------------------------------------------------
+css = f"""
+<style>
+[data-testid="stVerticalBlock"] > div:nth-child(1) {{
+    background-image: 
+        linear-gradient(
+            rgba(20, 70, 30, 0.8),
+            rgba(85, 60, 30, 0.7)
+        ),
+        url("data:image/jpeg;base64,{img_base64}");
+    background-size: cover;
+    background-position: center;
+    padding: 40px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    color: white;
+}}
+</style>
+"""
+
+st.markdown(css, unsafe_allow_html=True)
+
+# --------------------------------------------------------
+# Your normal Streamlit image display
+# --------------------------------------------------------
+st.image(img, caption="Vegetable Image Loaded")

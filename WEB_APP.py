@@ -121,12 +121,6 @@ for fruit in FRUIT_CLASSES:
 fruit_html += "</ol>"
 
 
-#looping over each model plant type to create tabs
-for plant in VEGETABLE_CLASSES:
-    st.markdown(f"[Train {plant} Model](./APPS/{plant.lower()}.py)")
-
-for plant in FRUIT_CLASSES:
-    st.markdown(f"[Train {plant} Model](./APPS/{plant.lower()}.py)")    
 
 # --- 5. LOAD MODEL ---
 @st.cache_resource

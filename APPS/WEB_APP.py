@@ -31,8 +31,9 @@ st.set_page_config(page_title=TITLE, layout="wide")
 #image ecoding
 from utils import encode_image_to_base64, inject_custom_csss
 
-BACKGROUND_IMAGE_PATH = 'images/VEGE.jpeg' 
-CSS_FILE_PATH = 'style.css'
+#BACKGROUND_IMAGE_PATH = 'images/VEGE.jpeg' 
+#CSS_FILE_PATH = 'style.css'
+st.image("images/VEGE.jpg", use_column_width=True)
 
 
 

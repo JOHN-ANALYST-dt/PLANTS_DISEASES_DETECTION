@@ -29,14 +29,13 @@ TITLE = "AgroVision AI : Crop Disease Detector"
 st.set_page_config(page_title=TITLE, layout="wide")
 
 #image ecoding
-import base64
+from utils import encode_image_to_base64, inject_custom_csss
 
-def encode_image(path):
-    with open(path, "rb") as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
+BACKGROUND_IMAGE_PATH = 'images/VEGE.jpeg' 
+CSS_PLACEHOLDER = "BACKGROUND_IMAGE_PLACEHOLDER"
 
-img_base64 = encode_image("images/VEGE.jpg")
+
+
 
 
 

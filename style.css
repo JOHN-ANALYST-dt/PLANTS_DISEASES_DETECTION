@@ -172,7 +172,9 @@ div[data-testid="stCameraInput"] > div:first-child > button {
             font-family: 'Segoe UI', sans-serif;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             margin-bottom: 15px;
-            margin-left: -15px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+    
         }
 
         .sidebar1 h3 {

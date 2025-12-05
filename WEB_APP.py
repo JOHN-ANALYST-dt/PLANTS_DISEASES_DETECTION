@@ -307,7 +307,10 @@ if input_data is not None:
             st.markdown('</div>', unsafe_allow_html=True)
         
         with col2:
-            st.markdown("### 📊 Confidence Scores (Top 5)")
+            st.markdown(f"""
+            <div class="confid">
+                <h3>📊 Confidence Scores (Top 5)</h3>
+            </div>""", unsafe_allow_html=True)
             
             class_scores = list(zip(FULL_CLASS_NAMES, raw_predictions))
             class_scores.sort(key=lambda x: x[1], reverse=True)

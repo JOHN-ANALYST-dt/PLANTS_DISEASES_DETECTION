@@ -351,10 +351,14 @@ st.sidebar.markdown(
 
 
 # ---------- Sidebar navigation ----------
-st.sidebar.markdown(
-    f'<a class="plant-btn" href="/{plant.lower()}">{plant}</a>',
-    unsafe_allow_html=True
-)
+for plant in VEGETABLE_CLASSES + FRUIT_CLASSES:
+    page_name = plant.lower().replace(" ", "_") + ".py"  # ex: corn.py, apple.py
+    st.sidebar.markdown(
+        f"""<a class="plant-btn" href="/{plant.lower().replace(" ", "_")}">
+        {plant}
+        </a>""",
+        unsafe_allow_html=True
+    )
 
 
 

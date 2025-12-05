@@ -245,7 +245,11 @@ if input_data is not None:
     
     # Display the selected image 
     with st.container():
-        st.subheader("Image Selected for Diagnosis")
+        st.markdown(f"""
+        <div class="selector">
+            <h3>Image Selected for Diagnosis</h3>
+        </div>
+        """)
         st.image(input_data, caption='Ready for analysis.', use_column_width=True)
     
     # Prediction button

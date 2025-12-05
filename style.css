@@ -288,7 +288,7 @@ div[data-testid="stCameraInput"] > div:first-child > button {
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
             position: absolute;
-            margin-right: 10px;
+            margin-right: 5px;
 
 }
 .confid h3{
@@ -297,6 +297,26 @@ div[data-testid="stCameraInput"] > div:first-child > button {
             font-weight: 600;
             color:white;
             font-size:bold;   
+}
+.selector{
+            padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            margin-bottom: 15px;
+            backdrop-filter: blur(9px);
+            -webkit-backdrop-filter: blur(9px);
+            position: absolute;
+            margin-right: 10px;
+}
+.selector h3{
+            font-size: 20px;
+            margin: 0;
+            font-weight: 600;
+            color:white;
+            font-size:bold; 
 }
 
      

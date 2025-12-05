@@ -17,24 +17,22 @@ from intervention import get_interventions
 BASE_DIR = pathlib.Path(__file__).parent 
 
 # Construct the full path to the model
-MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'TOMATO_mobileNet_model.h5')
+MODEL_PATH = os.path.join(BASE_DIR, 'APP_MODELS', 'mobileNet_model2.h5')
 REJECTION_THRESHOLD = 0.50 # 50% confidence minimum
-IMG_SIZE = (248,248) # Model input size
-TITLE = "AgroVision AI: Tomato Leaf Detector"
+IMG_SIZE = (128, 128) # Model input size
+TITLE = "AgroVision AI: Peach Leaf Detector"
 
 # --- 2. STREAMLIT PAGE CONFIG ---
 st.set_page_config(page_title=TITLE, layout="centered")
 
-# Define the specialized list of class names for TOMATO
+# Define the specialized list of class names for PEACH
 # Ensure these class names exactly match the labels used during your model training!
-TOMATO_CLASS_NAMES = [
-    'tomato healthy leaf',
-    'tomato bacterial spot',
-    'tomato early blight',
-    'tomato late blight',
-    'tomato leaf mold',
-    'tomato mosaic virus',
-    'tomato yellow leaf curl virus'
+PEACH_CLASS_NAMES = [
+    'peach healthy leaf',
+    'peach bacterial spot',
+    'peach scab',
+    'peach leaf curl',
+    'peach rust'
 ]
 
 # --- CSS INJECTION (Assuming style.css exists) ---
@@ -127,13 +125,13 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
         elif 'healthy' in predicted_class.lower():
             return {
                 "status": "healthy",
-                "diagnosis": "Excellent News! Healthy Tomato Leaf Detected",
+                "diagnosis": "Excellent News! Healthy Peach Leaf Detected",
                 "confidence": confidence,
                 "class": predicted_class,
                 "message": (
-                    f"Your tomato leaf appears **vibrant and free of disease!** "
-                    f"Confidence: {confidence*100:.2f}%. Ensure adequate water and nutrient supply, "
-                    "and stake your plants to prevent ground contact."
+                    f"Your peach leaf appears **clean and thriving!** "
+                    f"Confidence: {confidence*100:.2f}%. Maintain a diligent pruning and fertilization schedule "
+                    "to ensure sweet fruit production."
                 ),
                 "raw_predictions": predictions
             }
@@ -162,21 +160,21 @@ st.markdown(
     .big-font {{
         font-size:36px !important;
         font-weight: 800;
-        color: #DC143C; /* Crimson - a deep red for tomatoes */
+        color: #A84A2A; /* Dark Peach/Brown */
     }}
     .subheader-font {{
         font-size:24px !important;
-        color: #228B22; /* Forest Green for freshness */
+        color: #F7C59F; /* Soft Peach */
         margin-bottom: 20px;
     }}
     </style>
     <div class="big-font">{TITLE}</div>
-    <div class="subheader-font">Specialized Diagnosis for Tomato Crops</div>
+    <div class="subheader-font">Specialized Diagnosis for Peach Orchards</div>
     """, 
     unsafe_allow_html=True
 )
 
-st.info("This application is specialized for detecting the following **Tomato** issues: " + ', '.join(TOMATO_CLASS_NAMES))
+st.info("This application is specialized for detecting the following **Peach** issues: " + ', '.join(PEACH_CLASS_NAMES))
 
 # Simplified Input Section (Camera and Uploader)
 st.markdown("### 📸 Image Input")
@@ -216,8 +214,8 @@ if input_data is not None:
         # Prediction button
         if st.button('Diagnose Leaf Now', key='diagnose_button', use_container_width=True):
             
-            with st.spinner('Running specialized Tomato leaf analysis...'):
-                results = preprocess_and_predict(input_data, model, TOMATO_CLASS_NAMES, IMG_SIZE)
+            with st.spinner('Running specialized Peach leaf analysis...'):
+                results = preprocess_and_predict(input_data, model, PEACH_CLASS_NAMES, IMG_SIZE)
             
             st.markdown("### 🔬 Diagnosis Result")
             
@@ -230,7 +228,7 @@ if input_data is not None:
                 st.markdown(
                     f"""
                     <div class="healthy-prompt">
-                        <div class="emoji">🍅🌿</div>
+                        <div class="emoji">🍑🌿</div>
                         <p class="message">{results['message']}</p>
                     </div>
                     """, unsafe_allow_html=True
@@ -275,7 +273,7 @@ if input_data is not None:
                 raw_predictions = results['raw_predictions']
                 
                 # Combine class names and scores and sort for visualization
-                class_scores = list(zip(TOMATO_CLASS_NAMES, raw_predictions))
+                class_scores = list(zip(PEACH_CLASS_NAMES, raw_predictions))
                 class_scores.sort(key=lambda x: x[1], reverse=True)
                 
                 top_n = 5
@@ -293,13 +291,13 @@ if input_data is not None:
 st.sidebar.markdown(
     """
     <div class="sidebar-header">
-        <h3>Tomato Detection Status</h3>
+        <h3>Peach Detection Status</h3>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-st.sidebar.markdown(f"**Current Coverage:** {', '.join([c.replace('tomato ', '') for c in TOMATO_CLASS_NAMES])}")
+st.sidebar.markdown(f"**Current Coverage:** {', '.join([c.replace('peach ', '') for c in PEACH_CLASS_NAMES])}")
 st.sidebar.markdown(f"**Minimum Confidence (Threshold):** {REJECTION_THRESHOLD*100:.0f}%")
 st.sidebar.markdown(f"**Model Input Size:** {IMG_SIZE[0]}x{IMG_SIZE[1]} pixels")
 st.sidebar.markdown("---")

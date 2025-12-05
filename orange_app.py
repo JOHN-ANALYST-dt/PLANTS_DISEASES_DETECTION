@@ -17,23 +17,22 @@ from intervention import get_interventions
 BASE_DIR = pathlib.Path(__file__).parent 
 
 # Construct the full path to the model
-MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'CABBAGE_mobileNet_model7.h5')
+MODEL_PATH = os.path.join(BASE_DIR, 'APP_MODELS', 'ORANGES_mobileNet_model2.h5')
 REJECTION_THRESHOLD = 0.50 # 50% confidence minimum
 IMG_SIZE = (248, 248) # Model input size
-TITLE = "AgroVision AI: Cabbage Leaf Detector"
+TITLE = "AgroVision AI: Orange Leaf Detector"
 
 # --- 2. STREAMLIT PAGE CONFIG ---
 st.set_page_config(page_title=TITLE, layout="centered")
 
-# Define the specialized list of class names for CABBAGE
-# NOTE: Cabbage is often included in general 'vegetable' datasets, 
-# but we specifically target Cabbage diseases known to the model.
-CABBAGE_CLASS_NAMES = [
-    'cabbage healthy leaf',
-    'cabbage black rot',
-    'cabbage downy mildew',
-    'cabbage black leg (phoma lingam)'
-    # Note: Adjust these names if your actual model uses different labels 
+# Define the specialized list of class names for ORANGE
+# NOTE: Ensure these class names exactly match the labels used during your model training!
+ORANGE_CLASS_NAMES = [
+    'orange citrus greening', 
+    'orange leaf curl', 
+    'orange leaf disease', 
+    'orange leaf spot', 
+    'orange healthy' # MUST contain a healthy label
 ]
 
 # --- CSS INJECTION (Assuming style.css exists) ---
@@ -56,7 +55,8 @@ inject_custom_css("style.css") # Assuming style.css is provided
 def load_trained_model(path):
     """Loads the model from the .h5 file."""
     try:
-        # Load the model, specifying custom objects if necessary
+        # IMPORTANT: Custom objects might be needed if you used Keras layers 
+        # like RandomFlip or RandomRotation in your model definition.
         model = load_model(path)
         return model
     except Exception as e:
@@ -126,13 +126,13 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
         elif 'healthy' in predicted_class.lower():
             return {
                 "status": "healthy",
-                "diagnosis": "Excellent News! Healthy Cabbage Leaf Detected",
+                "diagnosis": "Excellent News! Healthy Orange Leaf Detected",
                 "confidence": confidence,
                 "class": predicted_class,
                 "message": (
-                    f"Your cabbage leaf appears **healthy and robust!** "
-                    f"Confidence: {confidence*100:.2f}%. Ensure adequate calcium and boron supply "
-                    "to prevent tip burn and maintain compact head formation."
+                    f"Your orange tree leaf appears **vibrant and free of disease!** "
+                    f"Confidence: {confidence*100:.2f}%. Maintain optimal plant health "
+                    "with consistent watering, balanced citrus-specific nutrients, and good airflow."
                 ),
                 "raw_predictions": predictions
             }
@@ -161,21 +161,21 @@ st.markdown(
     .big-font {{
         font-size:36px !important;
         font-weight: 800;
-        color: #38761D; /* Cabbage Green */
+        color: #FF8C00; /* Dark Orange */
     }}
     .subheader-font {{
         font-size:24px !important;
-        color: #8FBC8F; /* Pale Green/Sea Green for contrast */
+        color: #FFA500; /* Orange */
         margin-bottom: 20px;
     }}
     </style>
     <div class="big-font">{TITLE}</div>
-    <div class="subheader-font">Specialized Diagnosis for Cabbage and Cole Crops</div>
+    <div class="subheader-font">Specialized Diagnosis for Citrus (Orange) Trees</div>
     """, 
     unsafe_allow_html=True
 )
 
-st.info("This application is specialized for detecting the following **Cabbage** issues: " + ', '.join(CABBAGE_CLASS_NAMES))
+st.info("This application is specialized for detecting the following **Orange** diseases: " + ', '.join(ORANGE_CLASS_NAMES))
 
 # Simplified Input Section (Camera and Uploader)
 st.markdown("### 📸 Image Input")
@@ -215,8 +215,8 @@ if input_data is not None:
         # Prediction button
         if st.button('Diagnose Leaf Now', key='diagnose_button', use_container_width=True):
             
-            with st.spinner('Running specialized Cabbage leaf analysis...'):
-                results = preprocess_and_predict(input_data, model, CABBAGE_CLASS_NAMES, IMG_SIZE)
+            with st.spinner('Running specialized Orange leaf analysis...'):
+                results = preprocess_and_predict(input_data, model, ORANGE_CLASS_NAMES, IMG_SIZE)
             
             st.markdown("### 🔬 Diagnosis Result")
             
@@ -229,7 +229,7 @@ if input_data is not None:
                 st.markdown(
                     f"""
                     <div class="healthy-prompt">
-                        <div class="emoji">🥬🌿</div>
+                        <div class="emoji">🍊✨</div>
                         <p class="message">{results['message']}</p>
                     </div>
                     """, unsafe_allow_html=True
@@ -274,7 +274,7 @@ if input_data is not None:
                 raw_predictions = results['raw_predictions']
                 
                 # Combine class names and scores and sort for visualization
-                class_scores = list(zip(CABBAGE_CLASS_NAMES, raw_predictions))
+                class_scores = list(zip(ORANGE_CLASS_NAMES, raw_predictions))
                 class_scores.sort(key=lambda x: x[1], reverse=True)
                 
                 top_n = 5
@@ -292,13 +292,13 @@ if input_data is not None:
 st.sidebar.markdown(
     """
     <div class="sidebar-header">
-        <h3>Cabbage Detection Status</h3>
+        <h3>Citrus Detection Status</h3>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-st.sidebar.markdown(f"**Current Coverage:** {', '.join([c.replace('cabbage ', '') for c in CABBAGE_CLASS_NAMES])}")
+st.sidebar.markdown(f"**Current Coverage:** {', '.join([c.replace('orange ', '') for c in ORANGE_CLASS_NAMES])}")
 st.sidebar.markdown(f"**Minimum Confidence (Threshold):** {REJECTION_THRESHOLD*100:.0f}%")
 st.sidebar.markdown(f"**Model Input Size:** {IMG_SIZE[0]}x{IMG_SIZE[1]} pixels")
 st.sidebar.markdown("---")

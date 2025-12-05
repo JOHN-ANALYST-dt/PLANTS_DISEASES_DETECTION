@@ -17,21 +17,21 @@ from intervention import get_interventions
 BASE_DIR = pathlib.Path(__file__).parent 
 
 # Construct the full path to the model
-MODEL_PATH = os.path.join(BASE_DIR, 'MODELS', 'mobileNet_model2.h5')
+MODEL_PATH = os.path.join(BASE_DIR, 'APP_MODELS', 'CORN_mobileNet_model7.h5')
 REJECTION_THRESHOLD = 0.50 # 50% confidence minimum
 IMG_SIZE = (128, 128) # Model input size
-TITLE = "AgroVision AI: Tobacco Leaf Detector"
+TITLE = "AgroVision AI: Corn Leaf Detector"
 
 # --- 2. STREAMLIT PAGE CONFIG ---
 st.set_page_config(page_title=TITLE, layout="centered")
 
-# Define the specialized list of class names for TOBACCO
+# Define the specialized list of class names for CORN (Maize)
 # Ensure these class names exactly match the labels used during your model training!
-TOBACCO_CLASS_NAMES = [
-    'tobacco healthy leaf', 
-    'tobacco black shank', 
-    'tobacco leaf disease', 
-    'tobacco mosaic virus'
+CORN_CLASS_NAMES = [
+    'corn healthy leaf',
+    'corn common rust',
+    'corn gray leaf spot',
+    'corn northern leaf blight'
 ]
 
 # --- CSS INJECTION (Assuming style.css exists) ---
@@ -124,13 +124,13 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
         elif 'healthy' in predicted_class.lower():
             return {
                 "status": "healthy",
-                "diagnosis": "Excellent News! Healthy Tobacco Leaf Detected",
+                "diagnosis": "Excellent News! Healthy Corn Leaf Detected",
                 "confidence": confidence,
                 "class": predicted_class,
                 "message": (
-                    f"Your tobacco leaf appears **vibrant and free of disease!** "
-                    f"Confidence: {confidence*100:.2f}%. Ensure adequate water and nutrient supply, "
-                    "and practice good field hygiene to maintain health."
+                    f"Your corn leaf appears **vibrant and free of disease!** "
+                    f"Confidence: {confidence*100:.2f}%. Maintain health by ensuring proper nitrogen "
+                    "levels and timely irrigation during the critical silking and tasseling stages."
                 ),
                 "raw_predictions": predictions
             }
@@ -159,21 +159,21 @@ st.markdown(
     .big-font {{
         font-size:36px !important;
         font-weight: 800;
-        color: #8B4513; /* Saddle Brown/Tobacco Brown */
+        color: #FFD700; /* Gold - for corn */
     }}
     .subheader-font {{
         font-size:24px !important;
-        color: #A0522D; /* Sienna */
+        color: #006400; /* Dark Green for the stalks/leaves */
         margin-bottom: 20px;
     }}
     </style>
     <div class="big-font">{TITLE}</div>
-    <div class="subheader-font">Specialized Diagnosis for Tobacco Crops</div>
+    <div class="subheader-font">Specialized Diagnosis for Corn (Maize) Crops</div>
     """, 
     unsafe_allow_html=True
 )
 
-st.info("This application is specialized for detecting the following **Tobacco** issues: " + ', '.join(TOBACCO_CLASS_NAMES))
+st.info("This application is specialized for detecting the following **Corn** issues: " + ', '.join(CORN_CLASS_NAMES))
 
 # Simplified Input Section (Camera and Uploader)
 st.markdown("### 📸 Image Input")
@@ -213,8 +213,8 @@ if input_data is not None:
         # Prediction button
         if st.button('Diagnose Leaf Now', key='diagnose_button', use_container_width=True):
             
-            with st.spinner('Running specialized Tobacco leaf analysis...'):
-                results = preprocess_and_predict(input_data, model, TOBACCO_CLASS_NAMES, IMG_SIZE)
+            with st.spinner('Running specialized Corn leaf analysis...'):
+                results = preprocess_and_predict(input_data, model, CORN_CLASS_NAMES, IMG_SIZE)
             
             st.markdown("### 🔬 Diagnosis Result")
             
@@ -227,7 +227,7 @@ if input_data is not None:
                 st.markdown(
                     f"""
                     <div class="healthy-prompt">
-                        <div class="emoji">🌿👍</div>
+                        <div class="emoji">🌽🌿</div>
                         <p class="message">{results['message']}</p>
                     </div>
                     """, unsafe_allow_html=True
@@ -272,7 +272,7 @@ if input_data is not None:
                 raw_predictions = results['raw_predictions']
                 
                 # Combine class names and scores and sort for visualization
-                class_scores = list(zip(TOBACCO_CLASS_NAMES, raw_predictions))
+                class_scores = list(zip(CORN_CLASS_NAMES, raw_predictions))
                 class_scores.sort(key=lambda x: x[1], reverse=True)
                 
                 top_n = 5
@@ -290,13 +290,13 @@ if input_data is not None:
 st.sidebar.markdown(
     """
     <div class="sidebar-header">
-        <h3>Tobacco Detection Status</h3>
+        <h3>Corn Detection Status</h3>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-st.sidebar.markdown(f"**Current Coverage:** {', '.join([c.replace('tobacco ', '') for c in TOBACCO_CLASS_NAMES])}")
+st.sidebar.markdown(f"**Current Coverage:** {', '.join([c.replace('corn ', '') for c in CORN_CLASS_NAMES])}")
 st.sidebar.markdown(f"**Minimum Confidence (Threshold):** {REJECTION_THRESHOLD*100:.0f}%")
 st.sidebar.markdown(f"**Model Input Size:** {IMG_SIZE[0]}x{IMG_SIZE[1]} pixels")
 st.sidebar.markdown("---")

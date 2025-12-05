@@ -309,7 +309,7 @@ div[data-testid="stCameraInput"] > div:first-child > button {
             backdrop-filter: blur(9px);
             -webkit-backdrop-filter: blur(9px);
             position: absolute;
-            margin-right: 10px;
+            margin-left: 10px;
 }
 .selector h3{
             font-size: 20px;

@@ -351,7 +351,13 @@ st.sidebar.markdown(
 
 
 # ---------- Sidebar navigation ----------
-
+for plant in VEGETABLE_CLASSES + FRUIT_CLASSES:
+    st.sidebar.markdown(
+        f"""
+        <a class="plant-btn" href="/{plant.lower()}">{plant}</a>
+        """,
+        unsafe_allow_html=True
+    )
 
 
 

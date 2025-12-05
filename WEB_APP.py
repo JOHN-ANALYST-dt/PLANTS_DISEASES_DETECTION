@@ -249,7 +249,7 @@ if input_data is not None:
         <div class="selector">
             <h3>Image Selected for Diagnosis</h3>
         </div>
-        """)
+        """, unsafe_allow_html=True)
         st.image(input_data, caption='Ready for analysis.', use_column_width=True)
     
     # Prediction button

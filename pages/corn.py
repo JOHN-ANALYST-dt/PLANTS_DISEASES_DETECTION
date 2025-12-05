@@ -17,7 +17,7 @@ from intervention import get_interventions
 BASE_DIR = pathlib.Path(__file__).parent 
 
 # Construct the full path to the model
-MODEL_PATH = BASE_DIR / 'APP_MODELS' / 'CORN_mobileNet_model7.h5'
+MODEL_PATH = BASE_DIR /  'CORN_mobileNet_model7.h5'
 REJECTION_THRESHOLD = 0.50 # 50% confidence minimum
 IMG_SIZE = (128, 128) # Model input size
 TITLE = "AgroVision AI: Corn Leaf Detector"

@@ -423,3 +423,54 @@ css = f"""
 
 st.markdown(css, unsafe_allow_html=True)
 
+
+st.markdown("""
+<style>
+
+    /* Sidebar Background */
+    [data-testid="stSidebar"] {
+        background-color: #eef3f7;
+        padding: 10px;
+    }
+
+    /* Title Style */
+    [data-testid="stSidebar"] h2 {
+        color: #003366;
+        text-align: center;
+        font-weight: 800;
+        margin-bottom: 20px;
+    }
+
+    /* Remove default page list styling */
+    [data-testid="stSidebarNav"] ul {
+        padding-left: 0 !important;
+    }
+
+    [data-testid="stSidebarNav"] ul li {
+        list-style: none;  
+        margin-bottom: 10px;
+    }
+
+    /* Style each page link as a button */
+    [data-testid="stSidebarNav"] ul li a {
+        display: block;
+        padding: 10px 15px;
+        background: linear-gradient(135deg, #4CAF50, #2E7D32);  
+        color: white !important;
+        text-decoration: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        transition: 0.3s ease-in-out;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    /* Hover effect */
+    [data-testid="stSidebarNav"] ul li a:hover {
+        background: linear-gradient(135deg, #66BB6A, #388E3C);
+        transform: scale(1.02);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+
+</style>
+""", unsafe_allow_html=True)

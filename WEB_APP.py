@@ -423,54 +423,78 @@ css = f"""
 
 st.markdown(css, unsafe_allow_html=True)
 
+import streamlit as st
 
+# -------------------------
+# CUSTOM CSS
+# -------------------------
 st.markdown("""
 <style>
 
-    /* Sidebar Background */
-    [data-testid="stSidebar"] {
-        background-color: #eef3f7;
-        padding: 10px;
-    }
-
-    /* Title Style */
-    [data-testid="stSidebar"] h2 {
-        color: #003366;
+    /* Sidebar box styling */
+    .sidebar-section {
+        background: #234e70;
+        padding: 15px;
+        border-radius: 15px;
         text-align: center;
-        font-weight: 800;
+        color: white;
+        font-weight: 700;
         margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     }
 
-    /* Remove default page list styling */
+    /* Container for plant links */
+    .plant-links-box {
+        background: #ffffff;
+        padding: 12px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        margin-top: -5px;
+    }
+
+    /* Remove default Streamlit styling */
     [data-testid="stSidebarNav"] ul {
         padding-left: 0 !important;
     }
 
     [data-testid="stSidebarNav"] ul li {
-        list-style: none;  
+        list-style: none;
         margin-bottom: 10px;
     }
 
     /* Style each page link as a button */
-    [data-testid="stSidebarNav"] ul li a {
+    .plant-links-box a {
         display: block;
-        padding: 10px 15px;
-        background: linear-gradient(135deg, #4CAF50, #2E7D32);  
-        color: white !important;
+        background: linear-gradient(135deg, #4CAF50, #2E7D32);
+        padding: 10px;
         text-decoration: none;
+        color: white !important;
         border-radius: 10px;
-        font-size: 16px;
         font-weight: 600;
-        transition: 0.3s ease-in-out;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        text-align: center;
+        font-size: 15px;
+        transition: 0.3s;
     }
 
-    /* Hover effect */
-    [data-testid="stSidebarNav"] ul li a:hover {
+    .plant-links-box a:hover {
         background: linear-gradient(135deg, #66BB6A, #388E3C);
         transform: scale(1.02);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.2);
     }
 
 </style>
 """, unsafe_allow_html=True)
+
+# -------------------------
+# SIDEBAR CONTENT
+# -------------------------
+with st.sidebar:
+
+    # Your button (already in your app)
+    st.markdown("""
+        <div class="sidebar-section">
+            SELECT PLANT FOR PREDICTION
+        </div>
+    """, unsafe_allow_html=True)
+
+    # NEW: Create the links box
+    st.markdown("""<div class="plant-links-box">""", unsafe_allow_html=True)

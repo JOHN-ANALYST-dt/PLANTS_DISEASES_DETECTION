@@ -14,6 +14,18 @@ from intervention import get_interventions
 
 # --- 1. CONFIGURATION ---
 
+hide_pages_css = """
+<style>
+/* Hide the default Streamlit page selector (sidebar pages menu) */
+[data-testid="stSidebarNav"] ul {
+    display: none !important;
+}
+</style>
+"""
+import streamlit as st
+st.markdown(hide_pages_css, unsafe_allow_html=True)
+
+
 BASE_DIR = pathlib.Path(__file__).parent 
 
 # Paths and Constants

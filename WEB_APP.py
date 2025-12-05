@@ -35,9 +35,9 @@ CSS_PLACEHOLDER = "BACKGROUND_IMAGE_PLACEHOLDER" # Placeholder in style.css
 st.set_page_config(page_title=TITLE, layout="wide")
 
 
-# --- 3. UTILITY FUNCTIONS (Inlined for simplicity) ---
 
 
+ # 2.1. HIDE DEFAULT STREAMLIT PAGE SELECTOR
 hide_pages_css = """
 <style>
 /* Hide the default Streamlit page selector (sidebar pages menu) */
@@ -50,7 +50,7 @@ import streamlit as st
 st.markdown(hide_pages_css, unsafe_allow_html=True)
 
 
-
+# --- 3. UTILITY FUNCTIONS (Inlined for simplicity) ---
 def encode_image_to_base64(path):
     """Reads a local image and encodes it to a Base64 Data URL string."""
     if not os.path.exists(path):

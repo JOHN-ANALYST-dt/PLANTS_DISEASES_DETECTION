@@ -236,10 +236,43 @@ div[data-testid="stCameraInput"] > div:first-child > button {
 }
 
 .plant-btn:hover {
-    background: linear-gradient(135deg, #89a8c5, #4b6b89);
+    background: linear-gradient(135deg, #5ba5a5, #6da1d1);
     transform: scale(1.03);
     border-color: #ffffffaa;
 }
-
+.diagnosis{
+            background: linear-gradient(135deg, #456a8a, #2e4c63);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-family: 'Segoe UI', sans-serif;
+}
+.diagnosis h3{
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+            color:white;
+            font-size:bold;
+}
+.analysis{
+            background: linear-gradient(135deg, #456a8a, #2e4c63);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-family: 'Segoe UI', sans-serif;
+}
+.analysis h3{
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+            color:white;
+            font-size:bold;
+}
 
      

@@ -260,11 +260,22 @@ if input_data is not None:
                 predicted_class = "Uncertain Prediction - Please try again with a clearer image."
         
         # Display Results
-        st.markdown("## 🔍 Analysis Results")
+        st.markdown(f""" 
+        <div class="analysis">
+            <h3>🔍 Analysis Results</h3>
+        </div>
+        """,
+         unsafe_allow_html=True)
+
         col1, col2 = st.columns([1, 2]) 
 
         with col1:
-            st.markdown("### 🔬 Diagnosis Result")
+            st.markdown(f"""
+            <div class="diagnosis"> 
+                <h3>🔬 Diagnosis Result</h3>
+            </div>
+            """,unsafe_allow_html=True
+            )
             
             if 'Healthy' in predicted_class:
                 st.success(f"**Status:** {predicted_class}")

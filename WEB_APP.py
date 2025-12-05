@@ -14,17 +14,6 @@ from intervention import get_interventions
 
 # --- 1. CONFIGURATION ---
 
-hide_pages_css = """
-<style>
-/* Hide the default Streamlit page selector (sidebar pages menu) */
-[data-testid="stSidebarNav"] ul {
-    display: none !important;
-}
-</style>
-"""
-import streamlit as st
-st.markdown(hide_pages_css, unsafe_allow_html=True)
-
 
 BASE_DIR = pathlib.Path(__file__).parent 
 
@@ -47,6 +36,20 @@ st.set_page_config(page_title=TITLE, layout="wide")
 
 
 # --- 3. UTILITY FUNCTIONS (Inlined for simplicity) ---
+
+
+hide_pages_css = """
+<style>
+/* Hide the default Streamlit page selector (sidebar pages menu) */
+[data-testid="stSidebarNav"] ul {
+    display: none !important;
+}
+</style>
+"""
+import streamlit as st
+st.markdown(hide_pages_css, unsafe_allow_html=True)
+
+
 
 def encode_image_to_base64(path):
     """Reads a local image and encodes it to a Base64 Data URL string."""

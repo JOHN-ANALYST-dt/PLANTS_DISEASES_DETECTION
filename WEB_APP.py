@@ -109,6 +109,17 @@ FULL_CLASS_NAMES = [
 VEGETABLE_CLASSES = ['Corn', 'Potatoe', 'Tomato', 'Pepper', 'soybean', 'skumawiki', 'onion', 'Cabbage']
 FRUIT_CLASSES = ['Apple', 'Grape', 'Cherry', 'Strawberry', 'Raspberry', 'Peach', 'Orange']
     
+# --- Display as ordered HTML lists ---
+vegetable_html = "<h3>Vegetables</h3><ol>"
+for veg in VEGETABLE_CLASSES:
+    vegetable_html += f"<li>{veg}</li>"
+vegetable_html += "</ol>"
+
+fruit_html = "<h3>Fruits</h3><ol>"
+for fruit in FRUIT_CLASSES:
+    fruit_html += f"<li>{fruit}</li>"
+fruit_html += "</ol>"
+
 
 
 # --- 5. LOAD MODEL ---

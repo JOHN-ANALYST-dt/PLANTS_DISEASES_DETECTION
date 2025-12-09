@@ -355,6 +355,32 @@ if st.session_state.selected_plant:
                 }
                 
                 st.rerun() 
+                st.markdown("""
+    <style>
+    /* Base style for Diagnose Leaf button */
+    .stButton > button[key="diagnose_button"] {
+        background: linear-gradient(120deg, #2e7d32, #66bb6a);  /* Dark → light green */
+        color: white !important;
+        border: none;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        transition: 0.3s ease-in-out; /* Smooth transition */
+    }
+
+    /* Hover effect — brighter green plant colors */
+    .stButton > button[key="diagnose_button"]:hover {
+        background: linear-gradient(120deg, #43a047, #81c784) !important; /* Lighter fresh green */
+        color: white !important;
+        transform: scale(1.03); /* Slight grow effect */
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+    # ----------------------------------------------------------------------               
     
     # --- Display Results if analysis_run is True and results are available ---
     if st.session_state.analysis_run and st.session_state.prediction_result:

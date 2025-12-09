@@ -18,18 +18,19 @@ from intervention import get_interventions
 # ==============================================================================
 
 # Base directory setup
+
 BASE_DIR = pathlib.Path(__file__).parent 
 
 # Paths and Files
 MODEL_PATH = os.path.join(BASE_DIR, 'CABBAGE_mobileNet_model7.h5')
 BACKGROUND_IMAGE_PATH = os.path.join(BASE_DIR, 'vege2.jpeg') 
 CSS_PATH = os.path.join(BASE_DIR, 'style.css')
-
-
-
-# Model Parameters
 REJECTION_THRESHOLD = 0.50 # 50% confidence minimum
 IMG_SIZE = (248, 248) # Model input size
+
+TITLE = "AgroVision AI: Cabbage Leaf Detector"
+st.set_page_config(page_title=TITLE, layout="centered")
+
 CABBAGE_CLASS_NAMES = [
     'cabbage healthy leaf',
     'cabbage black rot',
@@ -39,8 +40,7 @@ CABBAGE_CLASS_NAMES = [
 ]
 
 # App Display
-TITLE = "AgroVision AI: Cabbage Leaf Detector"
-st.set_page_config(page_title=TITLE, layout="centered")
+
 
 # ==============================================================================
 # 2. UTILITY FUNCTIONS

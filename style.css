@@ -396,3 +396,25 @@ div[data-testid="stCameraInput"] label {
 .new-analysis-button button:hover {
     background-color: #218838 !important;
 }
+
+
+
+.stButton > button[key="diagnose_button"] {
+        background: linear-gradient(120deg, #2e7d32, #66bb6a);  /* Dark → light green */
+        color: white !important;
+        border: none;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        transition: 0.3s ease-in-out; /* Smooth transition */
+    }
+
+    /* Hover effect — brighter green plant colors */
+    .stButton > button[key="diagnose_button"]:hover {
+        background: linear-gradient(120deg, #43a047, #81c784) !important; /* Lighter fresh green */
+        color: white !important;
+        transform: scale(1.03); /* Slight grow effect */
+    }

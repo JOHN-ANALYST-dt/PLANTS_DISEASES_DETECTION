@@ -264,41 +264,41 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
 # ==============================================================================
 # 8. INPUT AND ANALYSIS SECTION (Conditional on Sidebar Selection)
 # ==============================================================================
 
 if st.session_state.selected_plant:
+    # This assignment runs only when a plant is selected
     selected_plant = st.session_state.selected_plant
     st.markdown("---") 
     
     # ----------------------------------------------------------------------
     # START: New Input Box (using st.container for visual grouping)
+    # This entire block MUST be indented under the 'if' condition
     # ----------------------------------------------------------------------
-    # New code for Section 8
     with st.container(border=True): 
         st.markdown(
-        f"## 📸 Input for {selected_plant} Leaf Diagnosis",
-        unsafe_allow_html=True
-    )
-    
-    st.info(f"Please use one of the two options below to submit an image of the **{selected_plant}** leaf.")
-    
-    col_cam, col_upload = st.columns(2)
-    
-    # 1. Camera Input: Using a custom key and label for CSS targeting
-    camera_img = col_cam.camera_input(
-        label="Capture Photo", # Simplified label
-        key="camera_input"
-    )
-    
-    # 2. Upload File
-    uploaded_file = col_upload.file_uploader(
-        f"2. Upload File from Device (Desktop/Local Files)", 
-        type=["jpg", "jpeg", "png"], 
-        key="uploader_input"
-    )
+            f"## 📸 Input for {selected_plant} Leaf Diagnosis",
+            unsafe_allow_html=True
+        )
+        
+        st.info(f"Please use one of the two options below to submit an image of the **{selected_plant}** leaf.")
+        
+        col_cam, col_upload = st.columns(2)
+        
+        # 1. Camera Input: Using a custom key and label for CSS targeting
+        camera_img = col_cam.camera_input(
+            label="Capture Photo", # Simplified label
+            key="camera_input"
+        )
+        
+        # 2. Upload File
+        uploaded_file = col_upload.file_uploader(
+            f"2. Upload File from Device (Desktop/Local Files)", 
+            type=["jpg", "jpeg", "png"], 
+            key="uploader_input"
+        )
     # ----------------------------------------------------------------------
     # END: New Input Box
     # ----------------------------------------------------------------------
@@ -340,7 +340,6 @@ if st.session_state.selected_plant:
     
     # --- Display Results if analysis_run is True and results are available ---
     if st.session_state.analysis_run and st.session_state.prediction_result:
-        # (The rest of the analysis display code remains here, unchanged)
         results = st.session_state.prediction_result
         
         # --- Diagnosis/Rejection Logic ---
@@ -426,8 +425,9 @@ if st.session_state.selected_plant:
                 'Confidence': [f"{c*100:.2f}%" for c in top_confidences]
             }
             st.dataframe(chart_data, use_container_width=True)
-else:
+
 # --- Initial Message if no plant is selected ---
+else:
     st.markdown("---")
     st.info("👈 **Select a crop** from the sidebar to begin the leaf disease diagnosis. The image input section will appear here.")
 # ==============================================================================

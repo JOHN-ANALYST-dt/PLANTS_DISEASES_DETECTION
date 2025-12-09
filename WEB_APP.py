@@ -267,12 +267,7 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
 # 7. STREAMLIT APP INTERFACE (MAIN CONTENT)
 # ==============================================================================
 
-# --- UI: Title ---
-# ==============================================================================
-# 7. STREAMLIT APP INTERFACE (MAIN CONTENT)
-# ==============================================================================
 
-# --- UI: Title with Home Button ---
 
 
 st.markdown(
@@ -295,13 +290,12 @@ if st.session_state.selected_plant:
     selected_plant = st.session_state.selected_plant
     st.markdown("---") 
     
-    # ----------------------------------------------------------------------
-    # START: New Input Box (using st.container for visual grouping)
+   
     # This entire block MUST be indented under the 'if' condition
     # ----------------------------------------------------------------------
     with st.container(border=True): 
         st.markdown(
-            f"## 📸 Input for {selected_plant} Leaf Diagnosis",
+            f"""<div class="diagnosis"> <h3>📸 Input for {selected_plant} Leaf Diagnosis</h3></div>""",
             unsafe_allow_html=True
         )
         

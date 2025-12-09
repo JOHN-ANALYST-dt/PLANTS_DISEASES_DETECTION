@@ -219,27 +219,7 @@ div[data-testid="stCameraInput"] > div:first-child > button {
             color:white;
             font-size:bold;
 }
-.plant-btn {
-    display: block;
-    width: 100%;
-    padding: 12px 18px;
-    margin-bottom: 12px;
-    font-size: 16px;
-    text-align: center;
-    color: white !important;
-    background: linear-gradient(135deg, green, #4f6e8d);
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.3s ease;
-    border: 2px solid transparent;
-}
 
-.plant-btn:hover {
-    background: linear-gradient(135deg, #5ba5a5, #6da1d1);
-    transform: scale(1.03);
-    border-color: #ffffffaa;
-}
 .diagnosis{
            padding: 10px;
             border-radius: 12px;

@@ -279,7 +279,7 @@ if st.session_state.selected_plant:
     
     with st.container(border=True): # Setting border=True gives a nice, distinct "box" effect
         st.markdown(
-            f"## 📸 Input for {selected_plant} Leaf Diagnosis",
+            f"""<div style="font-size: 18px; font-weight: bold;color:white;"> 📸 Input for {selected_plant} Leaf Diagnosis</div>""",
             unsafe_allow_html=True
         )
         

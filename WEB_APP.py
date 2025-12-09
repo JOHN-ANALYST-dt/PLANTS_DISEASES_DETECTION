@@ -328,7 +328,7 @@ if st.session_state.selected_plant:
         
     # Only show analysis button if an image is provided
     if input_data is not None:
-        st.markdown("---")
+       
         st.markdown("""<div class="analysis">
                         <h3>Image Selected for Analysis</h3>
                     </div>""", unsafe_allow_html=True)

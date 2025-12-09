@@ -428,7 +428,7 @@ with st.container(border=True):
             st.dataframe(chart_data, use_container_width=True)
 
 # --- Initial Message if no plant is selected ---
-else:
+
     st.markdown("---")
     st.info("👈 **Select a crop** from the sidebar to begin the leaf disease diagnosis. The image input section will appear here.")
 # ==============================================================================

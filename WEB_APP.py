@@ -276,7 +276,9 @@ if st.session_state.selected_plant:
     
     # --- Input Section ---
     st.markdown(
-        f"## 📸 Input for {selected_plant} Leaf Diagnosis",
+        f""" <div class="diagnosis">
+                    <h3>📸 Input for {selected_plant} Leaf Diagnosis</h3>
+            </div> """,
         unsafe_allow_html=True
     )
     

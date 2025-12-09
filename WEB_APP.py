@@ -72,6 +72,8 @@ def encode_image_to_base64(path):
         st.error(f"Error during image encoding: {e}")
         return "none"
 
+#CSS FILE INJECTION
+
 def inject_custom_css(file_path, base64_url):
     """
     Reads local CSS, replaces the placeholder with the Base64 URL, 
@@ -438,24 +440,3 @@ css = f"""
 
 st.markdown(css, unsafe_allow_html=True)
 
-import streamlit as st
-
-# Sidebar navigation
-st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to:", ["Home", "Corn Detector", "Interventions"])
-
-# --- Pages ---
-if page == "Home":
-    st.title("Welcome to AgroVision AI")
-    st.write("This app helps detect diseases in corn leaves.")
-    st.write("Use the sidebar to navigate through the app.")
-
-elif page == "Corn Detector":
-    st.title("Corn Leaf Detector")
-    st.write("Upload an image to detect leaf disease.")
-    # Put your image upload & model prediction code here
-
-elif page == "Interventions":
-    st.title("Recommended Interventions")
-    st.write("Get advice based on detected disease.")
-    # Put your intervention code here

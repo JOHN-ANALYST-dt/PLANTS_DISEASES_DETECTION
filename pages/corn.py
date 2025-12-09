@@ -8,6 +8,8 @@ import io
 from PIL import Image
 import os 
 import pathlib
+import base64
+import time
 # Assuming 'intervention.py' and 'style.css' exist in the same directory
 from intervention import get_interventions 
 
@@ -19,14 +21,41 @@ BASE_DIR = pathlib.Path(__file__).parent
 # Construct the full path to the model
 MODEL_PATH = os.path.join(BASE_DIR,  'CORN_mobileNet_model7.h5')
 REJECTION_THRESHOLD = 0.50 # 50% confidence minimum
-IMG_SIZE = (128, 128) # Model input size
+IMG_SIZE = (128, 128) 
 TITLE = "AgroVision AI: Corn Leaf Detector"
-
+BACKGROUND_IMAGE_PATH = './vege2.jpeg' 
+CSS_PLACEHOLDER = "BACKGROUND_IMAGE_PLACEHOLDER"
 # --- 2. STREAMLIT PAGE CONFIG ---
 st.set_page_config(page_title=TITLE, layout="centered")
 
 # Define the specialized list of class names for CORN (Maize)
-# Ensure these class names exactly match the labels used during your model training!
+
+#IMAGE BACKGROUND ENCODER
+
+def encode_image_to_base64(path):
+    """Reads a local image and encodes it to a Base64 Data URL string."""
+    if not os.path.exists(path):
+        st.error(f"Background image file not found at expected path: {path}. Using solid background.")
+        return "none"
+        
+    try:
+        ext = os.path.splitext(path)[1].lower()
+        # Assumes the user provided a JPEG, but checks file extension
+        mime_type = "image/jpeg" if ext in ('.jpg', '.jpeg') else "image/png"
+        
+        with open(path, "rb") as f:
+            data = f.read()
+            encoded_string = base64.b64encode(data).decode('utf-8')
+            
+        return f"data:{mime_type};base64,{encoded_string}"
+        
+    except Exception as e:
+        st.error(f"Error during image encoding: {e}")
+        return "none"
+
+img_base64_url = encode_image_to_base64(BACKGROUND_IMAGE_PATH)
+
+
 CORN_CLASS_NAMES = [
     'corn healthy leaf',
     'corn common rust',
@@ -155,20 +184,10 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
 
 st.markdown(
     f"""
-    <style>
-    .big-font {{
-        font-size:36px !important;
-        font-weight: 800;
-        color: #FFD700; /* Gold - for corn */
-    }}
-    .subheader-font {{
-        font-size:24px !important;
-        color: #006400; /* Dark Green for the stalks/leaves */
-        margin-bottom: 20px;
-    }}
-    </style>
-    <div class="big-font">{TITLE}</div>
-    <div class="subheader-font">Specialized Diagnosis for Corn (Maize) Crops</div>
+    <div class="title-container">
+        <div class="big-font">{TITLE}</div>
+        <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
+    </div>
     """, 
     unsafe_allow_html=True
 )
@@ -228,7 +247,7 @@ if input_data is not None:
                     f"""
                     <div class="healthy-prompt">
                         <div class="emoji">🌽🌿</div>
-                        <p class="message">{results['message']}</p>
+                        <p class="message">{results['message']}</p> 
                     </div>
                     """, unsafe_allow_html=True
                 )
@@ -286,7 +305,90 @@ if input_data is not None:
                 
                 st.dataframe(chart_data, use_container_width=True)
 
-# --- 7. SIDEBAR INSTRUCTIONS ---
+# --- SIDEBAR INSTRUCTIONS ---
+
+
+st.sidebar.markdown(
+    """
+    <div class="sidebar1">
+        <h3>Current Model Coverage</h3>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+st.sidebar.markdown(
+    """
+    <div class="sidebar2">
+        <h3>SELECT PLANT FOR PREDICTION</h3>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# HIDE DEFAULT STREAMLIT PAGE SELECTOR
+hide_pages_css = """
+<style>
+/* Hide the default Streamlit page selector (sidebar pages menu) */
+[data-testid="stSidebarNav"] ul {
+    display: none !important;
+}
+</style>
+"""
+import streamlit as st
+st.markdown(hide_pages_css, unsafe_allow_html=True)
+
+# Define the full list of class names (MUST match training order)
+FULL_CLASS_NAMES = [
+    'Apple Scab', 'Apple Black Rot', 'Apple Cedar Rust', 
+    'cabbage black rot','cabbage healthy','cabbage clubroot','cabbage downy mildew','cabbage leaf disease',
+    'Corn Common Rust', 'Corn Northern leaf blight', 'Corn Cercospora Leaf Spot gray leaf spot',
+    'Potato Early Blight', 'Potato Late Blight', 'potato healthy',
+    'Tomato Bacterial Spot', 'Tomato Early Blight', 'Tomato Healthy', 'Tomato late blight',
+    'Tomato leaf mold', 'Tomato septoria leaf spot', 'Tomato spider mites Two-spotted spider mite',
+    'Tomato Target Spot', 'Tomato Yellow Leaf Curl Virus', 'Tomato mosaic virus',
+    'Pepper Bell Bacterial Spot', 'Pepper Bell Healthy',
+    'Grape Black Rot', 'Grape Esca (Black Measles)', 'Grape Leaf Blight (Isariopsis Leaf Spot)', 'Grape Healthy',
+    'Cherry Powdery Mildew', 'Cherry Healthy',
+    'Strawberry Leaf Scorch', 'Strawberry Healthy',
+    'skumawiki leaf disease', 'skumawiki healthy',
+    'soybean healthy', 'soybean frog eye leaf spot', 'soybean rust', 'soybean powdery mildew',
+    'tobacco healthy leaf', 'tobacco black shank', 'tobacco leaf disease', 'tobacco mosaic virus',
+    'raspberry healthy', 'raspberry leaf spot',
+    'peach healthy', 'peach bacterial spot', 'peach leaf curl', 'peach powdery mildew', 'peach leaf curl', 'peach leaf disease',
+    'orange citrus greening', 'orange leaf curl', 'orange leaf disease', 'orange leaf spot',
+    'onion downy mildew', 'onion healthy leaf', 'onion leaf blight', 'onion purple blotch','onion thrips damage'
+]
+
+# --- Categorization for Tabbed View ---
+VEGETABLE_CLASSES = ['Corn', 'Potatoe', 'Tomato', 'Pepper', 'soybean', 'skumawiki', 'onion', 'Cabbage']
+FRUIT_CLASSES = ['Apple', 'Grape', 'Cherry', 'Strawberry', 'Raspberry', 'Peach', 'Orange']
+    
+# --- Display as ordered HTML lists ---
+vegetable_html = "<h3>Vegetables</h3><ol>"
+for veg in VEGETABLE_CLASSES:
+    vegetable_html += f"<li>{veg}</li>"
+vegetable_html += "</ol>"
+
+fruit_html = "<h3>Fruits</h3><ol>"
+for fruit in FRUIT_CLASSES:
+    fruit_html += f"<li>{fruit}</li>"
+fruit_html += "</ol>"
+
+
+# ---------- Sidebar navigation ----------
+for plant in VEGETABLE_CLASSES + FRUIT_CLASSES:
+    page_name = plant.lower().replace(" ", "_") + ".py"  # ex: corn.py, apple.py
+    st.sidebar.markdown(
+        f"""<a class="plant-btn" href="/{plant.lower().replace(" ", "_")}">
+        {plant}
+        </a>""",
+        unsafe_allow_html=True
+    )
+
+
+
+
 st.sidebar.markdown(
     """
     <div class="sidebar-header">

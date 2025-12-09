@@ -264,30 +264,45 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-# ----------------------------------------------------------------------
+# ==============================================================================
 # 8. INPUT AND ANALYSIS SECTION (Conditional on Sidebar Selection)
-# ----------------------------------------------------------------------
+# ==============================================================================
 
 if st.session_state.selected_plant:
-    # --- Content appears here, in the same window, below the title ---
     selected_plant = st.session_state.selected_plant
     st.markdown("---") 
     
-    # --- Input Section ---
-    st.markdown(
-        f""" <div class="diagnosis">
-                    <h3>📸 Input for {selected_plant} Leaf Diagnosis</h3>
-            </div> """,
-        unsafe_allow_html=True
-    )
+    # ----------------------------------------------------------------------
+    # START: New Input Box (using st.container for visual grouping)
+    # ----------------------------------------------------------------------
     
-    st.warning("For best results, upload a clear, focused image of the affected leaf area.")
-
-    col_cam, col_upload = st.columns(2)
-    # Keys are used to reset components when a new plant is selected
-    camera_img = col_cam.camera_input(f"1. Take a Photo of the {selected_plant} Leaf", key="camera_input")
-    uploaded_file = col_upload.file_uploader(f"2. Upload an Image of the {selected_plant} Leaf", type=["jpg", "jpeg", "png"], key="uploader_input")
+    with st.container(border=True): # Setting border=True gives a nice, distinct "box" effect
+        st.markdown(
+            f"## 📸 Input for {selected_plant} Leaf Diagnosis",
+            unsafe_allow_html=True
+        )
+        
+        st.info(f"Please use one of the two options below to submit an image of the **{selected_plant}** leaf.")
+        
+        col_cam, col_upload = st.columns(2)
+        
+        # 1. Camera Input / Mobile File Selector
+        # Adjusted label to be clearer about its dual function
+        camera_img = col_cam.camera_input(
+            f"1. Capture Photo or Select File (Best for Mobile)", 
+            key="camera_input"
+        )
+        
+        # 2. Upload File
+        uploaded_file = col_upload.file_uploader(
+            f"2. Upload File from Device (Desktop/Local Files)", 
+            type=["jpg", "jpeg", "png"], 
+            key="uploader_input"
+        )
+    
+    # ----------------------------------------------------------------------
+    # END: New Input Box
+    # ----------------------------------------------------------------------
     
     # --- Logic: Determine Input and Execute Prediction ---
     input_data = None
@@ -309,24 +324,24 @@ if st.session_state.selected_plant:
         with result_col:
             # Prediction button
             if st.button(f'Diagnose {selected_plant} Leaf Now', key='diagnose_button', use_container_width=True):
-                st.session_state.analysis_run = True # Set flag to show results
+                st.session_state.analysis_run = True 
                 
                 with st.spinner(f'Running analysis for {selected_plant} leaf...'):
                     predicted_class, confidence, raw_predictions = preprocess_and_predict(
                         input_data, model, FULL_CLASS_NAMES, IMG_SIZE
                     )
 
-                # Store results for display after button click and force rerun
                 st.session_state.prediction_result = {
                     "predicted_class": predicted_class,
                     "confidence": confidence,
                     "raw_predictions": raw_predictions
                 }
                 
-                st.rerun() # Force a script rerun to update the display
+                st.rerun() 
     
     # --- Display Results if analysis_run is True and results are available ---
     if st.session_state.analysis_run and st.session_state.prediction_result:
+        # (The rest of the analysis display code remains here, unchanged)
         results = st.session_state.prediction_result
         
         # --- Diagnosis/Rejection Logic ---
@@ -339,7 +354,6 @@ if st.session_state.selected_plant:
             # Check if the prediction matches the selected plant
             plant_prefix = selected_plant.lower().split(' ')[0]
             if not predicted_class.lower().startswith(plant_prefix):
-                 # Fallback/warning if the diagnosis doesn't match the selected crop
                  st.warning(f"⚠️ The model detected an issue primarily found in other crops (e.g., '{predicted_class}'). Showing results for **{selected_plant}**.")
                  
             final_diagnosis = predicted_class
@@ -417,61 +431,4 @@ if st.session_state.selected_plant:
 # --- Initial Message if no plant is selected ---
 else:
     st.markdown("---")
-    st.info("👈 **Select a crop** from the sidebar to begin the leaf disease diagnosis. The input area will appear here.")
-
-
-# ==============================================================================
-# 9. SIDEBAR INSTRUCTIONS & NAVIGATION
-# ==============================================================================
-
-# --- Sidebar Content ---
-st.sidebar.markdown(
-    """
-    <div class="sidebar1">
-        <h3>Current Model Coverage</h3>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-# ---------- Sidebar navigation (Buttons to update state) ----------
-st.sidebar.markdown("---")
-st.sidebar.markdown(
-    """
-    <div class="sidebar2">
-        <h3>SELECT PLANT FOR PREDICTION</h3>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-for plant in ALL_PLANTS:
-    # Use st.button to trigger the set_plant function via on_click
-    is_selected = st.session_state.selected_plant == plant
-    
-    st.sidebar.button(
-        label=plant,
-        key=f"plant_btn_{plant}",
-        on_click=set_plant,
-        args=(plant,),
-        # Highlight the selected button
-        type="primary" if is_selected else "secondary", 
-        use_container_width=True
-    )
-    
-st.sidebar.markdown("---")
-st.sidebar.markdown(f"**Trained on:** {len(FULL_CLASS_NAMES)} Disease Classes")
-st.sidebar.markdown(
-    """
-    <div class="sidebar2">
-        <h3>How to Use This App</h3>
-        <ol>
-            <li>**Select a crop** from the list above.</li>
-            <li>The image input area will appear below.</li>
-            <li>Upload or take a photo of the leaf.</li>
-            <li>Click the 'Diagnose Leaf' button.</li>
-        </ol>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+    st.info("👈 **Select a crop** from the sidebar to begin the leaf disease diagnosis. The image input section will appear here.")

@@ -264,6 +264,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
 # ==============================================================================
 # 8. INPUT AND ANALYSIS SECTION (Conditional on Sidebar Selection)
 # ==============================================================================
@@ -432,3 +433,58 @@ if st.session_state.selected_plant:
 else:
     st.markdown("---")
     st.info("👈 **Select a crop** from the sidebar to begin the leaf disease diagnosis. The image input section will appear here.")
+# ==============================================================================
+# 9. SIDEBAR INSTRUCTIONS & NAVIGATION
+# ==============================================================================
+
+# --- Sidebar Content ---
+st.sidebar.markdown(
+    """
+    <div class="sidebar1">
+        <h3>Current Model Coverage</h3>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# ---------- Sidebar navigation (Buttons to update state) ----------
+st.sidebar.markdown("---")
+st.sidebar.markdown(
+    """
+    <div class="sidebar2">
+        <h3>SELECT PLANT FOR PREDICTION</h3>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+for plant in ALL_PLANTS:
+    # Use st.button to trigger the set_plant function via on_click
+    is_selected = st.session_state.selected_plant == plant
+    
+    st.sidebar.button(
+        label=plant,
+        key=f"plant_btn_{plant}",
+        on_click=set_plant,
+        args=(plant,),
+        # Highlight the selected button
+        type="primary" if is_selected else "secondary", 
+        use_container_width=True
+    )
+    
+st.sidebar.markdown("---")
+st.sidebar.markdown(f"**Trained on:** {len(FULL_CLASS_NAMES)} Disease Classes")
+st.sidebar.markdown(
+    """
+    <div class="sidebar2">
+        <h3>How to Use This App</h3>
+        <ol>
+            <li>**Select a crop** from the list above.</li>
+            <li>The image input area will appear below.</li>
+            <li>Upload or take a photo of the leaf.</li>
+            <li>Click the 'Diagnose Leaf' button.</li>
+        </ol>
+    </div>
+    """,
+    unsafe_allow_html=True
+)

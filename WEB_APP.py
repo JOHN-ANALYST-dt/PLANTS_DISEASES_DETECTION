@@ -485,7 +485,7 @@ st.sidebar.button(
     type="primary", # Makes the button stand out
     use_container_width=True
 )
-st.sidebar.markdown("---")
+
 
 # ---------- Sidebar navigation (Buttons to update state) ----------
 st.sidebar.markdown("---")

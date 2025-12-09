@@ -406,7 +406,7 @@ div[data-testid="stCameraInput"] label {
 
 /* Style for the 'New Analysis' button inside the results */
 .new-analysis-button button {
-    background-color: #28a745 !important; /* Green color */
+    background-color: #16c43f !important; /* Green color */
     color: white !important;
     border: none !important;
     font-weight: bold;

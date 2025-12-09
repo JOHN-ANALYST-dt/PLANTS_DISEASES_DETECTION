@@ -277,8 +277,8 @@ if st.session_state.selected_plant:
     # START: New Input Box (using st.container for visual grouping)
     # ----------------------------------------------------------------------
     # New code for Section 8
-with st.container(border=True): 
-    st.markdown(
+    with st.container(border=True): 
+        st.markdown(
         f"## 📸 Input for {selected_plant} Leaf Diagnosis",
         unsafe_allow_html=True
     )
@@ -426,9 +426,8 @@ with st.container(border=True):
                 'Confidence': [f"{c*100:.2f}%" for c in top_confidences]
             }
             st.dataframe(chart_data, use_container_width=True)
-
+else:
 # --- Initial Message if no plant is selected ---
-
     st.markdown("---")
     st.info("👈 **Select a crop** from the sidebar to begin the leaf disease diagnosis. The image input section will appear here.")
 # ==============================================================================

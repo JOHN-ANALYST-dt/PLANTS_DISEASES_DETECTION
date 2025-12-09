@@ -273,10 +273,9 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
 # ==============================================================================
 
 # --- UI: Title with Home Button ---
-col_title, col_home = st.columns([0.9, 0.1])
 
-with col_title:
-    st.markdown(
+
+st.markdown(
         f"""
         <div class="title-container">
             <div class="big-font">{TITLE}</div>
@@ -286,15 +285,6 @@ with col_title:
         unsafe_allow_html=True
     )
 
-with col_home:
-    st.button(
-        label="Home", 
-        key="home_button",
-        on_click=reset_app, # Use the new reset function
-        help="Go back to the main app interface and clear selections.",
-        # Inject custom class to hide label and show icon
-        use_container_width=True,
-    )
 
 # ==============================================================================
 # 8. INPUT AND ANALYSIS SECTION (Conditional on Sidebar Selection)
@@ -476,6 +466,16 @@ else:
 # 9. SIDEBAR INSTRUCTIONS & NAVIGATION
 # ==============================================================================
 
+
+st.sidebar.button(
+    label="🏠 RETURN TO HOME",
+    key="sidebar_home_button",
+    on_click=reset_app,
+    help="Click to go back to the main app interface and clear all selections.",
+    type="primary", # Makes the button stand out
+    use_container_width=True
+)
+st.sidebar.markdown("---")
 # --- Sidebar Content ---
 st.sidebar.markdown(
     """

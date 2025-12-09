@@ -276,31 +276,29 @@ if st.session_state.selected_plant:
     # ----------------------------------------------------------------------
     # START: New Input Box (using st.container for visual grouping)
     # ----------------------------------------------------------------------
+    # New code for Section 8
+with st.container(border=True): 
+    st.markdown(
+        f"## 📸 Input for {selected_plant} Leaf Diagnosis",
+        unsafe_allow_html=True
+    )
     
-    with st.container(border=True): # Setting border=True gives a nice, distinct "box" effect
-        st.markdown(
-            f"""<div class="diagnosis"> <h3>📸 Input for {selected_plant} Leaf Diagnosis</h3></div>""",
-            unsafe_allow_html=True
-        )
-        
-        st.info(f"Please use one of the two options below to submit an image of the **{selected_plant}** leaf.")
-        
-        col_cam, col_upload = st.columns(2)
-        
-        # 1. Camera Input / Mobile File Selector
-        # Adjusted label to be clearer about its dual function
-        camera_img = col_cam.camera_input(
-            f"1. Capture Photo or Select File (Best for Mobile)", 
-            key="camera_input"
-        )
-        
-        # 2. Upload File
-        uploaded_file = col_upload.file_uploader(
-            f"2. Upload File from Device (Desktop/Local Files)", 
-            type=["jpg", "jpeg", "png"], 
-            key="uploader_input"
-        )
+    st.info(f"Please use one of the two options below to submit an image of the **{selected_plant}** leaf.")
     
+    col_cam, col_upload = st.columns(2)
+    
+    # 1. Camera Input: Using a custom key and label for CSS targeting
+    camera_img = col_cam.camera_input(
+        label="Capture Photo", # Simplified label
+        key="camera_input"
+    )
+    
+    # 2. Upload File
+    uploaded_file = col_upload.file_uploader(
+        f"2. Upload File from Device (Desktop/Local Files)", 
+        type=["jpg", "jpeg", "png"], 
+        key="uploader_input"
+    )
     # ----------------------------------------------------------------------
     # END: New Input Box
     # ----------------------------------------------------------------------

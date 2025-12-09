@@ -319,4 +319,51 @@ div[data-testid="stCameraInput"] > div:first-child > button {
             font-size:bold; 
 }
 
-     
+
+/* CSS for the camera input container */
+/* Targets the div containing the camera input to change its appearance */
+div[data-testid="stCameraInput"] {
+    /* Style the outer container */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+/* Style the button/label itself */
+div[data-testid="stCameraInput"] button {
+    /* Make it look like a prominent action button */
+    background-color: #337ab7; /* Blue button color */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    /* Center the button */
+    display: block;
+    width: 100%; 
+}
+
+div[data-testid="stCameraInput"] button:hover {
+    background-color: #286090;
+}
+
+/* Hide the default camera icon that Streamlit adds inside the button, if any */
+div[data-testid="stCameraInput"] button > svg {
+    display: none;
+}
+
+/* Use the ::before pseudo-element to inject the desired camera icon */
+div[data-testid="stCameraInput"] button::before {
+    content: "📸 Initiate Camera / File Select"; /* Add the icon and new text */
+    margin-right: 5px;
+    font-size: 1.1em;
+}
+
+/* Hide the default label text that appears above the widget */
+div[data-testid="stCameraInput"] label {
+    display: none;
+}
+ 

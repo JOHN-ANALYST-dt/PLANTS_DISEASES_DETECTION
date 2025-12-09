@@ -367,3 +367,52 @@ div[data-testid="stCameraInput"] label {
     display: none;
 }
  
+
+/* Style the 'Go Home' icon button */
+.go-home-button {
+    /* Target the container of the Streamlit button */
+    display: inline-block;
+    vertical-align: top; 
+    margin-top: 10px; /* Adjust spacing next to title */
+    margin-left: 20px;
+}
+
+/* Style the button itself */
+.go-home-button button {
+    background-color: transparent !important; /* Make it invisible */
+    border: none !important;
+    color: white !important;
+    font-size: 2.0rem; /* Make the icon large */
+    padding: 0;
+    margin: 0;
+}
+
+.go-home-button button:hover {
+    color: #ffd700 !important; /* Gold hover effect */
+    background-color: transparent !important;
+}
+
+/* Hide the default button label text and use only the icon/emoji */
+.go-home-button button span {
+    display: none;
+}
+
+/* Force the emoji to appear */
+.go-home-button button::before {
+    content: "🏠";
+    font-size: 1.5em;
+    display: inline;
+}
+
+/* Style for the 'New Analysis' button inside the results */
+.new-analysis-button button {
+    background-color: #28a745 !important; /* Green color */
+    color: white !important;
+    border: none !important;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.new-analysis-button button:hover {
+    background-color: #218838 !important;
+}

@@ -55,6 +55,20 @@ FULL_CLASS_NAMES = [
     'onion downy mildew', 'onion healthy leaf', 'onion leaf blight', 'onion purple blotch','onion thrips damage'
 ]
 
+# Function to update the selected plant in session state
+def set_plant(plant_name):
+    st.session_state.selected_plant = plant_name
+    st.session_state.analysis_run = False # Reset analysis when a new plant is selected
+    st.session_state.prediction_result = None
+    
+# NEW FUNCTION: Reset the entire analysis flow
+def reset_app():
+    st.session_state.selected_plant = None
+    st.session_state.analysis_run = False
+    st.session_state.prediction_result = None
+    st.rerun() # Trigger a rerun to go back to the welcome state
+
+
 # --- Categorization for Sidebar ---
 VEGETABLE_CLASSES = ['Corn', 'Potato', 'Tomato', 'Pepper Bell', 'Soybean', 'Onion', 'Cabbage']
 FRUIT_CLASSES = ['Apple', 'Grape', 'Cherry', 'Strawberry', 'Raspberry', 'Peach', 'Orange']
@@ -254,15 +268,33 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
 # ==============================================================================
 
 # --- UI: Title ---
-st.markdown(
-    f"""
-    <div class="title-container">
-        <div class="big-font">{TITLE}</div>
-        <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
-    </div>
-    """, 
-    unsafe_allow_html=True
-)
+# ==============================================================================
+# 7. STREAMLIT APP INTERFACE (MAIN CONTENT)
+# ==============================================================================
+
+# --- UI: Title with Home Button ---
+col_title, col_home = st.columns([0.9, 0.1])
+
+with col_title:
+    st.markdown(
+        f"""
+        <div class="title-container">
+            <div class="big-font">{TITLE}</div>
+            <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
+        </div>
+        """, 
+        unsafe_allow_html=True
+    )
+
+with col_home:
+    st.button(
+        label="Home", 
+        key="home_button",
+        on_click=reset_app, # Use the new reset function
+        help="Go back to the main app interface and clear selections.",
+        # Inject custom class to hide label and show icon
+        use_container_width=True,
+    )
 
 # ==============================================================================
 # 8. INPUT AND ANALYSIS SECTION (Conditional on Sidebar Selection)
@@ -425,6 +457,16 @@ if st.session_state.selected_plant:
                 'Confidence': [f"{c*100:.2f}%" for c in top_confidences]
             }
             st.dataframe(chart_data, use_container_width=True)
+
+            # --- INSERT THE NEW REFRESHER BUTTON CODE HERE ---
+            st.button(
+                label="🚀 Start New Analysis / Choose New Plant",
+                key="new_analysis_button",
+                on_click=reset_app, 
+                help="Click here to clear the current results and select a new plant.",
+                type="secondary",
+                use_container_width=True
+            )
 
 # --- Initial Message if no plant is selected ---
 else:

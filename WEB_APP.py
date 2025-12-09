@@ -329,7 +329,9 @@ if st.session_state.selected_plant:
     # Only show analysis button if an image is provided
     if input_data is not None:
         st.markdown("---")
-        st.subheader("Image Selected for Analysis")
+        st.markdown("""<div class="analysis">
+                        <h3>Image Selected for Analysis</h3>
+                    </div>""", unsafe_allow_html=True)
         
         image_col, result_col = st.columns([1, 1])
 
@@ -472,7 +474,7 @@ st.sidebar.markdown(
     unsafe_allow_html=True
 )
 st.sidebar.button(
-    label="🏠 RETURN TO HOME",
+    label="New Analysis / Home",
     key="sidebar_home_button",
     on_click=reset_app,
     help="Click to go back to the main app interface and clear all selections.",

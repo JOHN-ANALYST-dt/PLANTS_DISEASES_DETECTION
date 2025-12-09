@@ -321,22 +321,6 @@ if input_data is not None:
 
 # --- 9. SIDEBAR INSTRUCTIONS ---
 
-st.sidebar.markdown(
-    """
-    <div class="sidebar1">
-        <h3>Current Model Coverage</h3>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-st.sidebar.markdown(
-    """
-    <div class="sidebar2">
-        <h3>SELECT PLANT FOR PREDICTION</h3>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
 
 
 # HIDE DEFAULT STREAMLIT PAGE SELECTOR
@@ -351,33 +335,6 @@ hide_pages_css = """
 import streamlit as st
 st.markdown(hide_pages_css, unsafe_allow_html=True)
 
-# Define the full list of class names (MUST match training order)
-FULL_CLASS_NAMES = [
-    'Apple Scab', 'Apple Black Rot', 'Apple Cedar Rust', 
-    'cabbage black rot','cabbage healthy','cabbage clubroot','cabbage downy mildew','cabbage leaf disease',
-    'Corn Common Rust', 'Corn Northern leaf blight', 'Corn Cercospora Leaf Spot gray leaf spot',
-    'Potato Early Blight', 'Potato Late Blight', 'potato healthy',
-    'Tomato Bacterial Spot', 'Tomato Early Blight', 'Tomato Healthy', 'Tomato late blight',
-    'Tomato leaf mold', 'Tomato septoria leaf spot', 'Tomato spider mites Two-spotted spider mite',
-    'Tomato Target Spot', 'Tomato Yellow Leaf Curl Virus', 'Tomato mosaic virus',
-    'Pepper Bell Bacterial Spot', 'Pepper Bell Healthy',
-    'Grape Black Rot', 'Grape Esca (Black Measles)', 'Grape Leaf Blight (Isariopsis Leaf Spot)', 'Grape Healthy',
-    'Cherry Powdery Mildew', 'Cherry Healthy',
-    'Strawberry Leaf Scorch', 'Strawberry Healthy',
-    'skumawiki leaf disease', 'skumawiki healthy',
-    'soybean healthy', 'soybean frog eye leaf spot', 'soybean rust', 'soybean powdery mildew',
-    'tobacco healthy leaf', 'tobacco black shank', 'tobacco leaf disease', 'tobacco mosaic virus',
-    'raspberry healthy', 'raspberry leaf spot',
-    'peach healthy', 'peach bacterial spot', 'peach leaf curl', 'peach powdery mildew', 'peach leaf curl', 'peach leaf disease',
-    'orange citrus greening', 'orange leaf curl', 'orange leaf disease', 'orange leaf spot',
-    'onion downy mildew', 'onion healthy leaf', 'onion leaf blight', 'onion purple blotch','onion thrips damage'
-]
-
-# --- Categorization for Tabbed View ---
-#as ordered HTML lists ---
-
-
-# ---------- Sidebar navigation ----------
 
 
 # --- SIDEBAR INSTRUCTIONS ---

@@ -10,39 +10,48 @@ import os
 import pathlib
 import base64
 import time
-# Assuming 'intervention.py' and 'style.css' exist in the same directory
+# Assuming 'intervention.py' exists in the same directory
 from intervention import get_interventions 
 
-# --- 1. CONFIGURATION ---
+# ==============================================================================
+# 1. CONFIGURATION & CONSTANTS
+# ==============================================================================
 
 # Base directory setup
 BASE_DIR = pathlib.Path(__file__).parent 
 
-# Construct the full path to the model
+# Paths and Files
 MODEL_PATH = os.path.join(BASE_DIR, 'CABBAGE_mobileNet_model7.h5')
+BACKGROUND_IMAGE_PATH = os.path.join(BASE_DIR, 'vege2.jpeg') 
+CSS_PATH = os.path.join(BASE_DIR, 'style.css')
+
+# Model Parameters
 REJECTION_THRESHOLD = 0.50 # 50% confidence minimum
 IMG_SIZE = (248, 248) # Model input size
+CABBAGE_CLASS_NAMES = [
+    'cabbage healthy leaf',
+    'cabbage black rot',
+    'cabbage clubroot',
+    'cabbage downy mildew',
+    'cabbage black leg (phoma lingam)'
+]
+
+# App Display
 TITLE = "AgroVision AI: Cabbage Leaf Detector"
-IMAGE_SIZE=(124,124)
-BACKGROUND_IMAGE_PATH = './vege2.jpeg' 
-CSS_PLACEHOLDER = "BACKGROUND_IMAGE_PLACEHOLDER"
-
-# --- 2. STREAMLIT PAGE CONFIG ---
-st.set_page_config(page_title=TITLE, layout="centered")
 
 
+# ==============================================================================
+# 2. UTILITY FUNCTIONS
+# ==============================================================================
 
-
-# --- 3. UTILITY FUNCTIONS (Inlined for simplicity) ---
 def encode_image_to_base64(path):
     """Reads a local image and encodes it to a Base64 Data URL string."""
     if not os.path.exists(path):
-        st.error(f"Background image file not found at expected path: {path}. Using solid background.")
+        # st.error(f"Background image file not found at expected path: {path}. Using solid background.")
         return "none"
         
     try:
         ext = os.path.splitext(path)[1].lower()
-        # Assumes the user provided a JPEG, but checks file extension
         mime_type = "image/jpeg" if ext in ('.jpg', '.jpeg') else "image/png"
         
         with open(path, "rb") as f:
@@ -52,43 +61,19 @@ def encode_image_to_base64(path):
         return f"data:{mime_type};base64,{encoded_string}"
         
     except Exception as e:
-        st.error(f"Error during image encoding: {e}")
+        # st.error(f"Error during image encoding: {e}")
         return "none"
 
-
-
-img_base64_url = encode_image_to_base64(BACKGROUND_IMAGE_PATH)
-
-# 4.2. Inject Styles Immediately After Page Config
-#inject_custom_css("style.css", img_base64_url)
-#'cabbage black rot','cabbage healthy','cabbage clubroot','cabbage downy mildew','cabbage leaf disease',
-
-CABBAGE_CLASS_NAMES = [
-    'cabbage healthy leaf',
-    'cabbage black rot',
-    'cabbage clubroot',
-    'cabbage downy mildew',
-    'cabbage black leg (phoma lingam)'
-    # Note: Adjust these names if your actual model uses different labels 
-]
-
-# --- CSS INJECTION (Assuming style.css exists) ---
 def inject_custom_css(file_path):
     """Reads a local CSS file and injects it into the Streamlit app."""
     try:
-        # Check if the file path is relative and adjust if necessary
-        abs_path = os.path.join(BASE_DIR, file_path)
-        with open(abs_path) as f:
+        with open(file_path) as f:
             st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
     except FileNotFoundError:
         st.warning(f"CSS file not found at path: {file_path}. Using default Streamlit styling.")
     except Exception as e:
         st.error(f"Error injecting CSS: {e}")
 
-inject_custom_css("style.css")
-
-
-# --- 3. LOAD MODEL ---
 @st.cache_resource
 def load_trained_model(path):
     """Loads the model from the .h5 file."""
@@ -100,9 +85,6 @@ def load_trained_model(path):
         st.error(f"Error loading model: Could not load model at '{path}'. Error: {e}")
         return None
 
-model = load_trained_model(MODEL_PATH)
-
-# --- 4. PREDICTION FUNCTION ---
 def preprocess_and_predict(img_data, model, class_names, img_size):
     """
     Preprocesses the image data and returns the prediction result dictionary.
@@ -112,41 +94,31 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
         return {"status": "error", "diagnosis": "Model Not Available", "message": "The AI model failed to load."}
 
     try:
-        # Handle different input types (file_uploader, camera_input)
-        if isinstance(img_data, io.BytesIO):
-            img = Image.open(img_data).convert('RGB')
-        elif isinstance(img_data, Image.Image):
+        # --- Image Loading and Resizing ---
+        if isinstance(img_data, Image.Image):
             img = img_data
-        elif hasattr(img_data, 'getvalue'): # Handle Streamlit uploaded file object
+        elif hasattr(img_data, 'getvalue'): # Streamlit uploaded file object
             img = Image.open(io.BytesIO(img_data.getvalue())).convert('RGB')
         else:
             raise ValueError("Invalid image input type")
 
-        # Resize to the model's expected input size
         img = img.resize(img_size)
         
-        # Convert PIL Image to Numpy array
+        # --- Preprocessing ---
         img_array = image.img_to_array(img)
-        
-        # Expand dimensions to match the input shape (1, H, W, 3)
-        img_array = np.expand_dims(img_array, axis=0)
-        
-        # Apply MobileNetV2-specific preprocessing: Normalization to [-1, 1]
-        img_array = mobilenet_preprocess(img_array)
+        img_array = np.expand_dims(img_array, axis=0) # Add batch dimension (1, H, W, 3)
+        img_array = mobilenet_preprocess(img_array) # MobileNetV2 normalization [-1, 1]
 
-        # Make prediction
+        # --- Prediction ---
         predictions = model.predict(img_array)[0]
-        
-        # Get the predicted class index and confidence
         predicted_index = np.argmax(predictions)
         confidence = predictions[predicted_index]
         predicted_class = class_names[predicted_index]
         
         
-        # --- HEALTH PROMPT AND REJECTION LOGIC ---
+        # --- RESULT LOGIC ---
         
-        # 1. Check for Low Confidence/Rejection
-
+        # 1. Low Confidence/Rejection Logic
         if confidence < REJECTION_THRESHOLD:
             return {
                 "status": "inconclusive", 
@@ -160,7 +132,7 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
                 "raw_predictions": predictions
             }
         
-        # 2. Check for Healthy Leaf (MANDATORY REQUEST)
+        # 2. Healthy Leaf
         elif 'healthy' in predicted_class.lower():
             return {
                 "status": "healthy",
@@ -187,12 +159,21 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
             }
 
     except Exception as e:
-        st.exception(e)
-        return {"status": "error", "diagnosis": "Processing Error", "message": f"An unexpected error occurred: {e}"}
+        # st.exception(e) # Keep this in a real app for detailed debugging
+        return {"status": "error", "diagnosis": "Processing Error", "message": f"An unexpected error occurred during image processing."}
 
 
-# --- 5. STREAMLIT APP INTERFACE ---
+# ==============================================================================
+# 3. APP EXECUTION START
+# ==============================================================================
 
+# --- Setup ---
+st.set_page_config(page_title=TITLE, layout="centered")
+inject_custom_css(CSS_PATH) # Inject CSS immediately
+model = load_trained_model(MODEL_PATH)
+
+
+# --- UI: Title and Info ---
 st.markdown(
     f"""
     <div class="title-container">
@@ -203,42 +184,32 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+st.info("This application is specialized for detecting the following **Cabbage** issues: " + ', '.join([c.replace('cabbage ', '') for c in CABBAGE_CLASS_NAMES]))
 
-
-st.info("This application is specialized for detecting the following **Cabbage** issues: " + ', '.join(CABBAGE_CLASS_NAMES))
-
-# Simplified Input Section (Camera and Uploader)
+# --- UI: Input Section ---
 st.markdown("### 📸 Image Input")
 st.warning("For best results, take a clear photo of the *affected area* of a single leaf, or upload a high-quality image.")
 
 col_cam, col_upload = st.columns(2)
+camera_img = col_cam.camera_input("1. Take a Photo of the Leaf")
+uploaded_file = col_upload.file_uploader("2. Upload an Image from Device", type=["jpg", "jpeg", "png"])
 
-with col_cam:
-    # Camera Input (for mobile button functionality)
-    camera_img = st.camera_input("1. Take a Photo of the Leaf")
-
-with col_upload:
-    # File Uploader Input
-    uploaded_file = st.file_uploader("2. Upload an Image from Device", type=["jpg", "jpeg", "png"])
-
-# 6. EXECUTION AND RESULTS DISPLAY
+# --- Logic: Determine Input and Execute Prediction ---
 input_data = None
-# Determine which input was used
 if camera_img is not None:
     # Convert camera input to PIL Image immediately for consistent handling
     input_data = Image.open(camera_img) 
 elif uploaded_file is not None:
     input_data = uploaded_file
 
-# Check if an image is provided
 if input_data is not None:
     st.markdown("---")
     st.subheader("Image Selected for Analysis")
     
-    # Use a container to display image and prediction side-by-side or stacked
     image_col, result_col = st.columns([1, 1])
 
     with image_col:
+        # Display the image once input is ready
         st.image(input_data, caption='Ready for analysis.', use_column_width=True)
     
     with result_col:
@@ -251,11 +222,10 @@ if input_data is not None:
             st.markdown("### 🔬 Diagnosis Result")
             
             # --- Displaying Results based on Status ---
-            
             if results["status"] == "healthy":
                 st.success(f"**Status:** {results['class']}")
                 st.balloons()
-                st.markdown(f"**Confidence:** {results['confidence']*100:.2f}%")
+                # Simplified HTML structure for the healthy message
                 st.markdown(
                     f"""
                     <div class="healthy-prompt">
@@ -264,13 +234,11 @@ if input_data is not None:
                     </div>
                     """, unsafe_allow_html=True
                 )
-                
             elif results["status"] == "warning":
                 st.error(f"**Disease Detected:** {results['class']}")
-                st.markdown(f"**Confidence:** {results['confidence']*100:.2f}%")
                 
-                # Intervention Box
-                intervention_data = get_interventions(results['class']) # Use the full class name
+                # Fetch and display interventions
+                intervention_data = get_interventions(results['class']) 
                 st.markdown(
                     f"""
                     <div class="intervention-box">
@@ -278,28 +246,23 @@ if input_data is not None:
                             ⚠️ Immediate Action Required
                         </div>
                         <p class="mb-2">{results['message']}</p>
-                        <h4 class='text-lg font-bold text-red-700 mt-3'>Recommended Treatment:</h4>
-                        <p>{intervention_data['title']}</p>
+                        <h4 class='text-lg font-bold text-red-700 mt-3'>Recommended Treatment ({intervention_data['title']}):</h4>
                     </div>
                     """, unsafe_allow_html=True
                 )
-                
-                # Display actions in a structured, numbered list
+                # Display actions in a structured list
                 for i, action in enumerate(intervention_data['action']):
                     st.markdown(f"**{i+1}.** {action}")
 
             elif results["status"] == "inconclusive":
                 st.warning(f"**Status:** {results['diagnosis']}")
-                st.markdown(f"**Confidence:** {results['confidence']*100:.2f}%")
                 st.info(results['message'])
-
-            elif results["status"] == "error":
-                st.exception(results['message'])
 
             # --- Display Top Predictions (for all non-error results) ---
             if results["status"] != "error":
                 st.markdown("---")
                 st.markdown("### 📊 Top Prediction Scores")
+                st.markdown(f"**Confidence:** {results['confidence']*100:.2f}% (for **{results['class']}**)")
                 
                 raw_predictions = results['raw_predictions']
                 
@@ -308,103 +271,23 @@ if input_data is not None:
                 class_scores.sort(key=lambda x: x[1], reverse=True)
                 
                 top_n = 5
-                top_classes = [score[0] for score in class_scores[:top_n]]
-                top_confidences = [score[1] for score in class_scores[:top_n]]
-
                 chart_data = {
-                    'Class': top_classes, 
-                    'Confidence': [f"{c*100:.2f}%" for c in top_confidences]
+                    'Class': [score[0] for score in class_scores[:top_n]], 
+                    'Confidence': [f"{score[1]*100:.2f}%" for score in class_scores[:top_n]]
                 }
                 
                 st.dataframe(chart_data, use_container_width=True)
 
 
-# --- 9. SIDEBAR INSTRUCTIONS ---
+# ==============================================================================
+# 4. SIDEBAR AND FOOTER (Optional/Navigation)
+# ==============================================================================
 
-st.sidebar.markdown(
-    """
-    <div class="sidebar1">
-        <h3>Current Model Coverage</h3>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-st.sidebar.markdown(
-    """
-    <div class="sidebar2">
-        <h3>SELECT PLANT FOR PREDICTION</h3>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-
-# HIDE DEFAULT STREAMLIT PAGE SELECTOR
-hide_pages_css = """
-<style>
-/* Hide the default Streamlit page selector (sidebar pages menu) */
-[data-testid="stSidebarNav"] ul {
-    display: none !important;
-}
-</style>
-"""
-import streamlit as st
-st.markdown(hide_pages_css, unsafe_allow_html=True)
-
-# Define the full list of class names (MUST match training order)
-FULL_CLASS_NAMES = [
-    'Apple Scab', 'Apple Black Rot', 'Apple Cedar Rust', 
-    'cabbage black rot','cabbage healthy','cabbage clubroot','cabbage downy mildew','cabbage leaf disease',
-    'Corn Common Rust', 'Corn Northern leaf blight', 'Corn Cercospora Leaf Spot gray leaf spot',
-    'Potato Early Blight', 'Potato Late Blight', 'potato healthy',
-    'Tomato Bacterial Spot', 'Tomato Early Blight', 'Tomato Healthy', 'Tomato late blight',
-    'Tomato leaf mold', 'Tomato septoria leaf spot', 'Tomato spider mites Two-spotted spider mite',
-    'Tomato Target Spot', 'Tomato Yellow Leaf Curl Virus', 'Tomato mosaic virus',
-    'Pepper Bell Bacterial Spot', 'Pepper Bell Healthy',
-    'Grape Black Rot', 'Grape Esca (Black Measles)', 'Grape Leaf Blight (Isariopsis Leaf Spot)', 'Grape Healthy',
-    'Cherry Powdery Mildew', 'Cherry Healthy',
-    'Strawberry Leaf Scorch', 'Strawberry Healthy',
-    'skumawiki leaf disease', 'skumawiki healthy',
-    'soybean healthy', 'soybean frog eye leaf spot', 'soybean rust', 'soybean powdery mildew',
-    'tobacco healthy leaf', 'tobacco black shank', 'tobacco leaf disease', 'tobacco mosaic virus',
-    'raspberry healthy', 'raspberry leaf spot',
-    'peach healthy', 'peach bacterial spot', 'peach leaf curl', 'peach powdery mildew', 'peach leaf curl', 'peach leaf disease',
-    'orange citrus greening', 'orange leaf curl', 'orange leaf disease', 'orange leaf spot',
-    'onion downy mildew', 'onion healthy leaf', 'onion leaf blight', 'onion purple blotch','onion thrips damage'
-]
-
-# --- Categorization for Tabbed View ---
-VEGETABLE_CLASSES = ['Corn', 'Potatoe', 'Tomato', 'Pepper', 'soybean', 'skumawiki', 'onion', 'Cabbage']
-FRUIT_CLASSES = ['Apple', 'Grape', 'Cherry', 'Strawberry', 'Raspberry', 'Peach', 'Orange']
-    
-# --- Display as ordered HTML lists ---
-vegetable_html = "<h3>Vegetables</h3><ol>"
-for veg in VEGETABLE_CLASSES:
-    vegetable_html += f"<li>{veg}</li>"
-vegetable_html += "</ol>"
-
-fruit_html = "<h3>Fruits</h3><ol>"
-for fruit in FRUIT_CLASSES:
-    fruit_html += f"<li>{fruit}</li>"
-fruit_html += "</ol>"
-
-
-# ---------- Sidebar navigation ----------
-for plant in VEGETABLE_CLASSES + FRUIT_CLASSES:
-    page_name = plant.lower().replace(" ", "_") + ".py"  # ex: corn.py, apple.py
-    st.sidebar.markdown(
-        f"""<a class="plant-btn" href="/{plant.lower().replace(" ", "_")}">
-        {plant}"/;.
-        </a>""",
-        unsafe_allow_html=True
-    )
-
-
-# --- SIDEBAR INSTRUCTIONS ---
+# --- Sidebar Content ---
 st.sidebar.markdown(
     """
     <div class="sidebar-header">
-        <h3>Cabbage Detection Status</h3>
+        <h3>Cabbage Detector Settings</h3>
     </div>
     """,
     unsafe_allow_html=True
@@ -415,3 +298,21 @@ st.sidebar.markdown(f"**Minimum Confidence (Threshold):** {REJECTION_THRESHOLD*1
 st.sidebar.markdown(f"**Model Input Size:** {IMG_SIZE[0]}x{IMG_SIZE[1]} pixels")
 st.sidebar.markdown("---")
 st.sidebar.markdown("For assistance, upload a clear image or use the camera to focus on the symptoms.")
+
+
+# --- Hiding default Streamlit pages/menu ---
+hide_pages_css = """
+<style>
+/* Hide the default Streamlit page selector (sidebar pages menu) */
+[data-testid="stSidebarNav"] ul {
+    display: none !important;
+}
+</style>
+"""
+st.markdown(hide_pages_css, unsafe_allow_html=True)
+
+
+# --- Placeholder for Navigation/Full Model Scope (Removed unnecessary logic) ---
+# The complex HTML rendering for the full list of plants and the full class names array 
+# are typically handled by a main dashboard file or simplified for a single-page app.
+# Keeping the sidebar navigation to 'Cabbage' status for this specific app file.

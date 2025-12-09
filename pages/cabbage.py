@@ -73,6 +73,7 @@ def inject_custom_css(file_path):
         st.warning(f"CSS file not found at path: {file_path}. Using default Streamlit styling.")
     except Exception as e:
         st.error(f"Error injecting CSS: {e}")
+inject_custom_css("style.css")         
 
 @st.cache_resource
 def load_trained_model(path):
@@ -292,6 +293,7 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 st.sidebar.markdown(f"**Current Coverage:** {', '.join([c.replace('cabbage ', '') for c in CABBAGE_CLASS_NAMES])}")
 st.sidebar.markdown(f"**Minimum Confidence (Threshold):** {REJECTION_THRESHOLD*100:.0f}%")

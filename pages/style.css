@@ -1,0 +1,322 @@
+
+/* Link Font Awesome for the stethoscope icon */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+
+/* ---------------------------------------------------- */
+/* Global Centering and Layout Customization */
+.stApp {
+    margin: 0 auto !important;
+    max-width: 1200px; /* Adjust as needed */
+    
+}
+
+
+/* Title Background (BACKGROUND PICTURE OF A PLANTS OF VEGETABLES) */
+[data-testid="stVerticalBlock"] > div:nth-child(1) {
+   
+    background-size: cover;
+    background-position: center;
+    padding: 100px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    color: white;
+}
+
+/* Font Styling (Ensure contrast against background) */
+.title-container{
+     background: linear-gradient(
+            rgba(20, 70, 30, 0.65), 
+            rgba(85, 60, 30, 0.65)
+        ), 
+        url('./vege2.jpeg');
+        
+        background-size: cover;
+        background-position: center;
+        padding: 40px;
+        border-radius: 12px;
+        text-align: center;
+        font-family: 'Segoe UI', sans-serif;
+        margin-bottom: 25px;
+
+        /* Smooth shadow */
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+.big-font {
+    font-size: 36px !important;
+    font-weight: 900;
+    color: white; /* White for contrast */
+    text-shadow: 2px 2px 4px #000000;
+}
+.subheader-font {
+    font-size: 24px !important;
+    color: #C8E6C9; /* Lighter green for subheader */
+    margin-bottom: 0px;
+    text-shadow: 1px 1px 2px #000000;
+}
+
+/* Responsive Diagnose Button */
+button[data-testid="baseButton-secondary"] {
+    width: 100%;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 15px 10px;
+    background-color: #008080; 
+    color: white;
+    border: none;
+    transition: 0.3s;
+}
+button[data-testid="baseButton-secondary"]:hover {
+    background-color: #4CAF50;
+}
+
+/* Camera Input Styling (Icon Look) */
+div[data-testid="stCameraInput"] > label {
+    display: none !important;
+    color:white;
+    align-items: center;
+}
+div[data-testid="stCameraInput"] > div:first-child > button {
+    background-color: #f4a261;
+    color: white;
+    padding: 10px 20px;
+    font-size: 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    display: block; 
+    width: 100%;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* ---------------------------------------------------- */
+/* NEW INTERVENTION SECTION STYLES */
+/* ---------------------------------------------------- */
+
+.intervention-box {
+    border: 2px solid #008080; /* Teal border */
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    background-color: #f7fff7; /* Very light green background */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.intervention-title {
+    /* Colorful Gradient Background */
+    background: linear-gradient(90deg, #18981d, #4caf50); 
+    color: white; /* White text for contrast */
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+}
+
+.intervention-title i {
+    margin-right: 12px;
+    font-size: 1.5em;
+    color: #FFD166; /* Gold icon color for pop */
+}
+
+/* Ensure the titles inside the box are clear */
+.intervention-box h4 {
+    color: white !important;
+}
+
+
+
+/* Add a link to Font Awesome for the icon */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+
+/* Styling for the Intervention Section Container */
+.intervention-box {
+    border: 2px solid #008080; /* Teal border */
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    background-color: #f7fff7; /* Very light green background */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Stylish header acting as an "Intervention Button" visual prompt */
+.intervention-title {
+    /* Colorful Gradient Background */
+    background: linear-gradient(90deg, #18981d, #4caf50); 
+    color: white; /* White text for contrast */
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+}
+
+.intervention-title i {
+    margin-right: 12px;
+    font-size: 1.5em;
+    color: #FFD166; /* Gold icon color for pop */
+}
+
+.text-white {
+    color: white !important; 
+   
+}
+.sidebar2-instruction-box {
+    background-color: #e0f7fa; /* Light cyan background */
+    border-left: 5px solid #008080; /* Teal left border */
+    padding: 10px 15px;
+    margin-top: 15px;
+    border-radius: 5px;
+    
+}
+
+ .sidebar1 {
+            
+            padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin-bottom: 15px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            position: absolute;
+            margin-right: 10px;
+    
+        }
+
+        .sidebar1 h3 {
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+            color:white;
+            font-size:bold;
+
+        }
+        .sidebar2 {
+            background: linear-gradient(135deg, #456a8a, #2e4c63);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-family: 'Segoe UI', sans-serif;
+}
+.sidebar2 h3 {
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+            color:white;
+            font-size:bold;
+}
+.plant-btn {
+    display: block;
+    width: 100%;
+    padding: 12px 18px;
+    margin-bottom: 12px;
+    font-size: 16px;
+    text-align: center;
+    color: white !important;
+    background: linear-gradient(135deg, green, #4f6e8d);
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.plant-btn:hover {
+    background: linear-gradient(135deg, #5ba5a5, #6da1d1);
+    transform: scale(1.03);
+    border-color: #ffffffaa;
+}
+.diagnosis{
+           padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin-bottom: 15px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            position: absolute;
+            margin-right: 10px;
+}
+.diagnosis h3{
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+            color:white;
+            font-size:bold;
+}
+.analysis{
+            background: linear-gradient(135deg, #456a8a, #2e4c63);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-family: 'Segoe UI', sans-serif;
+}
+.analysis h3{
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+            color:white;
+            font-size:bold;
+}
+.confid{
+         padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin-bottom: 15px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            position: absolute;
+            margin-right: 5px;
+
+}
+.confid h3{
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+            color:white;
+            font-size:bold;   
+}
+.selector{
+            padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            margin-bottom: 15px;
+            backdrop-filter: blur(9px);
+            -webkit-backdrop-filter: blur(9px);
+            position: absolute;
+            margin-left: 34%;
+}
+.selector h3{
+            font-size: 20px;
+            margin: 0;
+            font-weight: 600;
+            color:white;
+            font-size:bold; 
+}
+
+     

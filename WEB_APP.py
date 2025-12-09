@@ -467,15 +467,7 @@ else:
 # ==============================================================================
 
 
-st.sidebar.button(
-    label="🏠 RETURN TO HOME",
-    key="sidebar_home_button",
-    on_click=reset_app,
-    help="Click to go back to the main app interface and clear all selections.",
-    type="primary", # Makes the button stand out
-    use_container_width=True
-)
-st.sidebar.markdown("---")
+
 # --- Sidebar Content ---
 st.sidebar.markdown(
     """
@@ -485,6 +477,15 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True
 )
+st.sidebar.button(
+    label="🏠 RETURN TO HOME",
+    key="sidebar_home_button",
+    on_click=reset_app,
+    help="Click to go back to the main app interface and clear all selections.",
+    type="primary", # Makes the button stand out
+    use_container_width=True
+)
+st.sidebar.markdown("---")
 
 # ---------- Sidebar navigation (Buttons to update state) ----------
 st.sidebar.markdown("---")

@@ -374,21 +374,10 @@ FULL_CLASS_NAMES = [
 ]
 
 # --- Categorization for Tabbed View ---
-VEGETABLE_CLASSES = ['Corn', 'Potatoe', 'Tomato', 'Pepper', 'soybean', 'skumawiki', 'onion', 'Cabbage']
-FRUIT_CLASSES = ['Apple', 'Grape', 'Cherry', 'Strawberry', 'Raspberry', 'Peach', 'Orange']
-    
-# --- Display as ordered HTML lists ---
+#as ordered HTML lists ---
 
 
 # ---------- Sidebar navigation ----------
-for plant in VEGETABLE_CLASSES + FRUIT_CLASSES:
-    page_name = plant.lower().replace(" ", "_") + ".py"  # ex: corn.py, apple.py
-    st.sidebar.markdown(
-        f"""<a class="plant-btn" href="/{plant.lower().replace(" ", "_")}">
-        {plant}"/;.
-        </a>""",
-        unsafe_allow_html=True
-    )
 
 
 # --- SIDEBAR INSTRUCTIONS ---

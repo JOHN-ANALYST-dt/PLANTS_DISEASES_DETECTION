@@ -179,29 +179,33 @@ inject_custom_css(CSS_PATH, img_base64_url)
 
 
 # ==============================================================================
-# 5. LOAD MODEL
+# 5. LOAD MODEL (FIXED LOGIC)
 # ==============================================================================
 @st.cache_resource
 def load_trained_model(path):
     """Loads the model from the .h5 file or simulates a load."""
     time.sleep(1) # Simulate loading time
-    # Check if the model file actually exists
-    if not os.path.exists(path) or path.endswith('mobileNet_model2.h5'):
-        st.warning(f"Using **mock model** for demonstration as '{os.path.basename(path)}' is not fully loaded/available.")
+    
+    # Check if the model file actually exists (FIXED)
+    if not os.path.exists(path):
+        st.error(f"Model file not found at path: {path}")
+        st.warning("Using **mock model** for demonstration.")
         return "DummyModel"
     
     try:
         model = load_model(path)
+        st.success("✅ Machine Learning Model Loaded Successfully!")
         return model
     except Exception as e:
         st.error(f"Error loading model: {e}")
+        st.warning("Using **mock model** for demonstration.")
         return "DummyModel"
 
 model = load_trained_model(MODEL_PATH)
 
 
 # ==============================================================================
-# 6. PREDICTION FUNCTION
+# 6. PREDICTION FUNCTION (FIXED EXCEPTION RETURN)
 # ==============================================================================
 def preprocess_and_predict(img_data, model, class_names, img_size):
     """
@@ -244,8 +248,10 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
             img = Image.open(img_data).convert('RGB')
         elif isinstance(img_data, Image.Image):
             img = img_data
+        elif hasattr(img_data, 'getvalue'): # For Streamlit uploaded file object
+            img = Image.open(img_data).convert('RGB')
         else:
-            raise ValueError("Invalid image input type")
+             raise ValueError("Invalid image input type")
 
         img = img.resize(img_size)
         img_array = image.img_to_array(img)
@@ -260,14 +266,14 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
         return predicted_class, confidence, predictions
     except Exception as e:
         st.error(f"Prediction failed: {e}")
-        return "Prediction Error", 0.0, None
+        # CRITICAL FIX: Return a zero-filled numpy array for the third value 
+        # to ensure the prediction unpacking and subsequent zip() operations succeed.
+        return "Prediction Error", 0.0, np.zeros(len(class_names))
 
 
 # ==============================================================================
 # 7. STREAMLIT APP INTERFACE (MAIN CONTENT)
 # ==============================================================================
-
-
 
 
 st.markdown(
@@ -290,7 +296,7 @@ if st.session_state.selected_plant:
     selected_plant = st.session_state.selected_plant
     st.markdown("---") 
     
-   
+    
     # This entire block MUST be indented under the 'if' condition
     # ----------------------------------------------------------------------
     with st.container(border=True): 
@@ -328,7 +334,7 @@ if st.session_state.selected_plant:
         
     # Only show analysis button if an image is provided
     if input_data is not None:
-       
+        st.markdown("---")
         st.markdown("""<div class="analysis">
                         <h3>Image Selected for Analysis</h3>
                     </div>""", unsafe_allow_html=True)
@@ -344,6 +350,7 @@ if st.session_state.selected_plant:
                 st.session_state.analysis_run = True 
                 
                 with st.spinner(f'Running analysis for {selected_plant} leaf...'):
+                    # The unpacking line is here. The fix ensures 3 values are always returned.
                     predicted_class, confidence, raw_predictions = preprocess_and_predict(
                         input_data, model, FULL_CLASS_NAMES, IMG_SIZE
                     )
@@ -355,7 +362,6 @@ if st.session_state.selected_plant:
                 }
                 
                 st.rerun() 
-    # ----------------------------------------------------------------------               
     
     # --- Display Results if analysis_run is True and results are available ---
     if st.session_state.analysis_run and st.session_state.prediction_result:

@@ -11,7 +11,6 @@ import base64
 import time
 
 # Assuming 'intervention.py' exists in the same directory
-# NOTE: Ensure this file is available in your environment.
 from intervention import get_interventions
 
 # ==============================================================================
@@ -24,7 +23,8 @@ BASE_DIR = pathlib.Path(__file__).parent
 # Paths and Constants
 MODEL_PATH = os.path.join(BASE_DIR, "inceptionv3_model2.h5")
 REJECTION_THRESHOLD = 0.50
-IMG_SIZE = (124, 124) 
+# FIX ML ERROR: Change from (124, 124) to (128, 128) based on your error message
+IMG_SIZE = (128, 128) 
 
 TITLE = "AgroVision AI : Crop Disease Detector"
 
@@ -189,7 +189,7 @@ div[data-testid*="diagnose_button"] button {
     background-color: #2ecc71 !important; /* Bright Neon Green */
     color: white !important; 
     font-size: 1.5em !important; /* Extremely large text */
-    padding: 20px 35px !important; /* Large padding */
+    padding: 15px 25px !important; /* FIXED: Reduced padding to prevent column overflow */
     border-radius: 15px !important; 
     border: 5px solid #27ae60 !important; /* Thicker, darker border */
     font-weight: 900 !important; 
@@ -326,7 +326,8 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
 
         return predicted_class, confidence, predictions
     except Exception as e:
-        st.error(f"Prediction failed: {e}")
+        # This will now hopefully display the error clearly *above* the button
+        st.error(f"Prediction failed: Exception encountered when calling Sequential.call(). Error: {e}")
         # Ensures a NumPy array is returned for unpacking
         return "Prediction Error", 0.0, np.zeros(len(class_names))
 
@@ -405,10 +406,8 @@ if st.session_state.selected_plant:
             st.image(input_data, caption=f'{selected_plant} Leaf Ready for Analysis.', use_column_width=True)
             
         with result_col:
-            # --- START: Added spacing to ensure button visibility ---
+            # Added spacing to ensure the button is visible below the image/other elements
             st.markdown("<br>", unsafe_allow_html=True)
-            st.markdown("<br>", unsafe_allow_html=True)
-            # --- END: Added spacing ---
             
             # Prediction button (Styled to look like a Markdown Block)
             if st.button(f'Diagnose {selected_plant} Leaf Now', key='diagnose_button', use_container_width=True):

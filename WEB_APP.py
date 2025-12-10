@@ -583,6 +583,15 @@ if st.session_state.selected_plant:
 
 # --- Initial Message if no plant is selected (The New Home Page) ---
 else:
+    st.markdown(
+    """
+    <div class="custom-info-box">
+        👈 <strong>Select a crop</strong> from the sidebar to begin the leaf disease diagnosis.
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
     # 1. Marketing Banner (Top Text)
     st.markdown(
         f"""
@@ -641,9 +650,7 @@ else:
         """
     )
 
-    st.markdown("---")
-    st.info("👈 **Select a crop** from the sidebar to begin the leaf disease diagnosis.")
-
+  
 
 # ==============================================================================
 # 9. SIDEBAR INSTRUCTIONS & NAVIGATION

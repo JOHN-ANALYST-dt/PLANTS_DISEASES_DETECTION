@@ -173,6 +173,15 @@ def inject_custom_css(file_path, base64_url):
         st.error(f"Error injecting CSS: {e}")
 
 
+#my css
+def load_css():
+    with open("style.css") as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+load_css()
+
+
+
 # --- 4. BACKGROUND IMAGE & CSS INJECTION ---
 img_base64_url = encode_image_to_base64(BACKGROUND_IMAGE_PATH)
 inject_custom_css(CSS_PATH, img_base64_url)

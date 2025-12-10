@@ -349,7 +349,7 @@ div[data-testid="stCameraInput"] label {
  
 
 /* Style the 'Go Home' icon button */
-.go-home-button {
+#go-home-button {
     /* Target the container of the Streamlit button */
     display: inline-block;
     vertical-align: top; 
@@ -358,7 +358,7 @@ div[data-testid="stCameraInput"] label {
 }
 
 /* Style the button itself */
-.go-home-button button {
+#go-home-button button {
     background-color: transparent !important; /* Make it invisible */
     border: none !important;
     color: white !important;
@@ -367,25 +367,25 @@ div[data-testid="stCameraInput"] label {
     margin: 0;
 }
 
-.go-home-button button:hover {
+#go-home-button button:hover {
     color: #ffd700 !important; /* Gold hover effect */
     background-color: transparent !important;
 }
 
 /* Hide the default button label text and use only the icon/emoji */
-.go-home-button button span {
+#go-home-button button span {
     display: none;
 }
 
 /* Force the emoji to appear */
-.go-home-button button::before {
+#go-home-button button::before {
     content: "🏠";
     font-size: 1.5em;
     display: inline;
 }
 
 /* Style for the 'New Analysis' button inside the results */
-.new-analysis-button button {
+#new-analysis-button button {
     background-color: #16c43f !important; /* Green color */
     color: white !important;
     border: none !important;
@@ -393,12 +393,12 @@ div[data-testid="stCameraInput"] label {
     margin-top: 15px;
 }
 
-.new-analysis-button button:hover {
+#new-analysis-button button:hover {
     background-color: #218838 !important;
 }
 
 
-.styled-leaf-image img {
+#styled-leaf-image img {
         border-radius: 15px;      /* Rounded corners */
         border: 3px solid #4caf50; /* Plant-green border */
         box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25); /* Soft shadow */
@@ -406,7 +406,7 @@ div[data-testid="stCameraInput"] label {
     }
 
     /* Hover effect */
-    .styled-leaf-image img:hover {
+    #styled-leaf-image img:hover {
         transform: scale(1.03);   /* Slight zoom */
         border-color: #66bb6a;     /* Lighter green hover */
         box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.35);
@@ -414,7 +414,7 @@ div[data-testid="stCameraInput"] label {
 /* Diagnose Button Styling */
 #diagnose_button button {
     background: linear-gradient(135deg, #4CAF50, #2E7D32); /* Plant green */
-    color: white !important;
+    color:black !important;
     font-size: 18px;
     font-weight: 600;
     padding: 14px 20px;

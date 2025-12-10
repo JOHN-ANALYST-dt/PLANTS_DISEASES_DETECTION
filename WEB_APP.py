@@ -179,38 +179,61 @@ inject_custom_css(CSS_PATH, img_base64_url)
 
 
 # ==============================================================================
-# 4.2. CUSTOM CSS for Diagnose Button AND Image Caption Styling (FIXED)
+# 4.2. CUSTOM CSS for Diagnose Button AND Image Caption Styling (FINAL FIX)
 # ==============================================================================
 st.markdown("""
 <style>
-/* --- 1. STYLING FOR THE DIAGNOSE BUTTON (Strong Blue) --- */
+/* --- 1. STYLING FOR THE DIAGNOSE BUTTON ('diagnose_button') - STYLED AS MARKDOWN BLOCK --- */
 div[data-testid*="diagnose_button"] button {
-    background-color: #007bff !important; /* Strong Blue for Action */
+    /* Use !important on every property to force override */
+    background-color: #2ecc71 !important; /* Bright Neon Green */
     color: white !important; 
-    font-size: 1.3em !important; 
-    padding: 18px 35px !important; 
+    font-size: 1.5em !important; /* Extremely large text */
+    padding: 20px 35px !important; /* Large padding */
     border-radius: 15px !important; 
-    border: 4px solid #0056b3 !important; 
+    border: 5px solid #27ae60 !important; /* Thicker, darker border */
     font-weight: 900 !important; 
-    letter-spacing: 1px; 
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5) !important;
-    transition: all 0.2s ease;
+    letter-spacing: 2px !important; 
+    text-transform: uppercase !important; /* Key change to look like Markdown Header */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6) !important;
+    transition: all 0.2s ease !important;
 }
 
 div[data-testid*="diagnose_button"] button:hover {
-    background-color: #0056b3 !important; 
-    border-color: #004085 !important;
+    background-color: #27ae60 !important; /* Darker green on hover */
+    border-color: #1e8449 !important;
 }
 
-/* --- 2. STYLING FOR THE IMAGE CAPTION (Bright Gold) --- */
+/* --- 2. STYLING FOR THE IMAGE CAPTION ('... Leaf Ready for Analysis.') --- */
 div[data-testid="stImageCaption"] {
-    /* Center the caption text */
+    /* Use !important on every property to force override */
     text-align: center !important; 
-    /* Aggressive color/style change for visibility */
     color: #ffd700 !important; /* Bright Gold */
-    font-size: 1.2em !important; 
+    font-size: 1.5em !important; 
     font-weight: bold !important;
-    padding-top: 10px;
+    padding: 15px 0 !important; 
+    margin-top: 10px !important;
+    background-color: rgba(50, 50, 50, 0.6) !important; 
+    border-radius: 5px !important;
+}
+
+/* --- 3. STYLING FOR THE NEW ANALYSIS BUTTON ('new_analysis_button') --- */
+div[data-testid*="new_analysis_button"] button {
+    /* Use !important on every property to force override */
+    background-color: #1abc9c !important; /* Turquoise/Teal for secondary action */
+    color: white !important;
+    font-size: 1.1em !important;
+    padding: 12px 25px !important;
+    border-radius: 8px !important;
+    border: 2px solid #16a085 !important;
+    font-weight: bold !important;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.2s ease !important;
+}
+
+div[data-testid*="new_analysis_button"] button:hover {
+    background-color: #16a085 !important;
+    border-color: #117864 !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -379,11 +402,10 @@ if st.session_state.selected_plant:
         image_col, result_col = st.columns([1, 1])
 
         with image_col:
-            # THIS LINE NOW USES THE STYLED CAPTION
             st.image(input_data, caption=f'{selected_plant} Leaf Ready for Analysis.', use_column_width=True)
             
         with result_col:
-            # Prediction button
+            # Prediction button (Styled to look like a Markdown Block)
             if st.button(f'Diagnose {selected_plant} Leaf Now', key='diagnose_button', use_container_width=True):
                 st.session_state.analysis_run = True 
                 
@@ -497,6 +519,7 @@ if st.session_state.selected_plant:
                  st.info("No detailed prediction scores are available due to an error or uncertainty.")
 
             # --- INSERT THE NEW REFRESHER BUTTON CODE HERE ---
+            # This button is now styled by 'new_analysis_button' CSS
             st.button(
                 label="🚀 Start New Analysis / Choose New Plant",
                 key="new_analysis_button",
@@ -525,6 +548,7 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True
 )
+# This button is now styled by the default Streamlit theme, but its type is 'primary'
 st.sidebar.button(
     label="New Analysis / Home",
     key="sidebar_home_button",

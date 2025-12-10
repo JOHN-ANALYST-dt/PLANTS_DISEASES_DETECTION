@@ -412,7 +412,7 @@ div[data-testid="stCameraInput"] label {
         box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.35);
     }
 /* Diagnose Button Styling */
-#diagnose_button button {
+#diagnose_button  {
     background: linear-gradient(135deg, #4CAF50, #2E7D32); /* Plant green */
     color:black !important;
     font-size: 18px;
@@ -427,13 +427,13 @@ div[data-testid="stCameraInput"] label {
 }
 
 /* Hover effect */
-#diagnose_button button:hover {
+#diagnose_button:hover {
     background: linear-gradient(135deg, #66BB6A, #43A047);
     transform: scale(1.03);
     box-shadow: 0 6px 14px rgba(0, 128, 0, 0.35);
 }
 
 /* Active (click) effect */
-#diagnose_button button:active {
+#diagnose_button:active {
     transform: scale(0.98);
 }

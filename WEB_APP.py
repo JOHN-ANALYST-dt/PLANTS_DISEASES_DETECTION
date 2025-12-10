@@ -199,6 +199,10 @@ div[data-testid*="diagnose_button"] button {
     transition: all 0.2s ease !important;
 }
 
+div[data-testid*="diagnose_button"] button:hover {
+    background-color: #27ae60 !important; /* Darker green on hover */
+    border-color: #1e8449 !important;
+}
 
 /* --- 2. STYLING FOR THE IMAGE CAPTION ('... Leaf Ready for Analysis.') --- */
 div[data-testid="stImageCaption"] {
@@ -209,6 +213,7 @@ div[data-testid="stImageCaption"] {
     font-weight: bold !important;
     padding: 15px 0 !important; 
     margin-top: 10px !important;
+    background-color: rgba(50, 50, 50, 0.6) !important; 
     border-radius: 5px !important;
 }
 
@@ -400,8 +405,12 @@ if st.session_state.selected_plant:
             st.image(input_data, caption=f'{selected_plant} Leaf Ready for Analysis.', use_column_width=True)
             
         with result_col:
+            # --- START: Added spacing to ensure button visibility ---
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown("<br>", unsafe_allow_html=True)
+            # --- END: Added spacing ---
+            
             # Prediction button (Styled to look like a Markdown Block)
-            # THIS LINE IS CORRECTED FROM THE ERROR MESSAGE:
             if st.button(f'Diagnose {selected_plant} Leaf Now', key='diagnose_button', use_container_width=True):
                 st.session_state.analysis_run = True 
                 

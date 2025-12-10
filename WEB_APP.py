@@ -387,7 +387,7 @@ if st.session_state.selected_plant:
                     "raw_predictions": raw_predictions
                 }
                 
-                st.rerun() 
+            
     
     # --- Display Results if analysis_run is True and results are available ---
     if st.session_state.analysis_run and st.session_state.prediction_result:

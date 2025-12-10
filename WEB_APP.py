@@ -23,7 +23,7 @@ BASE_DIR = pathlib.Path(__file__).parent
 # Paths and Constants
 MODEL_PATH = os.path.join(BASE_DIR, "inceptionv3_model2.h5")
 REJECTION_THRESHOLD = 0.50
-# FIX ML ERROR: Change from (124, 124) to (128, 128) based on your error message
+# FIXED ML ERROR: Set to (128, 128) as per model requirements
 IMG_SIZE = (128, 128) 
 
 TITLE = "AgroVision AI : Crop Disease Detector"
@@ -136,10 +136,22 @@ def inject_custom_css(file_path, base64_url):
     """
     Reads local CSS, replaces the placeholder with the Base64 URL, 
     and injects the final styles into the Streamlit app.
+    
+    MODIFIED: Removes background from main content and applies it to the sidebar.
     """
-    # Consolidated background image injection logic 
     img_base64_css = f"""
+    /* 1. REMOVE background from main content area (stVerticalBlock) */
     [data-testid="stVerticalBlock"] > div:nth-child(1) {{
+        background-image: none !important;
+        background-color: transparent !important;
+        /* Revert to default padding/color for main content */
+        padding: 0 !important;
+        margin-bottom: 0 !important;
+        color: inherit !important; 
+    }}
+    
+    /* 2. APPLY background image to the entire sidebar (top to bottom) */
+    [data-testid="stSidebar"] > div:first-child {{
         background-image: 
             linear-gradient(
                 rgba(20, 70, 30, 0.8),
@@ -147,11 +159,18 @@ def inject_custom_css(file_path, base64_url):
             ),
             url("{base64_url}"); /* Use the encoded image */
         background-size: cover;
+        background-attachment: fixed; /* Makes it look nice when scrolling */
         background-position: center;
-        padding: 40px 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
+    }}
+    
+    /* 3. Ensure sidebar content (text, buttons, etc.) is readable over the dark image */
+    [data-testid="stSidebar"] * {{
         color: white;
+    }}
+    
+    /* Ensure the main title container looks correct now that the main background is gone */
+    .title-container {{
+        background: transparent !important;
     }}
     """
     
@@ -159,7 +178,6 @@ def inject_custom_css(file_path, base64_url):
         with open(file_path) as f:
             css_content = f.read()
             # If the original style.css contains a placeholder, replace it. 
-            # Otherwise, just append the background image CSS.
             if CSS_PLACEHOLDER in css_content:
                 final_css = css_content.replace(CSS_PLACEHOLDER, base64_url) + img_base64_css
             else:
@@ -173,22 +191,13 @@ def inject_custom_css(file_path, base64_url):
         st.error(f"Error injecting CSS: {e}")
 
 
-#my css
-def load_css():
-    with open("style.css") as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-
-load_css()
-
-
-
 # --- 4. BACKGROUND IMAGE & CSS INJECTION ---
 img_base64_url = encode_image_to_base64(BACKGROUND_IMAGE_PATH)
 inject_custom_css(CSS_PATH, img_base64_url)
 
 
 # ==============================================================================
-# 4.2. CUSTOM CSS for Diagnose Button AND Image Caption Styling (FINAL FIX)
+# 4.2. CUSTOM CSS for Diagnose Button AND Image Caption Styling (REDUCED PADDING FIX)
 # ==============================================================================
 st.markdown("""
 <style>

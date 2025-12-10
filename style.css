@@ -411,3 +411,29 @@ div[data-testid="stCameraInput"] label {
         border-color: #66bb6a;     /* Lighter green hover */
         box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.35);
     }
+/* Diagnose Button Styling */
+#diagnose_button button {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32); /* Plant green */
+    color: white !important;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 14px 20px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 128, 0, 0.25);
+    transition: all 0.25s ease-in-out;
+}
+
+/* Hover effect */
+#diagnose_button button:hover {
+    background: linear-gradient(135deg, #66BB6A, #43A047);
+    transform: scale(1.03);
+    box-shadow: 0 6px 14px rgba(0, 128, 0, 0.35);
+}
+
+/* Active (click) effect */
+#diagnose_button button:active {
+    transform: scale(0.98);
+}

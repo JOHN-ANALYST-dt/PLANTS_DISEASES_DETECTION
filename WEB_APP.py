@@ -179,27 +179,29 @@ inject_custom_css(CSS_PATH, img_base64_url)
 
 
 # ==============================================================================
-# 4.2. CUSTOM CSS for Diagnose Button Styling (FIXED AND STYLED)
+# 4.2. CUSTOM CSS for Diagnose Button Styling (FINAL, AGGRESSIVE STYLING)
 # ==============================================================================
 st.markdown("""
 <style>
-/* Target the container of the button by its key */
+/* FIX: Use a highly specific selector and distinct color (Blue) 
+    to ensure the style overrides all defaults.
+*/
 div[data-testid*="diagnose_button"] button {
-    /* Strong green background for agriculture theme */
-    background-color: #28a745 !important; 
-    /* White text for contrast */
+    background-color: #007bff !important; /* Strong Blue for Action */
     color: white !important; 
-    /* Larger font and padding for visibility */
-    font-size: 1.1em !important; 
-    padding: 10px 20px !important;
-    border-radius: 8px !important;
-    border: 2px solid #1e7e34 !important; /* Darker border */
-    font-weight: bold;
+    font-size: 1.3em !important; /* Very large text */
+    padding: 18px 35px !important; /* Large padding */
+    border-radius: 15px !important; /* Rounded corners */
+    border: 4px solid #0056b3 !important; /* Thicker, darker border */
+    font-weight: 900 !important; /* Extra bold */
+    letter-spacing: 1px; /* Spacing out the text */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5) !important; /* Strong shadow */
+    transition: all 0.2s ease;
 }
-/* Ensure hover state keeps text white and darkens the background */
+
 div[data-testid*="diagnose_button"] button:hover {
-    background-color: #1e7e34 !important; 
-    color: white !important;
+    background-color: #0056b3 !important; /* Darker Blue on hover */
+    border-color: #004085 !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -232,7 +234,7 @@ model = load_trained_model(MODEL_PATH)
 
 
 # ==============================================================================
-# 6. PREDICTION FUNCTION (PREVIOUS ERROR FIX RETAINED)
+# 6. PREDICTION FUNCTION
 # ==============================================================================
 def preprocess_and_predict(img_data, model, class_names, img_size):
     """
@@ -293,7 +295,7 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
         return predicted_class, confidence, predictions
     except Exception as e:
         st.error(f"Prediction failed: {e}")
-        # Retaining the fix: ensures a NumPy array is returned for unpacking
+        # Ensures a NumPy array is returned for unpacking
         return "Prediction Error", 0.0, np.zeros(len(class_names))
 
 
@@ -314,7 +316,7 @@ st.markdown(
 
 
 # ==============================================================================
-# 8. INPUT AND ANALYSIS SECTION (Conditional on Sidebar Selection)
+# 8. INPUT AND ANALYSIS SECTION
 # ==============================================================================
 
 if st.session_state.selected_plant:
@@ -387,7 +389,7 @@ if st.session_state.selected_plant:
                     "raw_predictions": raw_predictions
                 }
                 
-            
+                # Removed st.rerun() in the previous step to fix the warning.
     
     # --- Display Results if analysis_run is True and results are available ---
     if st.session_state.analysis_run and st.session_state.prediction_result:
@@ -399,6 +401,8 @@ if st.session_state.selected_plant:
 
         if confidence < REJECTION_THRESHOLD:
             final_diagnosis = "Uncertain Prediction - Please try again with a clearer image."
+        elif predicted_class == "Prediction Error":
+            final_diagnosis = "Prediction Error - Model could not process image."
         else:
             # Check if the prediction matches the selected plant
             plant_prefix = selected_plant.lower().split(' ')[0]
@@ -426,7 +430,7 @@ if st.session_state.selected_plant:
             if 'Healthy' in final_diagnosis:
                 st.success(f"**Status:** {final_diagnosis}")
                 st.balloons()
-            elif 'Uncertain' in final_diagnosis:
+            elif 'Uncertain' in final_diagnosis or 'Error' in final_diagnosis:
                 st.warning(f"**Status:** {final_diagnosis}")
             else:
                 st.error(f"**Disease Detected:** {final_diagnosis}")
@@ -457,25 +461,30 @@ if st.session_state.selected_plant:
             
             # --- CRITICAL CHANGE: Filter Scores by Selected Plant ---
             raw_predictions = results['raw_predictions']
-            class_scores = list(zip(FULL_CLASS_NAMES, raw_predictions))
-            plant_prefix = selected_plant.lower().split(' ')[0] 
             
-            # Filter scores to only include classes relevant to the selected plant (e.g., 'cabbage black rot' for 'Cabbage')
-            filtered_scores = [
-                (c, s) for c, s in class_scores if c.lower().startswith(plant_prefix)
-            ]
-            
-            filtered_scores.sort(key=lambda x: x[1], reverse=True)
-            
-            top_n = 5
-            top_classes = [score[0] for score in filtered_scores[:top_n]]
-            top_confidences = [score[1] for score in filtered_scores[:top_n]]
+            # Only proceed with sorting/display if raw_predictions is a valid numpy array (not None or 0s from error)
+            if raw_predictions is not None and np.any(raw_predictions):
+                class_scores = list(zip(FULL_CLASS_NAMES, raw_predictions))
+                plant_prefix = selected_plant.lower().split(' ')[0] 
+                
+                # Filter scores to only include classes relevant to the selected plant (e.g., 'cabbage black rot' for 'Cabbage')
+                filtered_scores = [
+                    (c, s) for c, s in class_scores if c.lower().startswith(plant_prefix)
+                ]
+                
+                filtered_scores.sort(key=lambda x: x[1], reverse=True)
+                
+                top_n = 5
+                top_classes = [score[0] for score in filtered_scores[:top_n]]
+                top_confidences = [score[1] for score in filtered_scores[:top_n]]
 
-            chart_data = {
-                'Class': top_classes, 
-                'Confidence': [f"{c*100:.2f}%" for c in top_confidences]
-            }
-            st.dataframe(chart_data, use_container_width=True)
+                chart_data = {
+                    'Class': top_classes, 
+                    'Confidence': [f"{c*100:.2f}%" for c in top_confidences]
+                }
+                st.dataframe(chart_data, use_container_width=True)
+            else:
+                 st.info("No detailed prediction scores are available due to an error or uncertainty.")
 
             # --- INSERT THE NEW REFRESHER BUTTON CODE HERE ---
             st.button(

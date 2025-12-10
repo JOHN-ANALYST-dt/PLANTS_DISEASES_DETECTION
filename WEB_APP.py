@@ -179,14 +179,41 @@ inject_custom_css(CSS_PATH, img_base64_url)
 
 
 # ==============================================================================
-# 5. LOAD MODEL (FIXED LOGIC)
+# 4.2. CUSTOM CSS for Diagnose Button Styling (FIXED AND STYLED)
+# ==============================================================================
+st.markdown("""
+<style>
+/* Target the container of the button by its key */
+div[data-testid*="diagnose_button"] button {
+    /* Strong green background for agriculture theme */
+    background-color: #28a745 !important; 
+    /* White text for contrast */
+    color: white !important; 
+    /* Larger font and padding for visibility */
+    font-size: 1.1em !important; 
+    padding: 10px 20px !important;
+    border-radius: 8px !important;
+    border: 2px solid #1e7e34 !important; /* Darker border */
+    font-weight: bold;
+}
+/* Ensure hover state keeps text white and darkens the background */
+div[data-testid*="diagnose_button"] button:hover {
+    background-color: #1e7e34 !important; 
+    color: white !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+# ==============================================================================
+# 5. LOAD MODEL
 # ==============================================================================
 @st.cache_resource
 def load_trained_model(path):
     """Loads the model from the .h5 file or simulates a load."""
     time.sleep(1) # Simulate loading time
     
-    # Check if the model file actually exists (FIXED)
+    # Check if the model file actually exists
     if not os.path.exists(path):
         st.error(f"Model file not found at path: {path}")
         st.warning("Using **mock model** for demonstration.")
@@ -205,7 +232,7 @@ model = load_trained_model(MODEL_PATH)
 
 
 # ==============================================================================
-# 6. PREDICTION FUNCTION (FIXED EXCEPTION RETURN)
+# 6. PREDICTION FUNCTION (PREVIOUS ERROR FIX RETAINED)
 # ==============================================================================
 def preprocess_and_predict(img_data, model, class_names, img_size):
     """
@@ -266,8 +293,7 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
         return predicted_class, confidence, predictions
     except Exception as e:
         st.error(f"Prediction failed: {e}")
-        # CRITICAL FIX: Return a zero-filled numpy array for the third value 
-        # to ensure the prediction unpacking and subsequent zip() operations succeed.
+        # Retaining the fix: ensures a NumPy array is returned for unpacking
         return "Prediction Error", 0.0, np.zeros(len(class_names))
 
 

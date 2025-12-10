@@ -226,11 +226,12 @@ div[data-testid*="diagnose_button"] button:hover {
 div[data-testid="stImageCaption"] {
     /* Use !important on every property to force override */
     text-align: center !important; 
-    color: #ffd700 !important; /* Bright Gold */
+    color: green !important; /* Bright Gold */
     font-size: 1.5em !important; 
     font-weight: bold !important;
     padding: 15px 0 !important; 
-    margin-top: 10px !important;
+    margin-top: 5px !important;
+    margin-right:10px !important;
     background-color: rgba(50, 50, 50, 0.6) !important; 
     border-radius: 5px !important;
 }

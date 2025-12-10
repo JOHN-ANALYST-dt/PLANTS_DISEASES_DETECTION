@@ -406,7 +406,7 @@ if st.session_state.selected_plant:
             
         with result_col:
             # Prediction button (Styled to look like a Markdown Block)
-            if st.button(input_data,caption=f'Diagnose {selected_plant} Leaf Now', key='diagnose_button', use_container_width=True):
+            if st.button(input_data,caption=f'Diagnose {selected_plant} Leaf Now',  use_container_width=True):
                 st.session_state.analysis_run = True 
                 
                 with st.spinner(f'Running analysis for {selected_plant} leaf...'):

@@ -179,29 +179,38 @@ inject_custom_css(CSS_PATH, img_base64_url)
 
 
 # ==============================================================================
-# 4.2. CUSTOM CSS for Diagnose Button Styling (FINAL, AGGRESSIVE STYLING)
+# 4.2. CUSTOM CSS for Diagnose Button AND Image Caption Styling (FIXED)
 # ==============================================================================
 st.markdown("""
 <style>
-/* FIX: Use a highly specific selector and distinct color (Blue) 
-    to ensure the style overrides all defaults.
-*/
+/* --- 1. STYLING FOR THE DIAGNOSE BUTTON (Strong Blue) --- */
 div[data-testid*="diagnose_button"] button {
     background-color: #007bff !important; /* Strong Blue for Action */
     color: white !important; 
-    font-size: 1.3em !important; /* Very large text */
-    padding: 18px 35px !important; /* Large padding */
-    border-radius: 15px !important; /* Rounded corners */
-    border: 4px solid #0056b3 !important; /* Thicker, darker border */
-    font-weight: 900 !important; /* Extra bold */
-    letter-spacing: 1px; /* Spacing out the text */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5) !important; /* Strong shadow */
+    font-size: 1.3em !important; 
+    padding: 18px 35px !important; 
+    border-radius: 15px !important; 
+    border: 4px solid #0056b3 !important; 
+    font-weight: 900 !important; 
+    letter-spacing: 1px; 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5) !important;
     transition: all 0.2s ease;
 }
 
 div[data-testid*="diagnose_button"] button:hover {
-    background-color: #0056b3 !important; /* Darker Blue on hover */
+    background-color: #0056b3 !important; 
     border-color: #004085 !important;
+}
+
+/* --- 2. STYLING FOR THE IMAGE CAPTION (Bright Gold) --- */
+div[data-testid="stImageCaption"] {
+    /* Center the caption text */
+    text-align: center !important; 
+    /* Aggressive color/style change for visibility */
+    color: #ffd700 !important; /* Bright Gold */
+    font-size: 1.2em !important; 
+    font-weight: bold !important;
+    padding-top: 10px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -370,6 +379,7 @@ if st.session_state.selected_plant:
         image_col, result_col = st.columns([1, 1])
 
         with image_col:
+            # THIS LINE NOW USES THE STYLED CAPTION
             st.image(input_data, caption=f'{selected_plant} Leaf Ready for Analysis.', use_column_width=True)
             
         with result_col:
@@ -389,7 +399,7 @@ if st.session_state.selected_plant:
                     "raw_predictions": raw_predictions
                 }
                 
-                
+                # State change automatically triggers rerun.
     
     # --- Display Results if analysis_run is True and results are available ---
     if st.session_state.analysis_run and st.session_state.prediction_result:

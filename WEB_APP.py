@@ -197,49 +197,45 @@ inject_custom_css(CSS_PATH, img_base64_url)
 
 
 # ==============================================================================
-# 4.2. CUSTOM CSS for Diagnose Button AND Image Caption Styling (REDUCED PADDING FIX)
+# 4.2. CUSTOM CSS for Buttons, Captions, and HOME PAGE Marketing Block
 # ==============================================================================
 st.markdown("""
 <style>
-/* --- 1. STYLING FOR THE DIAGNOSE BUTTON ('diagnose_button') - STYLED AS MARKDOWN BLOCK --- */
+/* --- 1. STYLING FOR THE DIAGNOSE BUTTON ('diagnose_button') - FIXED PADDING --- */
 div[data-testid*="diagnose_button"] button {
-    /* Use !important on every property to force override */
-    background-color: #2ecc71 !important; /* Bright Neon Green */
+    background-color: #2ecc71 !important; 
     color: white !important; 
-    font-size: 1.5em !important; /* Extremely large text */
-    padding: 15px 25px !important; /* FIXED: Reduced padding to prevent column overflow */
+    font-size: 1.5em !important; 
+    padding: 15px 25px !important; /* Reduced padding for visibility */
     border-radius: 15px !important; 
-    border: 5px solid #27ae60 !important; /* Thicker, darker border */
+    border: 5px solid #27ae60 !important; 
     font-weight: 900 !important; 
     letter-spacing: 2px !important; 
-    text-transform: uppercase !important; /* Key change to look like Markdown Header */
+    text-transform: uppercase !important; 
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6) !important;
     transition: all 0.2s ease !important;
 }
 
 div[data-testid*="diagnose_button"] button:hover {
-    background-color: #27ae60 !important; /* Darker green on hover */
+    background-color: #27ae60 !important; 
     border-color: #1e8449 !important;
 }
 
-/* --- 2. STYLING FOR THE IMAGE CAPTION ('... Leaf Ready for Analysis.') --- */
+/* --- 2. STYLING FOR THE IMAGE CAPTION --- */
 div[data-testid="stImageCaption"] {
-    /* Use !important on every property to force override */
     text-align: center !important; 
-    color: green !important; /* Bright Gold */
+    color: #ffd700 !important; 
     font-size: 1.5em !important; 
     font-weight: bold !important;
     padding: 15px 0 !important; 
-    margin-top: 5px !important;
-    margin-right:10px !important;
+    margin-top: 10px !important;
     background-color: rgba(50, 50, 50, 0.6) !important; 
     border-radius: 5px !important;
 }
 
 /* --- 3. STYLING FOR THE NEW ANALYSIS BUTTON ('new_analysis_button') --- */
 div[data-testid*="new_analysis_button"] button {
-    /* Use !important on every property to force override */
-    background-color: #1abc9c !important; /* Turquoise/Teal for secondary action */
+    background-color: #1abc9c !important; 
     color: white !important;
     font-size: 1.1em !important;
     padding: 12px 25px !important;
@@ -254,6 +250,39 @@ div[data-testid*="new_analysis_button"] button:hover {
     background-color: #16a085 !important;
     border-color: #117864 !important;
 }
+
+/* --- 4. NEW: STYLING FOR THE HOME PAGE MARKETING BLOCK --- */
+.home-marketing-box {
+    background-color: rgba(39, 174, 96, 0.1); /* Light green tint */
+    border: 2px solid #2ecc71; /* Green border */
+    border-radius: 10px;
+    padding: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.home-marketing-box h2 {
+    color: #2ecc71; /* Green title */
+    font-weight: 700;
+    text-align: center;
+}
+.metric-item {
+    text-align: center;
+    padding: 10px;
+}
+.metric-item h4 {
+    margin: 0;
+    color: #3498db; /* Blue for the number/title */
+    font-size: 1.8em;
+    font-weight: 900;
+}
+.metric-item p {
+    margin: 5px 0 0;
+    color: #555;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -552,10 +581,70 @@ if st.session_state.selected_plant:
                 use_container_width=True
             )
 
-# --- Initial Message if no plant is selected ---
+# --- Initial Message if no plant is selected (The New Home Page) ---
 else:
+    # 1. Marketing Banner (Top Text)
+    st.markdown(
+        f"""
+        <div class="home-marketing-box">
+            <h2>Protect Your Crops with Intelligent Disease Detection</h2>
+            <p style='font-size:1.2em; text-align:center;'>
+                Upload a leaf image and get instant AI diagnosis for 60+ crop diseases. 
+                Learn treatment strategies and protect your harvest.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    # 2. Metric Icons (using columns)
+    col_diseases, col_plants, col_accuracy = st.columns(3)
+    
+    total_classes = len(FULL_CLASS_NAMES)
+    total_plants = len(ALL_PLANTS)
+    
+    with col_diseases:
+        st.markdown(f"""
+            <div class='metric-item'>
+                <p style='font-size: 2.5em; margin: 0;'>🦠</p>
+                <h4>{total_classes}+</h4>
+                <p>Disease Classes</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+    with col_plants:
+        st.markdown(f"""
+            <div class='metric-item'>
+                <p style='font-size: 2.5em; margin: 0;'>🌿</p>
+                <h4>{total_plants}</h4>
+                <p>Crop Types Covered</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+    with col_accuracy:
+        st.markdown(f"""
+            <div class='metric-item'>
+                <p style='font-size: 2.5em; margin: 0;'>🎯</p>
+                <h4>90%+</h4>
+                <p>Prediction Accuracy</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
     st.markdown("---")
-    st.info("👈 **Select a crop** from the sidebar to begin the leaf disease diagnosis. The image input section will appear here.")
+    
+    # 3. Footer Markdown 
+    st.markdown(
+        """
+        ### Protecting Your Harvest
+        Understanding plant diseases is the first step to healthier crops and better yields. 
+        Our AI-powered platform helps farmers identify and treat diseases early.
+        """
+    )
+
+    st.markdown("---")
+    st.info("👈 **Select a crop** from the sidebar to begin the leaf disease diagnosis.")
+
+
 # ==============================================================================
 # 9. SIDEBAR INSTRUCTIONS & NAVIGATION
 # ==============================================================================

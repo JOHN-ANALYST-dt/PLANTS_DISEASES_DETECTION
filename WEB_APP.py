@@ -22,7 +22,6 @@ from intervention import get_interventions
 BASE_DIR = pathlib.Path(__file__).parent 
 
 # Paths and Constants
-# Ensure 'inceptionv3_model2.h5' is correctly placed relative to this script
 MODEL_PATH = os.path.join(BASE_DIR, "inceptionv3_model2.h5")
 REJECTION_THRESHOLD = 0.50
 IMG_SIZE = (124, 124) 
@@ -56,6 +55,20 @@ FULL_CLASS_NAMES = [
     'onion downy mildew', 'onion healthy leaf', 'onion leaf blight', 'onion purple blotch','onion thrips damage'
 ]
 
+# Function to update the selected plant in session state
+def set_plant(plant_name):
+    st.session_state.selected_plant = plant_name
+    st.session_state.analysis_run = False # Reset analysis when a new plant is selected
+    st.session_state.prediction_result = None
+    
+# NEW FUNCTION: Reset the entire analysis flow
+def reset_app():
+    st.session_state.selected_plant = None
+    st.session_state.analysis_run = False
+    st.session_state.prediction_result = None
+    st.rerun() # Trigger a rerun to go back to the welcome state
+
+
 # --- Categorization for Sidebar ---
 VEGETABLE_CLASSES = ['Corn', 'Potato', 'Tomato', 'Pepper Bell', 'Soybean', 'Onion', 'Cabbage']
 FRUIT_CLASSES = ['Apple', 'Grape', 'Cherry', 'Strawberry', 'Raspberry', 'Peach', 'Orange']
@@ -83,33 +96,6 @@ def set_plant(plant_name):
     st.session_state.analysis_run = False # Reset analysis when a new plant is selected
     st.session_state.prediction_result = None
     
-# NEW FUNCTION: Reset the entire analysis flow
-def reset_app():
-    st.session_state.selected_plant = None
-    st.session_state.analysis_run = False
-    st.session_state.prediction_result = None
-    st.rerun() # Trigger a rerun to go back to the welcome state
-
-# CRITICAL: Define the run_diagnosis function for the on_click handler
-def run_diagnosis(input_data, model, class_names, img_size):
-    selected_plant = st.session_state.selected_plant
-    
-    # Run the prediction
-    # st.spinner is intentionally omitted here as it doesn't show reliably in on_click handlers
-    predicted_class, confidence, raw_predictions = preprocess_and_predict(
-        input_data, model, class_names, img_size
-    )
-    
-    # Save results to session state
-    st.session_state.prediction_result = {
-        "predicted_class": predicted_class,
-        "confidence": confidence,
-        "raw_predictions": raw_predictions
-    }
-    st.session_state.analysis_run = True 
-    # Streamlit handles the rerun automatically after the on_click finishes.
-
-
 # --- 2.3. HIDE DEFAULT STREAMLIT PAGE SELECTOR ---
 hide_pages_css = """
 <style>
@@ -187,54 +173,28 @@ def inject_custom_css(file_path, base64_url):
         st.error(f"Error injecting CSS: {e}")
 
 
-# ==============================================================================
-# 4. CUSTOM CSS INJECTION
-# ==============================================================================
-
-# --- 4.1. IMAGE ENCODING & CSS INJECTION ---
+# --- 4. BACKGROUND IMAGE & CSS INJECTION ---
 img_base64_url = encode_image_to_base64(BACKGROUND_IMAGE_PATH)
 inject_custom_css(CSS_PATH, img_base64_url)
 
-# --- 4.2. CUSTOM CSS for Diagnose Button Text Color ---
-st.markdown("""
-<style>
-/* Target the button based on its key='diagnose_button' */
-/* Ensure the button text is white on default and hover states */
-div[data-testid*="diagnose_button"] button {
-    color: white !important; 
-    background-color: #007bff; /* Keep a primary look */
-}
-
-div[data-testid*="diagnose_button"] button:hover {
-    color: white !important; 
-    /* Streamlit handles the hover color change for background */
-}
-</style>
-""", unsafe_allow_html=True)
-
 
 # ==============================================================================
-# 5. LOAD MODEL (FIXED LOGIC)
+# 5. LOAD MODEL
 # ==============================================================================
 @st.cache_resource
 def load_trained_model(path):
     """Loads the model from the .h5 file or simulates a load."""
     time.sleep(1) # Simulate loading time
-    
-    # Check if the model file actually exists (CRITICAL FIX)
-    if not os.path.exists(path):
-        st.error(f"Model file not found at path: {path}")
-        st.warning("Using **mock model** for demonstration.")
+    # Check if the model file actually exists
+    if not os.path.exists(path) or path.endswith('mobileNet_model2.h5'):
+        st.warning(f"Using **mock model** for demonstration as '{os.path.basename(path)}' is not fully loaded/available.")
         return "DummyModel"
     
     try:
         model = load_model(path)
-        st.success("✅ Machine Learning Model Loaded Successfully!")
         return model
     except Exception as e:
-        # If file exists but is corrupted or not a valid Keras model
-        st.error(f"Error loading model '{os.path.basename(path)}': {e}")
-        st.warning("Using **mock model** for demonstration.")
+        st.error(f"Error loading model: {e}")
         return "DummyModel"
 
 model = load_trained_model(MODEL_PATH)
@@ -284,8 +244,6 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
             img = Image.open(img_data).convert('RGB')
         elif isinstance(img_data, Image.Image):
             img = img_data
-        elif hasattr(img_data, 'getvalue'): # For Streamlit uploaded file object
-            img = Image.open(img_data).convert('RGB')
         else:
             raise ValueError("Invalid image input type")
 
@@ -302,22 +260,25 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
         return predicted_class, confidence, predictions
     except Exception as e:
         st.error(f"Prediction failed: {e}")
-        return "Prediction Error", 0.0, np.zeros(len(class_names)) # Return mock array to prevent errors
+        return "Prediction Error", 0.0, None
 
 
 # ==============================================================================
 # 7. STREAMLIT APP INTERFACE (MAIN CONTENT)
 # ==============================================================================
 
+
+
+
 st.markdown(
-    f"""
-    <div class="title-container">
-        <div class="big-font">{TITLE}</div>
-        <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
-    </div>
-    """, 
-    unsafe_allow_html=True
-)
+        f"""
+        <div class="title-container">
+            <div class="big-font">{TITLE}</div>
+            <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
+        </div>
+        """, 
+        unsafe_allow_html=True
+    )
 
 
 # ==============================================================================
@@ -325,10 +286,13 @@ st.markdown(
 # ==============================================================================
 
 if st.session_state.selected_plant:
+    # This assignment runs only when a plant is selected
     selected_plant = st.session_state.selected_plant
     st.markdown("---") 
     
-    
+   
+    # This entire block MUST be indented under the 'if' condition
+    # ----------------------------------------------------------------------
     with st.container(border=True): 
         st.markdown(
             f"""<div class="diagnosis"> <h3>📸 Input for {selected_plant} Leaf Diagnosis</h3></div>""",
@@ -339,9 +303,9 @@ if st.session_state.selected_plant:
         
         col_cam, col_upload = st.columns(2)
         
-        # 1. Camera Input
+        # 1. Camera Input: Using a custom key and label for CSS targeting
         camera_img = col_cam.camera_input(
-            label="Capture Photo", 
+            label="Capture Photo", # Simplified label
             key="camera_input"
         )
         
@@ -351,14 +315,23 @@ if st.session_state.selected_plant:
             type=["jpg", "jpeg", "png"], 
             key="uploader_input"
         )
-
-    # --- Logic: Determine Input Data from Camera or Uploader ---
+    # ----------------------------------------------------------------------
+    # END: New Input Box
+    # ----------------------------------------------------------------------
+    
+    # --- Logic: Determine Input and Execute Prediction ---
     input_data = None
     if camera_img is not None:
-        # For camera input, streamilt provides a BytesIO object, but we convert it to PIL Image now.
         input_data = Image.open(camera_img)
     elif uploaded_file is not None:
-        # For uploader, streamilt provides an UploadedFile object.
+        input_data = uploaded_file
+        
+    # Only show analysis button if an image is provided
+    input_data = None
+    if camera_img is not None:
+        input_data = Image.open(camera_img)
+    elif uploaded_file is not None:
+        # If input is file_uploader, we can use the file object directly for the function argument
         input_data = uploaded_file
         
     # Only show analysis button if an image is provided
@@ -372,7 +345,7 @@ if st.session_state.selected_plant:
             st.image(input_data, caption=f'{selected_plant} Leaf Ready for Analysis.', use_column_width=True)
             
         with result_col:
-            # Prediction button uses on_click to trigger run_diagnosis (FIXED LOGIC)
+            # Prediction button is now an on_click handler
             st.button(
                 label=f'Diagnose {selected_plant} Leaf Now', 
                 key='diagnose_button', 
@@ -381,9 +354,11 @@ if st.session_state.selected_plant:
                 on_click=run_diagnosis,
                 args=(input_data, model, FULL_CLASS_NAMES, IMG_SIZE)
             )
-
+                
+            st.session_state.analysis_run = True
+    # ----------------------------------------------------------------------               
+    
     # --- Display Results if analysis_run is True and results are available ---
-    # The analysis_run flag is now set by run_diagnosis() on successful click/prediction
     if st.session_state.analysis_run and st.session_state.prediction_result:
         results = st.session_state.prediction_result
         
@@ -471,7 +446,7 @@ if st.session_state.selected_plant:
             }
             st.dataframe(chart_data, use_container_width=True)
 
-            # --- NEW: Refresher Button ---
+            # --- INSERT THE NEW REFRESHER BUTTON CODE HERE ---
             st.button(
                 label="🚀 Start New Analysis / Choose New Plant",
                 key="new_analysis_button",
@@ -485,10 +460,10 @@ if st.session_state.selected_plant:
 else:
     st.markdown("---")
     st.info("👈 **Select a crop** from the sidebar to begin the leaf disease diagnosis. The image input section will appear here.")
-    
 # ==============================================================================
 # 9. SIDEBAR INSTRUCTIONS & NAVIGATION
 # ==============================================================================
+
 
 
 # --- Sidebar Content ---
@@ -500,10 +475,8 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True
 )
-
-# --- Home/Reset Button (Using Primary type for visibility) ---
 st.sidebar.button(
-    label="🏠 RETURN TO HOME",
+    label="New Analysis / Home",
     key="sidebar_home_button",
     on_click=reset_app,
     help="Click to go back to the main app interface and clear all selections.",

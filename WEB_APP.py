@@ -327,17 +327,11 @@ if st.session_state.selected_plant:
         input_data = uploaded_file
         
     # Only show analysis button if an image is provided
-    input_data = None
-    if camera_img is not None:
-        input_data = Image.open(camera_img)
-    elif uploaded_file is not None:
-        # If input is file_uploader, we can use the file object directly for the function argument
-        input_data = uploaded_file
-        
-    # Only show analysis button if an image is provided
     if input_data is not None:
-        st.markdown("---")
-        st.subheader("Image Selected for Analysis")
+       
+        st.markdown("""<div class="analysis">
+                        <h3>Image Selected for Analysis</h3>
+                    </div>""", unsafe_allow_html=True)
         
         image_col, result_col = st.columns([1, 1])
 
@@ -345,17 +339,22 @@ if st.session_state.selected_plant:
             st.image(input_data, caption=f'{selected_plant} Leaf Ready for Analysis.', use_column_width=True)
             
         with result_col:
-            # Prediction button is now an on_click handler
-            st.button(
-                label=f'Diagnose {selected_plant} Leaf Now', 
-                key='diagnose_button', 
-                use_container_width=True,
-                # CRITICAL CHANGE: Use on_click to trigger the function
-                on_click=run_diagnosis,
-                args=(input_data, model, FULL_CLASS_NAMES, IMG_SIZE)
-            )
+            # Prediction button
+            if st.button(f'Diagnose {selected_plant} Leaf Now', key='diagnose_button', use_container_width=True):
+                st.session_state.analysis_run = True 
                 
-            st.session_state.analysis_run = True
+                with st.spinner(f'Running analysis for {selected_plant} leaf...'):
+                    predicted_class, confidence, raw_predictions = preprocess_and_predict(
+                        input_data, model, FULL_CLASS_NAMES, IMG_SIZE
+                    )
+
+                st.session_state.prediction_result = {
+                    "predicted_class": predicted_class,
+                    "confidence": confidence,
+                    "raw_predictions": raw_predictions
+                }
+                
+                st.rerun() 
     # ----------------------------------------------------------------------               
     
     # --- Display Results if analysis_run is True and results are available ---

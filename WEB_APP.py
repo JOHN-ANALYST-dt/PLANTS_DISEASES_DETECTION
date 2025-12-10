@@ -199,10 +199,6 @@ div[data-testid*="diagnose_button"] button {
     transition: all 0.2s ease !important;
 }
 
-div[data-testid*="diagnose_button"] button:hover {
-    background-color: #27ae60 !important; /* Darker green on hover */
-    border-color: #1e8449 !important;
-}
 
 /* --- 2. STYLING FOR THE IMAGE CAPTION ('... Leaf Ready for Analysis.') --- */
 div[data-testid="stImageCaption"] {
@@ -213,7 +209,6 @@ div[data-testid="stImageCaption"] {
     font-weight: bold !important;
     padding: 15px 0 !important; 
     margin-top: 10px !important;
-    background-color: rgba(50, 50, 50, 0.6) !important; 
     border-radius: 5px !important;
 }
 

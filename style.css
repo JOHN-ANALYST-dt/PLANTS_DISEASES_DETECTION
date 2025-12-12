@@ -466,3 +466,85 @@ div[data-testid="stCameraInput"] label {
     from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* --- 1. STYLING FOR THE DIAGNOSE BUTTON ('diagnose_button') - FIXED PADDING --- */
+div[data-testid*="diagnose_button"] button {
+    background-color: #2ecc71 !important; 
+    color: white !important; 
+    font-size: 1.5em !important; 
+    padding: 15px 25px !important; /* Reduced padding for visibility */
+    border-radius: 15px !important; 
+    border: 5px solid #27ae60 !important; 
+    font-weight: 900 !important; 
+    letter-spacing: 2px !important; 
+    text-transform: uppercase !important; 
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6) !important;
+    transition: all 0.2s ease !important;
+}
+
+div[data-testid*="diagnose_button"] button:hover {
+    background-color: #27ae60 !important; 
+    border-color: #1e8449 !important;
+}
+
+/* --- 2. STYLING FOR THE IMAGE CAPTION --- */
+div[data-testid="stImageCaption"] {
+    text-align: center !important; 
+    color: #ffd700 !important; 
+    font-size: 1.5em !important; 
+    font-weight: bold !important;
+    padding: 15px 0 !important; 
+    margin-top: 10px !important;
+    background-color: rgba(50, 50, 50, 0.6) !important; 
+    border-radius: 5px !important;
+}
+
+/* --- 3. STYLING FOR THE NEW ANALYSIS BUTTON ('new_analysis_button') --- */
+div[data-testid*="new_analysis_button"] button {
+    background-color: #1abc9c !important; 
+    color: white !important;
+    font-size: 1.1em !important;
+    padding: 12px 25px !important;
+    border-radius: 8px !important;
+    border: 2px solid #16a085 !important;
+    font-weight: bold !important;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.2s ease !important;
+}
+
+div[data-testid*="new_analysis_button"] button:hover {
+    background-color: #16a085 !important;
+    border-color: #117864 !important;
+}
+
+/* --- 4. NEW: STYLING FOR THE HOME PAGE MARKETING BLOCK --- */
+.home-marketing-box {
+    background-color: rgba(39, 174, 96, 0.1); /* Light green tint */
+    border: 2px solid #2ecc71; /* Green border */
+    border-radius: 10px;
+    padding: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.home-marketing-box h2 {
+    color: #2ecc71; /* Green title */
+    font-weight: 700;
+    text-align: center;
+}
+.metric-item {
+    text-align: center;
+    padding: 10px;
+}
+.metric-item h4 {
+    margin: 0;
+    color: #3498db; /* Blue for the number/title */
+    font-size: 1.8em;
+    font-weight: 900;
+}
+.metric-item p {
+    margin: 5px 0 0;
+    color: #555;
+    font-size: 0.9em;
+    font-weight: bold;
+}

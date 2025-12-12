@@ -40,12 +40,12 @@
 .big-font {
     font-size: 36px !important;
     font-weight: 900;
-    color: white; /* White for contrast */
+    color: green; /* White for contrast */
     text-shadow: 2px 2px 4px #000000;
 }
 .subheader-font {
     font-size: 27px !important;
-    color: #C8E6C9; /* Lighter green for subheader */
+    color: rgb(72, 241, 72); /* Lighter green for subheader */
     margin-bottom: 0px;
     text-shadow: 1px 1px 2px #000000;
 }
@@ -443,7 +443,7 @@ div[data-testid="stCameraInput"] label {
 }
 
 /* Click (Active) Effect */
-#sidebar_home_button.button:active {
+#sidebar_home_button.butt:active {
     transform: scale(0.97);
 }
 /* Fancy Plant-Themed Info Box */
@@ -546,55 +546,4 @@ div[data-testid*="new_analysis_button"] button:hover {
     color: #555;
     font-size: 0.9em;
     font-weight: bold;
-}
-
-
-
-
-/* --- NEW: 5. STYLING FOR FRUIT BUTTONS (e.g., Apple, Grape) --- */
-/* Target all buttons within the sidebar that are NOT the primary/secondary type */
-[data-testid="stSidebar"] button {
-    font-weight: 600 !important;
-    transition: all 0.2s ease;
-    /* Ensure default color is readable against dark sidebar background */
-    color: green !important; 
-    border-radius: 5px !important;
-}
-
-/* Base style for Fruit Buttons (Warm, Berry/Citrus Tones) */
-.fruit-btn button {
-    background-color: #d9534f !important; /* Muted Red */
-    border: 1px solid #c9302c !important; 
-    color: green !important;
-}
-
-.fruit-btn button:hover {
-    background-color: #c9302c !important; /* Darker Red on hover */
-    border-color: #ac2925 !important;
-}
-
-/* Base style for Vegetable Buttons (Earthy, Green Tones) */
-.vegetable-btn button {
-    background-color: #5cb85c !important; /* Muted Green */
-    border: 1px solid #4cae4c !important;
-    color: white !important;
-}
-
-.vegetable-btn button:hover {
-    background-color: #4cae4c !important; /* Darker Green on hover */
-    border-color: #398439 !important;
-}
-
-/* Highlight style for the CURRENTLY SELECTED fruit button */
-.fruit-btn-selected button {
-    background-color: #f0ad4e !important; /* Orange/Gold highlight */
-    border: 3px solid #eea236 !important; 
-    color: #2c3e50 !important; /* Dark text for contrast */
-}
-
-/* Highlight style for the CURRENTLY SELECTED vegetable button */
-.vegetable-btn-selected button {
-    background-color: #5bc0de !important; /* Teal/Sky Blue highlight */
-    border: 3px solid #46b8da !important;
-    color: #2c3e50 !important; /* Dark text for contrast */
 }

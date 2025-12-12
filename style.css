@@ -491,7 +491,7 @@ div[data-testid*="new_analysis_button"] button:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 .home-marketing-box h2 {
-    color: #2ecc71; /* Green title */
+    color: white; /* Green title */
     font-weight: 700;
     text-align: center;
 }

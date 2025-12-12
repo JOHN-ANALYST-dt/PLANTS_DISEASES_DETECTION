@@ -557,7 +557,7 @@ div[data-testid*="new_analysis_button"] button:hover {
     font-weight: 600 !important;
     transition: all 0.2s ease;
     /* Ensure default color is readable against dark sidebar background */
-    color: #f0f2f6 !important; 
+    color: green !important; 
     border-radius: 5px !important;
 }
 
@@ -565,7 +565,7 @@ div[data-testid*="new_analysis_button"] button:hover {
 .fruit-btn button {
     background-color: #d9534f !important; /* Muted Red */
     border: 1px solid #c9302c !important; 
-    color: white !important;
+    color: green !important;
 }
 
 .fruit-btn button:hover {

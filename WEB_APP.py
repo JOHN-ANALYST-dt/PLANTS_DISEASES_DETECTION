@@ -193,7 +193,7 @@ def inject_custom_css(file_path, base64_url):
 
 # --- 4. BACKGROUND IMAGE & CSS INJECTION ---
 img_base64_url = encode_image_to_base64(BACKGROUND_IMAGE_PATH)
-inject_custom_css(CSS_PATH, img_base64_url)
+#inject_custom_css(CSS_PATH, img_base64_url)
 
 
 # ==============================================================================

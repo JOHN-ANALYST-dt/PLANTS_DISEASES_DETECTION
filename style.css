@@ -7,7 +7,7 @@
 .stApp {
     margin: 0 auto !important;
     max-width: 1200px; /* Adjust as needed */
-    background-color: darkgray;
+    background-color: rgb(196, 192, 192);
     
 }
 
@@ -41,12 +41,12 @@
 .big-font {
     font-size: 36px !important;
     font-weight: 900;
-    color: green; /* White for contrast */
+    color: white; /* White for contrast */
     text-shadow: 2px 2px 3px #161515;
 }
 .subheader-font {
     font-size: 27px !important;
-    color: rgb(72, 241, 72); /* Lighter green for subheader */
+    color: white; /* Lighter green for subheader */
     margin-bottom: 0px;
     text-shadow: 1px 1px 2px #000000;
 }
@@ -548,3 +548,31 @@ div[data-testid*="new_analysis_button"] button:hover {
     font-size: 0.9em;
     font-weight: bold;
 }
+
+
+
+.footer-container {
+            padding: 25px;
+            margin-top: 40px;
+            border-radius: 12px;
+            text-align: center;
+            font-family: 'Segoe UI', sans-serif;
+
+            background: linear-gradient(135deg, #0f5132, #198754, #4ade80);
+            color: white;
+
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .footer-title {
+            margin-bottom: 10px;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .footer-text {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+   

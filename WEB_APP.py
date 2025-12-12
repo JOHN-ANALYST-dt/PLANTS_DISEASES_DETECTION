@@ -558,12 +558,17 @@ else:
     
     # 3. Footer Markdown 
     st.markdown(
-        """
-        ### Protecting Your Harvest
-        Understanding plant diseases is the first step to healthier crops and better yields. 
-        Our AI-powered platform helps farmers identify and treat diseases early.
-        """
-    )
+    """
+    <div class="footer-container">
+        <div class="footer-title">🌿 Protecting Your Harvest</div>
+        <div class="footer-text">
+            Understanding plant diseases is the first step to healthier crops and better yields.<br>
+            Our AI-powered platform helps farmers identify and treat diseases early.
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
   
 

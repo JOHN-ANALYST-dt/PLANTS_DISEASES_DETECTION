@@ -602,6 +602,7 @@ st.sidebar.button(
 
 # ---------- Sidebar navigation (Buttons to update state) ----------
 
+
 st.sidebar.markdown(
     """
     <div class="sidebar2">
@@ -613,39 +614,18 @@ st.sidebar.markdown(
 
 for plant in ALL_PLANTS:
     is_selected = st.session_state.selected_plant == plant
-    
-    # --- Determine the CSS class based on plant type and selection state ---
-    if plant in FRUIT_CLASSES:
-        btn_class = "fruit-btn"
-        if is_selected:
-            btn_class = "fruit-btn-selected"
-    elif plant in VEGETABLE_CLASSES:
-        btn_class = "vegetable-btn"
-        if is_selected:
-            btn_class = "vegetable-btn-selected"
-    else:
-        btn_class = "default-btn" # Fallback class
 
-    # Inject a div with the custom class *before* the button.
-    # Streamlit places the button immediately after this markdown block, allowing 
-    # the CSS selector to target the button's internal elements.
-    st.sidebar.markdown(
-        f'<div class="{btn_class}">',
-        unsafe_allow_html=True
-    )
+    btn_class = "plant-btn-selected" if is_selected else "plant-btn"
 
-    # Use st.button to trigger the set_plant function via on_click
-    # Note: We must close the div after the button
+    st.sidebar.markdown(f'<div class="{btn_class}">', unsafe_allow_html=True)
+
     st.sidebar.button(
         label=plant,
         key=f"plant_btn_{plant}",
         on_click=set_plant,
         args=(plant,),
-        # Setting type to secondary ensures we target it with the general sidebar CSS,
-        # but the custom CSS takes precedence.
-        type="secondary", 
+        type="secondary",
         use_container_width=True
     )
-    
-    # Close the custom div immediately after the button is placed
-    st.sidebar.markdown('</div>', unsafe_allow_html=True)
+
+    st.sidebar.markdown("</div>", unsafe_allow_html=True)

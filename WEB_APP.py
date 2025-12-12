@@ -302,7 +302,7 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
 
 st.markdown(
         f"""
-        <div class="title-container">
+        <div class="title-container1">
             <div class="big-font">{TITLE}</div>
             <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
         </div>

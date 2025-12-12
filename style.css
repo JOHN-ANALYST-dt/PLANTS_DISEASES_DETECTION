@@ -1,79 +1,39 @@
-/* ==================================================================== */
-/* 1. IMPORTS & GLOBAL FONT SETTINGS                                    */
-/* ==================================================================== */
+
+/* Link Font Awesome for the stethoscope icon */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
 
-/* ==================================================================== */
-/* 2. CORE LAYOUT & BACKGROUND (Requires Python Injection)              */
-/* ==================================================================== */
-
-/* --- A. Main App Container (Transparent for Blurred Background) --- */
+/* ---------------------------------------------------- */
+/* Global Centering and Layout Customization */
 .stApp {
-    position: relative;
-    z-index: 1; /* Ensure content is above the pseudo-element */
-    background-color: transparent !important; /* Critical for showing blur */
     margin: 0 auto !important;
-    max-width: 1200px;
-}
-
-/* --- B. Blurred Background Pseudo-element (Main View) --- */
-.stApp::before {
-    content: "";
-    z-index: -1; /* Place behind content */
-    position: fixed; /* Fixed position so it doesn't scroll */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    max-width: 1200px; /* Adjust as needed */
+    background-color: rgb(196, 192, 192);
     
-    /* Placeholder for Base64 Image URL from Python */
-    background-image: url("BACKGROUND_IMAGE_PLACEHOLDER"); 
-    
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    filter: blur(4px); /* The main blur effect */
-    background-color: rgba(255, 255, 255, 0.15); 
-    background-blend-mode: overlay;
-}
-
-/* --- C. Sidebar Styling (Solid Color) --- */
-[data-testid="stSidebar"] > div:first-child {
-    /* Solid Dark Color for high contrast, no background image here */
-    background-color: #2c3e50 !important; 
-    background-attachment: scroll; 
-    background-position: unset;
-    z-index: 10; /* Ensure sidebar is above the pseudo-element */
-}
-
-/* Ensure sidebar content (text, buttons, etc.) is readable */
-[data-testid="stSidebar"] * {
-    color: white;
-}
-
-/* Ensure the main content block and inner containers are transparent */
-[data-testid="stVerticalBlock"], [data-testid="stAppViewContainer"] {
-    background-color: transparent !important;
 }
 
 
-/* ==================================================================== */
-/* 3. HEADER & TITLE STYLES                                             */
-/* ==================================================================== */
+
 .title-container1 {
     padding: 40px;
     border-radius: 12px;
     text-align: center;
     font-family: 'Segoe UI', sans-serif;
     margin-bottom: 25px;
+
+    
     background: linear-gradient(
         135deg,
-        #0f5132 0%,      /* deep plant green */
-        #198754 35%,     /* healthy leaf green */
-        #4ade80 60%,     /* bright growth green */
-        #3b82f6 80%      /* AI tech blue */
+        #0f5132 0%,     /* deep plant green */
+        #198754 35%,    /* healthy leaf green */
+        #4ade80 60%,    /* bright growth green */
+        #3b82f6 80%  /* AI tech blue */
+        
     );
+
+    /* Smooth shadow */
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+
+    /* Optional glow effect for “AI” feel */
     border: 1px solid rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(3px);
 }
@@ -81,76 +41,17 @@
 .big-font {
     font-size: 36px !important;
     font-weight: 900;
-    color: white; 
+    color: white; /* White for contrast */
     text-shadow: 2px 2px 3px #161515;
 }
 .subheader-font {
     font-size: 27px !important;
-    color: white; 
+    color: white; /* Lighter green for subheader */
     margin-bottom: 0px;
     text-shadow: 1px 1px 2px #000000;
 }
 
-/* ==================================================================== */
-/* 4. BUTTON STYLES (Targeted by Key/Data-TestId)                       */
-/* ==================================================================== */
-
-/* --- Primary Diagnose Button --- */
-div[data-testid*="diagnose_button"] button {
-    background: linear-gradient(135deg, #2ecc71, #27ae60) !important; 
-    color: white !important; 
-    font-size: 1.5em !important; 
-    padding: 15px 25px !important; 
-    border-radius: 15px !important; 
-    border: 5px solid #27ae60 !important; 
-    font-weight: 900 !important; 
-    letter-spacing: 2px !important; 
-    text-transform: uppercase !important; 
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6) !important;
-    transition: all 0.2s ease !important;
-    width: 100%; /* Ensure it spans full width */
-}
-div[data-testid*="diagnose_button"] button:hover {
-    background: linear-gradient(135deg, #27ae60, #1e8449) !important;
-    border-color: #1e8449 !important;
-}
-
-/* --- New Analysis Button (Post-Diagnosis) --- */
-div[data-testid*="new_analysis_button"] button {
-    background-color: #1abc9c !important; 
-    color: white !important;
-    font-size: 1.1em !important;
-    padding: 12px 25px !important;
-    border-radius: 8px !important;
-    border: 2px solid #16a085 !important;
-    font-weight: bold !important;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3) !important;
-    transition: all 0.2s ease !important;
-}
-div[data-testid*="new_analysis_button"] button:hover {
-    background-color: #16a085 !important;
-    border-color: #117864 !important;
-}
-
-/* --- Sidebar Home Button (Targeted by key/id) --- */
-div[data-testid*="sidebar_home_button"] button { 
-    background-color: #2E7D32 !important; 
-    color: white !important; 
-    border: none !important;
-    border-radius: 8px !important;
-    padding: 10px 16px !important;
-    font-weight: 600 !important;
-    transition: 0.25s ease-in-out !important;
-}
-div[data-testid*="sidebar_home_button"] button:hover {
-    background-color: #1B5E20 !important; 
-    color: white !important;
-    transform: scale(1.02);
-}
-
-/* --- Generic Secondary Button (Used for Plant Selection) --- */
-/* (Keeping your original rule, but be aware it's very broad) */
-/* This is often overridden by the custom fruit/veg classes injected in Python */
+/* Responsive Diagnose Button */
 button[data-testid="baseButton-secondary"] {
     width: 100%;
     font-size: 1.2rem;
@@ -165,84 +66,43 @@ button[data-testid="baseButton-secondary"]:hover {
     background-color: #4CAF50;
 }
 
-
-/* ==================================================================== */
-/* 5. CAMERA & UPLOAD STYLES                                            */
-/* ==================================================================== */
-
-/* Style the Camera Input button/label itself (Consolidated) */
-div[data-testid="stCameraInput"] button {
-    background-color: #337ab7; /* Blue button color */
+/* Camera Input Styling (Icon Look) */
+div[data-testid="stCameraInput"] > label {
+    display: none !important;
+    color:white;
+    align-items: center;
+}
+div[data-testid="stCameraInput"] > div:first-child > button {
+    background-color: #f4a261;
     color: white;
     padding: 10px 20px;
+    font-size: 20px;
     border-radius: 5px;
     border: none;
-    font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s;
-    display: block;
-    width: 100%; 
+    display: block; 
+    width: 100%;
+    font-weight: bold;
     margin-bottom: 10px;
 }
-div[data-testid="stCameraInput"] button:hover {
-    background-color: #286090;
-}
 
-/* Use the ::before pseudo-element to inject custom text/icon */
-div[data-testid="stCameraInput"] button::before {
-    content: "📸 Initiate Camera / File Select"; 
-    margin-right: 5px;
-    font-size: 1.1em;
-}
+/* ---------------------------------------------------- */
+/* NEW INTERVENTION SECTION STYLES */
+/* ---------------------------------------------------- */
 
-/* Hide Streamlit's default label text and icon */
-div[data-testid="stCameraInput"] label,
-div[data-testid="stCameraInput"] button > svg {
-    display: none !important;
-}
-
-
-/* ==================================================================== */
-/* 6. INFORMATION & RESULTS BLOCKS                                      */
-/* ==================================================================== */
-
-/* --- Image Caption (Result Label) --- */
-div[data-testid="stImageCaption"] {
-    text-align: center !important; 
-    color: #ffd700 !important; /* Gold */
-    font-size: 1.5em !important; 
-    font-weight: bold !important;
-    padding: 15px 0 !important; 
-    margin-top: 10px !important;
-    background-color: rgba(50, 50, 50, 0.6) !important; 
-    border-radius: 5px !important;
-}
-
-/* --- Styled User-Uploaded Image Container --- */
-#styled-leaf-image img {
-    border-radius: 15px; 
-    border: 3px solid #4caf50; 
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
-    transition: 0.3s ease-in-out;
-}
-#styled-leaf-image img:hover {
-    transform: scale(1.03); 
-    border-color: #66bb6a;
-    box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.35);
-}
-
-/* --- Intervention Box (Diagnosis/Treatment) --- */
 .intervention-box {
-    border: 2px solid #008080; 
+    border: 2px solid #008080; /* Teal border */
     border-radius: 10px;
     padding: 15px;
     margin-top: 15px;
-    background-color: #f7fff7; 
+    background-color: #f7fff7; /* Very light green background */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .intervention-title {
+    /* Colorful Gradient Background */
     background: linear-gradient(90deg, #18981d, #4caf50); 
-    color: white; 
+    color: white; /* White text for contrast */
     padding: 10px 15px;
     border-radius: 8px;
     font-size: 1.2em;
@@ -253,121 +113,411 @@ div[data-testid="stImageCaption"] {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     text-transform: uppercase;
 }
+
 .intervention-title i {
     margin-right: 12px;
     font-size: 1.5em;
-    color: #FFD166; 
+    color: #FFD166; /* Gold icon color for pop */
 }
 
+/* Ensure the titles inside the box are clear */
+.intervention-box h4 {
+    color: white !important;
+}
 
-/* ==================================================================== */
-/* 7. SIDEBAR SPECIFIC BOXES (NO POSITION:ABSOLUTE)                     */
-/* ==================================================================== */
+.text-white {
+    color: white !important; 
+   
+}
+.sidebar2-instruction-box {
+    background-color: #e0f7fa; /* Light cyan background */
+    border-left: 5px solid #008080; /* Teal left border */
+    padding: 10px 15px;
+    margin-top: 15px;
+    border-radius: 5px;
+    
+}
 
-/* --- Sidebar Instruction Box --- */
-.sidebar2 {
-    background: linear-gradient(135deg, #456a8a, #2e4c63);
-    padding: 15px;
-    border-radius: 12px;
-    text-align: center;
-    color: white;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    font-family: 'Segoe UI', sans-serif;
+ .sidebar1 {
+            
+            padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin-bottom: 15px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            position: absolute;
+            margin-right: 10px;
+    
+        }
+
+        .sidebar1 h3 {
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+            color:white;
+            font-size:bold;
+
+        }
+        .sidebar2 {
+            background: linear-gradient(135deg, #456a8a, #2e4c63);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-family: 'Segoe UI', sans-serif;
 }
 .sidebar2 h3 {
-    font-size: 18px;
-    margin: 0;
-    font-weight: 600;
-    color:white;
-    font-weight: bold;
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+            color:white;
+            font-size:bold;
 }
 
-/* --- Sidebar 1/Diagnosis/Confid (General Card Look, removed position:absolute) --- */
-/* NOTE: These classes are very similar. You might want to consolidate them in your Python code. */
-.sidebar1, .diagnosis, .confid {
-    padding: 10px;
-    border-radius: 12px;
-    text-align: center;
-    color: white;
-    font-family: 'Segoe UI', sans-serif;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    margin-bottom: 15px;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    background-color: rgba(50, 50, 50, 0.4); /* Added transparent background for blur to work */
+.diagnosis{
+           padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin-bottom: 15px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            position: absolute;
+            margin-right: 10px;
 }
+.diagnosis h3{
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+            color:white;
+            font-size:bold;
+}
+.analysis{
+            background: linear-gradient(135deg, #456a8a, #2e4c63);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-family: 'Segoe UI', sans-serif;
+}
+.analysis h3{
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+            color:white;
+            font-size:bold;
+}
+.confid{
+         padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin-bottom: 15px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            position: absolute;
+            margin-right: 5px;
 
-.analysis {
-    background: linear-gradient(135deg, #456a8a, #2e4c63);
-    padding: 15px;
-    border-radius: 12px;
-    text-align: center;
-    color: white;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    font-family: 'Segoe UI', sans-serif;
 }
-/* General header style for these blocks */
-.sidebar1 h3, .diagnosis h3, .confid h3, .analysis h3, .selector h3 {
-    font-size: 18px;
-    margin: 0;
-    font-weight: 600;
-    color: white;
-    font-weight: bold;
+.confid h3{
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+            color:white;
+            font-size:bold;   
 }
-
-/* --- Selector Box (Removed position:absolute) --- */
 .selector{
-    padding: 10px;
-    border-radius: 12px;
-    text-align: center;
-    color: white;
-    font-family: 'Segoe UI', sans-serif;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    margin-bottom: 15px;
-    backdrop-filter: blur(9px);
-    -webkit-backdrop-filter: blur(9px);
-    background-color: rgba(50, 50, 50, 0.4); /* Added transparent background for blur to work */
-    /* REMOVED: position: absolute; margin-left: 34%; */
+            padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            margin-bottom: 15px;
+            backdrop-filter: blur(9px);
+            -webkit-backdrop-filter: blur(9px);
+            position: absolute;
+            margin-left: 34%;
+}
+.selector h3{
+            font-size: 20px;
+            margin: 0;
+            font-weight: 600;
+            color:white;
+            font-size:bold; 
 }
 
-/* ==================================================================== */
-/* 8. FOOTER AND MISC                                                   */
-/* ==================================================================== */
-.footer-container {
-    padding: 25px;
-    margin-top: 40px;
-    border-radius: 12px;
-    text-align: center;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0f5132, #198754, #4ade80);
-    color: white;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
-    border: 1px solid rgba(255,255,255,0.15);
-}
-/* ... (Other misc styles like .text-white, .custom-info-box) */
 
-.text-white { color: white !important; }
+/* CSS for the camera input container */
+/* Targets the div containing the camera input to change its appearance */
+div[data-testid="stCameraInput"] {
+    /* Style the outer container */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+/* Style the button/label itself */
+div[data-testid="stCameraInput"] button {
+    /* Make it look like a prominent action button */
+    background-color: #337ab7; /* Blue button color */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    /* Center the button */
+    display: block;
+    width: 100%; 
+}
+
+div[data-testid="stCameraInput"] button:hover {
+    background-color: #286090;
+}
+
+/* Hide the default camera icon that Streamlit adds inside the button, if any */
+div[data-testid="stCameraInput"] button > svg {
+    display: none;
+}
+
+/* Use the ::before pseudo-element to inject the desired camera icon */
+div[data-testid="stCameraInput"] button::before {
+    content: "📸 Initiate Camera / File Select"; /* Add the icon and new text */
+    margin-right: 5px;
+    font-size: 1.1em;
+}
+
+/* Hide the default label text that appears above the widget */
+div[data-testid="stCameraInput"] label {
+    display: none;
+}
+ 
+
+/* Style the 'Go Home' icon button */
+#go-home-button {
+    /* Target the container of the Streamlit button */
+    display: inline-block;
+    vertical-align: top; 
+    margin-top: 10px; /* Adjust spacing next to title */
+    margin-left: 20px;
+}
+
+/* Style the button itself */
+#go-home-button button {
+    background-color: transparent ;/* Make it invisible */
+    border: none ;
+    color: white ;
+    font-size: 2.0rem; /* Make the icon large */
+    padding: 0;
+    margin: 0;
+}
+
+#go-home-button button:hover {
+    color: #ffd700 ; /* Gold hover effect */
+    background-color: transparent ;
+}
+
+/* Hide the default button label text and use only the icon/emoji */
+#go-home-button button span {
+    display: none;
+}
+
+/* Force the emoji to appear */
+#go-home-button button::before {
+    content: "🏠";
+    font-size: 1.5em;
+    display: inline;
+}
+
+/* Style for the 'New Analysis' button inside the results */
+#new-analysis-button button {
+    background-color: #16c43f; /* Green color */
+    color: white;
+    border: none ;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+#new-analysis-button button:hover {
+    background-color: #218838 ;
+}
+
+
+#styled-leaf-image img {
+        border-radius: 15px;      /* Rounded corners */
+        border: 3px solid #4caf50; /* Plant-green border */
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25); /* Soft shadow */
+        transition: 0.3s ease-in-out;
+    }
+
+    /* Hover effect */
+    #styled-leaf-image img:hover {
+        transform: scale(1.03);   /* Slight zoom */
+        border-color: #66bb6a;     /* Lighter green hover */
+        box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.35);
+    }
+/* Diagnose Button Styling */
+#diagnose_button  {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32); /* Plant green */
+    color:black ;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 14px 20px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 128, 0, 0.25);
+    transition: all 0.25s ease-in-out;
+}
+
+
+
+/* Sidebar Home Button Styling */
+#sidebar_home_button.button  {
+    background-color: #2E7D32 ;  /* Green */
+    color: white ;                /* White text */
+    border: none ;
+    border-radius: 8px ;
+    font-weight: 600 ;
+    transition: 0.25s ease-in-out ;
+}
+
+/* Hover Effect */
+#sidebar_home_button.button:hover {
+    background-color: #1B5E20 ; /* Darker green */
+    color: white ;
+    transform: scale(1.02);
+}
+
+/* Click (Active) Effect */
+#sidebar_home_button.button:active {
+    transform: scale(0.97);
+}
+/* Fancy Plant-Themed Info Box */
 .custom-info-box {
-    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-    border-left: 6px solid #2e7d32; 
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9); /* soft plant green gradient */
+    border-left: 6px solid #2e7d32; /* deep green accent */
     padding: 18px 22px;
     border-radius: 12px;
     font-size: 1.05rem;
-    color: #1b5e20;
+    color: #1b5e20; /* dark plant green text */
     font-weight: 500;
     box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.08);
     margin-top: 15px;
     animation: fadeIn 0.6s ease-in-out;
 }
 
+/* Simple fade-in effect */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Hide the default Streamlit page selector (sidebar pages menu) */
-[data-testid="stSidebarNav"] ul {
-    display: none !important;
+/* --- 1. STYLING FOR THE DIAGNOSE BUTTON ('diagnose_button') - FIXED PADDING --- */
+
+
+/* --- 2. STYLING FOR THE IMAGE CAPTION --- */
+div[data-testid="stImageCaption"] {
+    text-align: center ; 
+    color: #ffd700 ; 
+    font-size: 1.5em ; 
+    font-weight: bold;
+    padding: 15px 0;
+    margin-top: 10px;
+    background-color: rgba(50, 50, 50, 0.6); 
+    border-radius: 5px ;
 }
+
+/* --- 3. STYLING FOR THE NEW ANALYSIS BUTTON ('new_analysis_button') --- */
+div[data-testid*="new_analysis_button"] button {
+    background-color: #1abc9c !important; 
+    color: white !important;
+    font-size: 1.1em !important;
+    padding: 12px 25px !important;
+    border-radius: 8px !important;
+    border: 2px solid #16a085 !important;
+    font-weight: bold !important;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.2s ease !important;
+}
+
+div[data-testid*="new_analysis_button"] button:hover {
+    background-color: #16a085 !important;
+    border-color: #117864 !important;
+}
+
+/* --- 4. NEW: STYLING FOR THE HOME PAGE MARKETING BLOCK --- */
+.home-marketing-box {
+    background-color: rgba(39, 174, 96, 0.1); /* Light green tint */
+    border: 1px solid #2ecc71; /* Green border */
+    border-radius: 10px;
+    padding: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.home-marketing-box h2 {
+    color: rgb(27, 138, 27); /* Green title */
+    font-weight: 700;
+    text-align: center;
+}
+.metric-item {
+    text-align: center;
+    padding: 10px;
+}
+.metric-item h4 {
+    margin: 0;
+    color: #3498db; /* Blue for the number/title */
+    font-size: 1.8em;
+    font-weight: 900;
+}
+.metric-item p {
+    margin: 5px 0 0;
+    color: #555;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+
+
+.footer-container {
+            padding: 25px;
+            margin-top: 40px;
+            border-radius: 12px;
+            text-align: center;
+            font-family: 'Segoe UI', sans-serif;
+
+            background: linear-gradient(135deg, #0f5132, #198754, #4ade80);
+            color: white;
+
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .footer-title {
+            margin-bottom: 10px;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .footer-text {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+   

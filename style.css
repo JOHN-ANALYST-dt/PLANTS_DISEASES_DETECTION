@@ -90,15 +90,6 @@ div[data-testid="stCameraInput"] > div:first-child > button {
 /* NEW INTERVENTION SECTION STYLES */
 /* ---------------------------------------------------- */
 
-
-/* Ensure the titles inside the box are clear */
-.intervention-box h4 {
-    color: white !important;
-}
-
-
-
-/* Styling for the Intervention Section Container */
 .intervention-box {
     border: 2px solid #008080; /* Teal border */
     border-radius: 10px;
@@ -108,7 +99,6 @@ div[data-testid="stCameraInput"] > div:first-child > button {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Stylish header acting as an "Intervention Button" visual prompt */
 .intervention-title {
     /* Colorful Gradient Background */
     background: linear-gradient(90deg, #18981d, #4caf50); 
@@ -124,7 +114,16 @@ div[data-testid="stCameraInput"] > div:first-child > button {
     text-transform: uppercase;
 }
 
+.intervention-title i {
+    margin-right: 12px;
+    font-size: 1.5em;
+    color: #FFD166; /* Gold icon color for pop */
+}
 
+/* Ensure the titles inside the box are clear */
+.intervention-box h4 {
+    color: white !important;
+}
 
 .text-white {
     color: white !important; 
@@ -160,11 +159,11 @@ div[data-testid="stCameraInput"] > div:first-child > button {
             margin: 0;
             font-weight: 600;
             color:white;
-            font-weight:bold;
+            font-size:bold;
 
         }
         .sidebar2 {
-            background: linear-gradient( sec(135deg, #456a8a, #2e4c63);
+            background: linear-gradient(135deg, #456a8a, #2e4c63);
             padding: 15px;
             border-radius: 12px;
             text-align: center;
@@ -176,9 +175,9 @@ div[data-testid="stCameraInput"] > div:first-child > button {
 .sidebar2 h3 {
             font-size: 18px;
             margin: 0;
-            font-weight: 600PX;
+            font-weight: 600;
             color:white;
-            font-weight:bold;
+            font-size:bold;
 }
 
 .diagnosis{
@@ -199,7 +198,7 @@ div[data-testid="stCameraInput"] > div:first-child > button {
             margin: 0;
             font-weight: 600;
             color:white;
-            font-weight:bold;
+            font-size:bold;
 }
 .analysis{
             background: linear-gradient(135deg, #456a8a, #2e4c63);
@@ -260,6 +259,16 @@ div[data-testid="stCameraInput"] > div:first-child > button {
             font-size:bold; 
 }
 
+
+/* CSS for the camera input container */
+/* Targets the div containing the camera input to change its appearance */
+div[data-testid="stCameraInput"] {
+    /* Style the outer container */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-align: center;
+}
 
 /* Style the button/label itself */
 div[data-testid="stCameraInput"] button {
@@ -505,7 +514,7 @@ div[data-testid*="new_analysis_button"] button:hover {
 
 
 
-.footer-container{
+.footer-container {
             padding: 25px;
             margin-top: 40px;
             border-radius: 12px;
@@ -517,8 +526,9 @@ div[data-testid*="new_analysis_button"] button:hover {
 
             box-shadow: 0 4px 15px rgba(0,0,0,0.25);
             border: 1px solid rgba(255,255,255,0.15);
-}
-.footer-title {
+        }
+
+        .footer-title {
             margin-bottom: 10px;
             font-size: 22px;
             font-weight: 600;

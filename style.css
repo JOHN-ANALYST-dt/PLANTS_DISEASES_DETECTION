@@ -13,17 +13,31 @@
 
 
 /* Font Styling (Ensure contrast against background) */
-.title-container{
+.title-container {
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+    margin-bottom: 25px;
 
-        padding: 40px;
-        border-radius: 12px;
-        text-align: center;
-        font-family: 'Segoe UI', sans-serif;
-        margin-bottom: 25px;
+    /* AI + Plant Disease Inspired Gradient */
+    background: linear-gradient(
+        135deg,
+        #0f5132 0%,     /* deep plant green */
+        #198754 35%,    /* healthy leaf green */
+        #4ade80 60%,    /* bright growth green */
+        #3b82f6 80%,    /* AI tech blue */
+        #8b5cf6 100%    /* AI neural purple */
+    );
 
-        /* Smooth shadow */
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    /* Smooth shadow */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+
+    /* Optional glow effect for “AI” feel */
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(3px);
 }
+
 .big-font {
     font-size: 36px !important;
     font-weight: 900;

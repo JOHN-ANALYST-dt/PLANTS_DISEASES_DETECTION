@@ -26,7 +26,7 @@
         #0f5132 0%,     /* deep plant green */
         #198754 35%,    /* healthy leaf green */
         #4ade80 60%,    /* bright growth green */
-        #3b82f6 80%,    /* AI tech blue */
+        #3b82f6 80%  /* AI tech blue */
         
     );
 
@@ -90,35 +90,6 @@ div[data-testid="stCameraInput"] > div:first-child > button {
 /* NEW INTERVENTION SECTION STYLES */
 /* ---------------------------------------------------- */
 
-.intervention-box {
-    border: 2px solid #008080; /* Teal border */
-    border-radius: 10px;
-    padding: 15px;
-    margin-top: 15px;
-    background-color: #f7fff7; /* Very light green background */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.intervention-title {
-    /* Colorful Gradient Background */
-    background: linear-gradient(90deg, #18981d, #4caf50); 
-    color: white; /* White text for contrast */
-    padding: 10px 15px;
-    border-radius: 8px;
-    font-size: 1.2em;
-    font-weight: bold;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    text-transform: uppercase;
-}
-
-.intervention-title i {
-    margin-right: 12px;
-    font-size: 1.5em;
-    color: #FFD166; /* Gold icon color for pop */
-}
 
 /* Ensure the titles inside the box are clear */
 .intervention-box h4 {
@@ -126,9 +97,6 @@ div[data-testid="stCameraInput"] > div:first-child > button {
 }
 
 
-
-/* Add a link to Font Awesome for the icon */
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
 
 /* Styling for the Intervention Section Container */
 .intervention-box {
@@ -156,11 +124,7 @@ div[data-testid="stCameraInput"] > div:first-child > button {
     text-transform: uppercase;
 }
 
-.intervention-title i {
-    margin-right: 12px;
-    font-size: 1.5em;
-    color: #FFD166; /* Gold icon color for pop */
-}
+
 
 .text-white {
     color: white !important; 
@@ -196,11 +160,11 @@ div[data-testid="stCameraInput"] > div:first-child > button {
             margin: 0;
             font-weight: 600;
             color:white;
-            font-size:bold;
+            font-weight:bold;
 
         }
         .sidebar2 {
-            background: linear-gradient(135deg, #456a8a, #2e4c63);
+            background: linear-gradient( sec(135deg, #456a8a, #2e4c63);
             padding: 15px;
             border-radius: 12px;
             text-align: center;
@@ -212,9 +176,9 @@ div[data-testid="stCameraInput"] > div:first-child > button {
 .sidebar2 h3 {
             font-size: 18px;
             margin: 0;
-            font-weight: 600;
+            font-weight: 600PX;
             color:white;
-            font-size:bold;
+            font-weight:bold;
 }
 
 .diagnosis{
@@ -235,7 +199,7 @@ div[data-testid="stCameraInput"] > div:first-child > button {
             margin: 0;
             font-weight: 600;
             color:white;
-            font-size:bold;
+            font-weight:bold;
 }
 .analysis{
             background: linear-gradient(135deg, #456a8a, #2e4c63);
@@ -296,16 +260,6 @@ div[data-testid="stCameraInput"] > div:first-child > button {
             font-size:bold; 
 }
 
-
-/* CSS for the camera input container */
-/* Targets the div containing the camera input to change its appearance */
-div[data-testid="stCameraInput"] {
-    /* Style the outer container */
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    text-align: center;
-}
 
 /* Style the button/label itself */
 div[data-testid="stCameraInput"] button {
@@ -551,7 +505,7 @@ div[data-testid*="new_analysis_button"] button:hover {
 
 
 
-.footer-container {
+.footer-container{
             padding: 25px;
             margin-top: 40px;
             border-radius: 12px;
@@ -563,9 +517,8 @@ div[data-testid*="new_analysis_button"] button:hover {
 
             box-shadow: 0 4px 15px rgba(0,0,0,0.25);
             border: 1px solid rgba(255,255,255,0.15);
-        }
-
-        .footer-title {
+}
+.footer-title {
             margin-bottom: 10px;
             font-size: 22px;
             font-weight: 600;

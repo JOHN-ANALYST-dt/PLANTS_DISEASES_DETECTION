@@ -667,6 +667,8 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True
 )
+st.sidebar.markdown("---")
+st.sidebar.markdown("---")
 # This button is now styled by the default Streamlit theme, but its type is 'primary'
 st.sidebar.button(
     label="New Analysis / Home",
@@ -680,6 +682,7 @@ st.sidebar.button(
 
 # ---------- Sidebar navigation (Buttons to update state) ----------
 st.sidebar.markdown("---")
+
 st.sidebar.markdown(
     """
     <div class="sidebar2">

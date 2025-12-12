@@ -21,7 +21,7 @@ from intervention import get_interventions
 BASE_DIR = pathlib.Path(__file__).parent 
 
 # Paths and Constants
-MODEL_PATH = os.path.join(BASE_DIR, "inceptionv3_model2.h5")
+MODEL_PATH = os.path.join(BASE_DIR, "leaf_disease_mobilenet_final2.h5")
 REJECTION_THRESHOLD = 0.50
 # FIXED ML ERROR: Set to (128, 128) as per model requirements
 IMG_SIZE = (128, 128) 

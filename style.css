@@ -41,7 +41,7 @@
     font-size: 36px !important;
     font-weight: 900;
     color: green; /* White for contrast */
-    text-shadow: 2px 2px 4px #000000;
+    text-shadow: 2px 2px 3px #161515;
 }
 .subheader-font {
     font-size: 27px !important;

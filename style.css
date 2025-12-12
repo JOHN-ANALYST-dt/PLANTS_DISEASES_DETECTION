@@ -44,7 +44,7 @@
     text-shadow: 2px 2px 4px #000000;
 }
 .subheader-font {
-    font-size: 24px !important;
+    font-size: 27px !important;
     color: #C8E6C9; /* Lighter green for subheader */
     margin-bottom: 0px;
     text-shadow: 1px 1px 2px #000000;
@@ -425,7 +425,7 @@ div[data-testid="stCameraInput"] label {
 
 
 /* Sidebar Home Button Styling */
-#sidebar_home_button  {
+#sidebar_home_button.button  {
     background-color: #2E7D32 !important;  /* Green */
     color: white !important;                /* White text */
     border: none !important;
@@ -436,14 +436,14 @@ div[data-testid="stCameraInput"] label {
 }
 
 /* Hover Effect */
-#sidebar_home_button:hover {
+#sidebar_home_button.button:hover {
     background-color: #1B5E20 !important;  /* Darker green */
     color: white !important;
     transform: scale(1.02);
 }
 
 /* Click (Active) Effect */
-#sidebar_home_button:active {
+#sidebar_home_button.button:active {
     transform: scale(0.97);
 }
 /* Fancy Plant-Themed Info Box */

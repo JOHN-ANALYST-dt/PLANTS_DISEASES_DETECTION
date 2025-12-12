@@ -30,8 +30,8 @@ TITLE = "AgroVision AI : Crop Disease Detector"
 
 # Background Image Setup: Ensure these files are in the same directory
 BACKGROUND_IMAGE_PATH = os.path.join(BASE_DIR, 'vege2.jpeg')
-#CSS_PATH = os.path.join(BASE_DIR, 'style.css') # Assuming style.css is required
-CSS_PLACEHOLDER = "BACKGROUND_IMAGE_PLACEHOLDER" # Placeholder in style.css
+CSS_PATH = os.path.join(BASE_DIR, 'style.css') 
+CSS_PLACEHOLDER = "BACKGROUND_IMAGE_PLACEHOLDER" 
 
 # Define the full list of class names (MUST match training order)
 FULL_CLASS_NAMES = [
@@ -193,7 +193,7 @@ def inject_custom_css(file_path, base64_url):
 
 # --- 4. BACKGROUND IMAGE & CSS INJECTION ---
 img_base64_url = encode_image_to_base64(BACKGROUND_IMAGE_PATH)
-#inject_custom_css(CSS_PATH, img_base64_url)
+inject_custom_css(CSS_PATH, img_base64_url)
 
 
 # ==============================================================================

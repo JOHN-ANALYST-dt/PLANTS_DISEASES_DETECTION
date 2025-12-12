@@ -12,7 +12,6 @@
 
 
 
-/* Font Styling (Ensure contrast against background) */
 .title-container {
     padding: 40px;
     border-radius: 12px;
@@ -20,7 +19,7 @@
     font-family: 'Segoe UI', sans-serif;
     margin-bottom: 25px;
 
-    /* AI + Plant Disease Inspired Gradient */
+    
     background: linear-gradient(
         135deg,
         #0f5132 0%,     /* deep plant green */

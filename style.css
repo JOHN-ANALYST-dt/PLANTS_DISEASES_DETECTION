@@ -26,7 +26,7 @@
         #198754 35%,    /* healthy leaf green */
         #4ade80 60%,    /* bright growth green */
         #3b82f6 80%,    /* AI tech blue */
-        #8b5cf6 100%    /* AI neural purple */
+        #a68edd 80%    /* AI neural purple */
     );
 
     /* Smooth shadow */
@@ -40,7 +40,7 @@
 .big-font {
     font-size: 36px !important;
     font-weight: 900;
-    color: green; /* White for contrast */
+    color: white; /* White for contrast */
     text-shadow: 2px 2px 4px #000000;
 }
 .subheader-font {

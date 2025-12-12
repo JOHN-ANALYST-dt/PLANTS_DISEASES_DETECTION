@@ -596,7 +596,6 @@ st.sidebar.button(
 
 
 # ---------- Sidebar navigation (Buttons to update state) ----------
-st.sidebar.markdown("---")
 
 st.sidebar.markdown(
     """

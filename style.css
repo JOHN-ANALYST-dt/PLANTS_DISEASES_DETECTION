@@ -426,7 +426,7 @@ div[data-testid="stCameraInput"] label {
 
 
 /* Sidebar Home Button Styling */
-#sidebar_home_button button {
+#sidebar_home_button  {
     background-color: #2E7D32 !important;  /* Green */
     color: white !important;                /* White text */
     border: none !important;
@@ -437,14 +437,14 @@ div[data-testid="stCameraInput"] label {
 }
 
 /* Hover Effect */
-#sidebar_home_button button:hover {
+#sidebar_home_button:hover {
     background-color: #1B5E20 !important;  /* Darker green */
     color: white !important;
     transform: scale(1.02);
 }
 
 /* Click (Active) Effect */
-#sidebar_home_button button:active {
+#sidebar_home_button:active {
     transform: scale(0.97);
 }
 /* Fancy Plant-Themed Info Box */

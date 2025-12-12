@@ -24,7 +24,7 @@ BASE_DIR = pathlib.Path(__file__).parent
 MODEL_PATH = os.path.join(BASE_DIR, "leaf_disease_mobilenet_final2.h5")
 REJECTION_THRESHOLD = 0.50
 # FIXED ML ERROR: Set to (128, 128) as per model requirements
-IMG_SIZE = (128, 128) 
+IMG_SIZE = (224, 224) 
 
 TITLE = "AgroVision AI : Crop Disease Detector"
 

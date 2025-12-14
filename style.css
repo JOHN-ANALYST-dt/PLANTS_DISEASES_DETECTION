@@ -39,13 +39,13 @@
 }
 
 .big-font {
-    font-size: 36px !important;
+    font-size: 36px ;
     font-weight: 900;
     color: white; /* White for contrast */
     text-shadow: 2px 2px 3px #161515;
 }
 .subheader-font {
-    font-size: 27px !important;
+    font-size: 27px ;
     color: white; /* Lighter green for subheader */
     margin-bottom: 0px;
     text-shadow: 1px 1px 2px #000000;
@@ -308,41 +308,8 @@ div[data-testid="stCameraInput"] label {
 }
  
 
-/* Style the 'Go Home' icon button */
-#go-home-button {
-    /* Target the container of the Streamlit button */
-    display: inline-block;
-    vertical-align: top; 
-    margin-top: 10px; /* Adjust spacing next to title */
-    margin-left: 20px;
-}
 
-/* Style the button itself */
-#go-home-button button {
-    background-color: transparent ;/* Make it invisible */
-    border: none ;
-    color: white ;
-    font-size: 2.0rem; /* Make the icon large */
-    padding: 0;
-    margin: 0;
-}
 
-#go-home-button button:hover {
-    color: #ffd700 ; /* Gold hover effect */
-    background-color: transparent ;
-}
-
-/* Hide the default button label text and use only the icon/emoji */
-#go-home-button button span {
-    display: none;
-}
-
-/* Force the emoji to appear */
-#go-home-button button::before {
-    content: "🏠";
-    font-size: 1.5em;
-    display: inline;
-}
 
 /* Style for the 'New Analysis' button inside the results */
 #new-analysis-button button {
@@ -358,19 +325,10 @@ div[data-testid="stCameraInput"] label {
 }
 
 
-#styled-leaf-image img {
-        border-radius: 15px;      /* Rounded corners */
-        border: 3px solid #4caf50; /* Plant-green border */
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25); /* Soft shadow */
-        transition: 0.3s ease-in-out;
-    }
 
-    /* Hover effect */
-    #styled-leaf-image img:hover {
-        transform: scale(1.03);   /* Slight zoom */
-        border-color: #66bb6a;     /* Lighter green hover */
-        box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.35);
-    }
+
+  
+
 /* Diagnose Button Styling */
 #diagnose_button  {
     background: linear-gradient(135deg, #4CAF50, #2E7D32); /* Plant green */

@@ -50,7 +50,7 @@ DYNAMIC_MODEL_MAPPING = {
     "Strawberry": {"path": os.path.join(BASE_DIR, "APP_MODELS/STRAWBERRY_mobileNet_model.h5"), "img_size": (224, 224)},
     "Raspberry": {"path": os.path.join(BASE_DIR, "APP_MODELS/RASPBERRY_mobileNet_model.h5"), "img_size": (224, 224)},
     "Peach": {"path": os.path.join(BASE_DIR, "APP_MODELS/peach_model.h5"), "img_size": (224, 224)},
-    "Orange": {"path": os.path.join(BASE_DIR, "APP_MODELS/ORANGES_mobileNet_model2.h5"), "img_size": (128,128)},
+    "Orange": {"path": os.path.join(BASE_DIR, "APP_MODELS/ORANGE_MODEL.h5"), "img_size": (224,224)},
     "Pepper Bell": {"path": os.path.join(BASE_DIR, "APP_MODELS/PEPPER_mobileNet_model7.h5"), "img_size": (224, 224)},
     "Soybean": {"path": os.path.join(BASE_DIR, "APP_MODELS/soybean_model.h5"), "img_size": (224, 224)},
     "Onion": {"path": os.path.join(BASE_DIR, "APP_MODELS/ONION_mobileNet_model.h5"), "img_size": (224, 224)},

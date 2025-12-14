@@ -156,13 +156,13 @@ hide_pages_css = """
 
 /* 2. STICKY TOP NAVIGATION BAR CONTAINER */
 .top-nav-container {
-    position: fixed;
+    position: sticky;
     top: 0;
     left: 0; 
     /* Account for sidebar width (approx 210px in default wide mode) */
     width: calc(100% - 220px); 
     height: 60px;
-    background: linear-gradient(135deg, #145a32, #0b3d2e);
+    background: light-green;
     display: flex;
     align-items: center;
     justify-content: center;

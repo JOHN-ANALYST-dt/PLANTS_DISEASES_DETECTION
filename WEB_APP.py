@@ -12,8 +12,8 @@ import time
 import pandas as pd 
 
 # --- Gemini API Imports ---
-from google import genai
-from google.genai.errors import APIError
+import google.generativeai as genai
+from google.generativeai.errors import APIError
 # --------------------------
 
 # Assuming 'intervention.py' exists in the same directory

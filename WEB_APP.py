@@ -607,6 +607,7 @@ st.sidebar.button(
 # ==============================================================================
 
 # --- Optional: Display a custom header using one of your defined CSS classes ---
+
 st.sidebar.markdown(
     """
     <div class="sidebar2">
@@ -616,6 +617,9 @@ st.sidebar.markdown(
     unsafe_allow_html=True
 )
 
+
+st.sidebar.markdown("---")
+st.sidebar.markdown("---")
 # 1. Prepare the options list
 # Add a prompt to the start of the list if no plant is currently selected
 options_list = ["--- Select a Crop ---"] + ALL_PLANTS

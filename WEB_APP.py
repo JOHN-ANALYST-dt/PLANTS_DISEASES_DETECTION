@@ -757,10 +757,10 @@ st.markdown("""
 
 
 
-    st.markdown("---")
+st.markdown("---")
     
     # 3. Footer Markdown 
-    st.markdown(
+st.markdown(
     """
     <div class="footer-container">
         <div class="footer-title">Protecting Your Harvest</div>

@@ -198,6 +198,18 @@ elif st.session_state.active_tab == "About Us":
 
 st.markdown("</div>", unsafe_allow_html=True)
 
+st.markdown(f"""
+<style>
+.top-nav button {{
+    background: transparent;
+}}
+
+.top-nav button:has(span:contains("{st.session_state.active_tab}")) {{
+    background: #2ecc71 !important;
+    color: #0f2f1c !important;
+}}
+</style>
+""", unsafe_allow_html=True)
 
 ######----------------###############
 

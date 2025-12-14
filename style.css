@@ -478,6 +478,81 @@ div[data-testid*="new_analysis_button"] button:hover {
         }
 
         
+
+
+
+
+
+        /* ===============================
+   📊 METRIC CARD – DISEASE CLASSES
+   =============================== */
+
+.metric-item {
+    background: linear-gradient(
+        135deg,
+        rgba(30, 120, 80, 0.85),
+        rgba(20, 80, 50, 0.85)
+    );
+    border-radius: 18px;
+    padding: 1.2rem 1rem;
+    text-align: center;
+    color: #ffffff;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover lift effect */
+.metric-item:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.45);
+}
+
+/* Icon container */
+.metric-icon {
+    font-size: 2.6rem;
+    margin-bottom: 0.4rem;
+    color: #a8ffce;
+}
+
+/* Icon pulse animation */
+.metric-disease .fa-virus {
+    animation: pulseGlow 2.2s infinite ease-in-out;
+}
+
+/* Metric number */
+.metric-item h4 {
+    font-size: 1.9rem;
+    font-weight: 800;
+    margin: 0.2rem 0;
+    color: #ffffff;
+}
+
+/* Metric label */
+.metric-item p {
+    font-size: 0.95rem;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 0.4px;
+}
+
+/* ===============================
+   ✨ ICON ANIMATION
+   =============================== */
+@keyframes pulseGlow {
+    0% {
+        transform: scale(1);
+        text-shadow: 0 0 6px rgba(46, 204, 113, 0.6);
+    }
+    50% {
+        transform: scale(1.12);
+        text-shadow: 0 0 14px rgba(46, 204, 113, 1);
+    }
+    100% {
+        transform: scale(1);
+        text-shadow: 0 0 6px rgba(46, 204, 113, 0.6);
+    }
+}
+
    
 
 

@@ -134,6 +134,15 @@ def reset_app():
     st.session_state.analysis_run = False
     st.session_state.prediction_result = None
     st.rerun() # Trigger a rerun to go back to the welcome state
+
+
+
+st.markdown("""
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+""", unsafe_allow_html=True)
+
+
     
 # --- 2.3. HIDE DEFAULT STREAMLIT PAGE SELECTOR ---
 hide_pages_css = """
@@ -570,12 +579,14 @@ else:
     
     with col_diseases:
         st.markdown(f"""
-            <div class='metric-item'>
-                <i class="fa-solid fa-virus"></i>
+            <div class="metric-item metric-disease">
+                <div class="metric-icon">
+                    <i class="fa-solid fa-virus"></i>
+                </div>
                 <h4>{total_classes}+</h4>
                 <p>Disease Classes</p>
             </div>
-        """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
         
     with col_plants:
         st.markdown(f"""

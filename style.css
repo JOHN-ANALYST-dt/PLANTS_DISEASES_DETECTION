@@ -480,45 +480,4 @@ div[data-testid*="new_analysis_button"] button:hover {
 
 
 
-/* Custom Button Classes for Plants */
-/* ==================================================================== */
-/* 9. SELECTBOX FIXES (To ensure readability in the dark sidebar)       */
-/* ==================================================================== */
-
-/* Target the Streamlit Selectbox widget container within the sidebar */
-[data-testid="stSidebar"] [data-testid="stSelectbox"] {
-    /* Ensure the entire widget container respects the dark theme */
-    color: white !important; 
-}
-
-/* Target the actual displayed input value area (the box itself) */
-[data-testid="stSidebar"] [data-testid="stSelectbox"] div[data-baseweb="select"] div[data-testid="stInput"] {
-    /* Set a dark background for the input box */
-    background-color: #3b4d5e !important; /* Dark Blue-Gray color */
-    border: 1px solid #5d8aa8 !important; /* Light border for contrast */
-    color: white !important; /* Ensure text remains white */
-    border-radius: 8px !important;
-}
-
-/* Target the text *inside* the selectbox */
-[data-testid="stSidebar"] [data-testid="stSelectbox"] div[data-baseweb="select"] div[data-testid="stInput"] > div {
-    color: white !important;
-}
-
-/* Target the dropdown menu (the actual list that appears) */
-div[data-baseweb="popover"] ul {
-    background-color: #333 !important; /* Dark background for the dropdown list */
-    border: 1px solid #555 !important;
-}
-
-/* Target the items inside the dropdown list */
-div[data-baseweb="popover"] li {
-    color: white !important; /* White text for the list items */
-}
-
-/* Fix hover state for dropdown items */
-div[data-baseweb="popover"] li:hover {
-    background-color: #0f5132 !important; /* Highlight color on hover */
-    color: white !important;
-}
 

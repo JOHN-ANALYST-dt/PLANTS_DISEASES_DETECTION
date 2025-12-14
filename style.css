@@ -224,7 +224,6 @@ div[data-testid="stCameraInput"] > div:first-child > button {
             margin-bottom: 15px;
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
-            position: absolute;
             margin-right: 5px;
 
 }
@@ -245,7 +244,7 @@ div[data-testid="stCameraInput"] > div:first-child > button {
             margin-bottom: 15px;
             backdrop-filter: blur(9px);
             -webkit-backdrop-filter: blur(9px);
-            position: absolute;
+            
             margin-left: 34%;
 }
 .selector h3{

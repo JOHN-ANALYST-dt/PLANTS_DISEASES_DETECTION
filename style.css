@@ -538,16 +538,7 @@ div[data-testid*="new_analysis_button"] button:hover {
     }
 }
 
-   .about-container {
-    background: rgb(32, 173, 32);
-    border-radius: 16px;
-    padding: 1.4rem 1.6rem;
-    max-width: 900px;
-    margin: 0 auto 2rem auto;
-    text-align: center;
-    color: white;
-    box-shadow: 0 12px 28px rgba(0,0,0,0.35);
-}
+   
 
 
 

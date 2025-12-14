@@ -27,7 +27,7 @@ BASE_DIR = pathlib.Path(__file__).parent
 # The actual models are loaded via MODEL_MAPPING.
 SINGLE_MODEL_PATH = os.path.join(BASE_DIR, "leaf_disease_mobilenet_final2.h5")
 REJECTION_THRESHOLD = 0.50
-IMG_SIZE = (224, 224) 
+IMG_SIZE = (248,248) 
 TITLE = "AgroVision AI : Crop Disease Detector"
 
 # Background Image Setup: Ensure these files are in the same directory

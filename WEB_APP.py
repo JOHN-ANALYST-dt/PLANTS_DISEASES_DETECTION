@@ -591,7 +591,9 @@ else:
     with col_plants:
         st.markdown(f"""
             <div class='metric-item'>
-                <p style='font-size: 2.5em; margin: 0;'>🌿</p>
+                <div class="metric-icon">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
                 <h4>{total_plants}</h4>
                 <p>Crop Types Covered</p>
             </div>

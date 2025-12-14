@@ -455,6 +455,7 @@ if st.session_state.selected_plant:
                 <h3>📊 Top Prediction Scores (Scoped to {selected_plant})</h3>
             </div>""", unsafe_allow_html=True)
             st.sidebar.markdown("---")
+            st.sidebar.markdown("---")
             
             # --- CRITICAL CHANGE: Filter Scores by Selected Plant ---
             raw_predictions = results['raw_predictions']

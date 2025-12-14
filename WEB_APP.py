@@ -11,7 +11,17 @@ import base64
 import time
 
 # Assuming 'intervention.py' exists in the same directory
-from intervention import get_interventions
+# Ensure 'intervention.py' is available with a get_interventions function
+try:
+    from intervention import get_interventions
+except ImportError:
+    # Define a dummy function if the file is missing to prevent errors
+    def get_interventions(disease_name):
+        return {
+            'title': "Intervention Data Missing",
+            'action': ["The 'intervention.py' file could not be found.", "Please check your project structure."]
+        }
+
 
 # ==============================================================================
 # 1. CONFIGURATION & CONSTANTS
@@ -23,7 +33,7 @@ BASE_DIR = pathlib.Path(__file__).parent
 # Paths and Constants
 MODEL_PATH = os.path.join(BASE_DIR, "leaf_disease_mobilenet_final2.h5")
 REJECTION_THRESHOLD = 0.50
-# FIXED ML ERROR: Set to (128, 128) as per model requirements
+# FIXED ML ERROR: Set to (224, 224) as per model requirements
 IMG_SIZE = (224, 224) 
 
 TITLE = "AgroVision AI : Crop Disease Detector"
@@ -55,20 +65,6 @@ FULL_CLASS_NAMES = [
     'onion downy mildew', 'onion healthy leaf', 'onion leaf blight', 'onion purple blotch','onion thrips damage'
 ]
 
-# Function to update the selected plant in session state
-def set_plant(plant_name):
-    st.session_state.selected_plant = plant_name
-    st.session_state.analysis_run = False # Reset analysis when a new plant is selected
-    st.session_state.prediction_result = None
-    
-# NEW FUNCTION: Reset the entire analysis flow
-def reset_app():
-    st.session_state.selected_plant = None
-    st.session_state.analysis_run = False
-    st.session_state.prediction_result = None
-    st.rerun() # Trigger a rerun to go back to the welcome state
-
-
 # --- Categorization for Sidebar ---
 VEGETABLE_CLASSES = ['Corn', 'Potato', 'Tomato', 'Pepper Bell', 'Soybean', 'Onion', 'Cabbage']
 FRUIT_CLASSES = ['Apple', 'Grape', 'Cherry', 'Strawberry', 'Raspberry', 'Peach', 'Orange']
@@ -76,7 +72,7 @@ ALL_PLANTS = VEGETABLE_CLASSES + FRUIT_CLASSES
 
 
 # ==============================================================================
-# 2. APP SETUP (MUST BE FIRST EXECUTABLE COMMANDS)
+# 2. APP SETUP & STATE MANAGEMENT
 # ==============================================================================
 
 # --- 2.1. STREAMLIT PAGE CONFIG ---
@@ -96,6 +92,14 @@ def set_plant(plant_name):
     st.session_state.analysis_run = False # Reset analysis when a new plant is selected
     st.session_state.prediction_result = None
     
+# NEW FUNCTION: Reset the entire analysis flow
+def reset_app():
+    st.session_state.selected_plant = None
+    st.session_state.analysis_run = False
+    st.session_state.prediction_result = None
+    st.rerun() # Trigger a rerun to go back to the welcome state
+
+
 # --- 2.3. HIDE DEFAULT STREAMLIT PAGE SELECTOR ---
 hide_pages_css = """
 <style>
@@ -109,7 +113,7 @@ st.markdown(hide_pages_css, unsafe_allow_html=True)
 
 
 # ==============================================================================
-# 3. UTILITY FUNCTIONS
+# 3. UTILITY FUNCTIONS & CSS INJECTION
 # ==============================================================================
 
 def encode_image_to_base64(path):
@@ -136,9 +140,8 @@ def inject_custom_css(file_path, base64_url):
     """
     Reads local CSS, replaces the placeholder with the Base64 URL, 
     and injects the final styles into the Streamlit app.
-    
-    MODIFIED: Removes background from main content and applies it to the sidebar.
     """
+    # This block enforces the sidebar to have the background image
     img_base64_css = f"""
     /* 1. REMOVE background from main content area (stVerticalBlock) */
     [data-testid="stVerticalBlock"] > div:nth-child(1) {{
@@ -197,12 +200,6 @@ inject_custom_css(CSS_PATH, img_base64_url)
 
 
 # ==============================================================================
-# 4.2. CUSTOM CSS for Buttons, Captions, and HOME PAGE Marketing Block
-# ==============================================================================
-
-
-
-# ==============================================================================
 # 5. LOAD MODEL
 # ==============================================================================
 @st.cache_resource
@@ -217,7 +214,9 @@ def load_trained_model(path):
         return "DummyModel"
     
     try:
-        model = load_model(path)
+        # Suppress potential TensorFlow warnings during load
+        with tf.get_logger().disable_resource_variables():
+             model = load_model(path)
         st.success("✅ Machine Learning Model Loaded Successfully!")
         return model
     except Exception as e:
@@ -360,8 +359,8 @@ if st.session_state.selected_plant:
     if input_data is not None:
         st.markdown("---")
         st.markdown("""<div class="analysis">
-                        <h3>Image Selected for Analysis</h3>
-                    </div>""", unsafe_allow_html=True)
+                            <h3>Image Selected for Analysis</h3>
+                        </div>""", unsafe_allow_html=True)
         
         image_col, result_col = st.columns([1, 1])
 
@@ -570,12 +569,11 @@ else:
     unsafe_allow_html=True
 )
 
-  
+    
 
 # ==============================================================================
 # 9. SIDEBAR INSTRUCTIONS & NAVIGATION
 # ==============================================================================
-
 
 
 # --- Sidebar Content ---
@@ -589,7 +587,7 @@ st.sidebar.markdown(
 )
 st.sidebar.markdown("---")
 
-# This button is now styled by the default Streamlit theme, but its type is 'primary'
+# Home Button
 st.sidebar.button(
     label="New Analysis / Home",
     key="sidebar_home_button",
@@ -600,14 +598,9 @@ st.sidebar.button(
 )
 
 
-# ---------- Sidebar navigation (Buttons to update state) ----------
-
-# ==============================================================================
-# 9. SIDEBAR NAVIGATION (Simplified Dropdown List)
-# ==============================================================================
+# ---------- Sidebar navigation (Dropdown List) ----------
 
 # --- Optional: Display a custom header using one of your defined CSS classes ---
-
 st.sidebar.markdown(
     """
     <div class="sidebar2">
@@ -617,9 +610,6 @@ st.sidebar.markdown(
     unsafe_allow_html=True
 )
 
-
-st.sidebar.markdown("---")
-st.sidebar.markdown("---")
 # 1. Prepare the options list
 # Add a prompt to the start of the list if no plant is currently selected
 options_list = ["--- Select a Crop ---"] + ALL_PLANTS
@@ -649,4 +639,3 @@ if selected_option and selected_option != "--- Select a Crop ---":
         set_plant(selected_option)
 
 st.sidebar.markdown("---")
-# ... (rest of sidebar content continues here)

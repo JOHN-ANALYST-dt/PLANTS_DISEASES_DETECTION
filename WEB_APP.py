@@ -1,6 +1,6 @@
 import streamlit as st
 import tensorflow as tf
-from tensorflow.keras.models import load_model # Used for the single model fallback
+from tensorflow.keras.models import load_model 
 from tensorflow.keras.preprocessing import image
 import numpy as np
 import io
@@ -9,7 +9,7 @@ import os
 import pathlib
 import base64
 import time
-import pandas as pd # Added for clear results visualization
+import pandas as pd 
 
 # Assuming 'intervention.py' exists in the same directory
 # NOTE: Ensure intervention.py handles the new per-plant classes
@@ -23,11 +23,9 @@ from intervention import get_interventions
 BASE_DIR = pathlib.Path(__file__).parent 
 
 # Paths and Constants
-# NOTE: MODEL_PATH is now only used as a fallback/example.
-# The actual models are loaded via MODEL_MAPPING.
 SINGLE_MODEL_PATH = os.path.join(BASE_DIR, "leaf_disease_mobilenet_final2.h5")
 REJECTION_THRESHOLD = 0.50
-IMG_SIZE = (248,248) 
+# NOTE: IMG_SIZE is now determined dynamically by the model mapping below
 TITLE = "AgroVision AI : Crop Disease Detector"
 
 # Background Image Setup: Ensure these files are in the same directory
@@ -41,30 +39,32 @@ FRUIT_CLASSES = ['Apple', 'Grape', 'Cherry', 'Strawberry', 'Raspberry', 'Peach',
 ALL_PLANTS = VEGETABLE_CLASSES + FRUIT_CLASSES
 
 # ==============================================================================
-# 1.1. 🧠 DYNAMIC MODEL AND CLASS MAPPINGS (THE CORE CHANGE)
+# 1.1.  DYNAMIC MODEL, CLASS, AND SIZE MAPPINGS (THE CORE FIX)
 # ==============================================================================
 
-# ⚠️ IMPORTANT: UPDATE THESE PATHS TO YOUR TRAINED MODEL FILES!
-# These models must be trained ONLY on their specific classes.
-MODEL_MAPPING = {
-    "Potato": os.path.join(BASE_DIR, "APP_MODELS/_model.h5"),
-    "Tomato": os.path.join(BASE_DIR, "APP_MODELS/TOMATO_mobileNet_model.h5"),
-    "Apple": os.path.join(BASE_DIR, "APP_MODELS/APPLE_mobileNet_model7.h5"),
-    "Corn": os.path.join(BASE_DIR, "APP_MODELS/CORN_mobileNet_model7.h5"),
-    "Grape": os.path.join(BASE_DIR, "APP_MODELS/GRAPES_mobileNet_model7.h5"),
-    "Cherry": os.path.join(BASE_DIR, "APP_MODELS/CHERRY_mobileNet_model7.h5"),
-    "Strawberry": os.path.join(BASE_DIR, "APP_MODELS/STRAWBERRY_mobileNet_model.h5"),
-    "Raspberry": os.path.join(BASE_DIR, "APP_MODELS/RASPBERRY_mobileNet_model.h5"),
-    "Peach": os.path.join(BASE_DIR, "APP_MODELS/peach_model.h5"),
-    "Orange": os.path.join(BASE_DIR, "APP_MODELS/ORANGES_mobileNet_model2.h5"),
-    "Pepper Bell": os.path.join(BASE_DIR, "APP_MODELS/PEPPER_mobileNet_model2.h5"),
-    "Soybean": os.path.join(BASE_DIR, "APP_MODELS/soybean_model.h5"),
-    "Onion": os.path.join(BASE_DIR, "APP_MODELS/ONION_mobileNet_model.h5"),
-    "Cabbage": os.path.join(BASE_DIR, "APP_MODELS/CABBAGE_mobileNet_model7.h5"),
+
+DYNAMIC_MODEL_MAPPING = {
+    "Potato": {"path": os.path.join(BASE_DIR, "APP_MODELS/_model.h5"), "img_size": (224, 224)}, # Default
+    "Tomato": {"path": os.path.join(BASE_DIR, "APP_MODELS/TOMATO_mobileNet_model.h5"), "img_size": (224, 224)},
+    "Apple": {"path": os.path.join(BASE_DIR, "APP_MODELS/APPLE_mobileNet_model7.h5"), "img_size": (224, 224)},
+    
+    "Corn": {"path": os.path.join(BASE_DIR, "APP_MODELS/CORN_mobileNet_model7.h5"), "img_size": (248, 248)}, 
+    
+    "Grape": {"path": os.path.join(BASE_DIR, "APP_MODELS/GRAPES_mobileNet_model7.h5"), "img_size": (124, 124)}, 
+    
+    "Cherry": {"path": os.path.join(BASE_DIR, "APP_MODELS/CHERRY_mobileNet_model7.h5"), "img_size": (224, 224)},
+    "Strawberry": {"path": os.path.join(BASE_DIR, "APP_MODELS/STRAWBERRY_mobileNet_model.h5"), "img_size": (224, 224)},
+    "Raspberry": {"path": os.path.join(BASE_DIR, "APP_MODELS/RASPBERRY_mobileNet_model.h5"), "img_size": (224, 224)},
+    "Peach": {"path": os.path.join(BASE_DIR, "APP_MODELS/peach_model.h5"), "img_size": (224, 224)},
+    "Orange": {"path": os.path.join(BASE_DIR, "APP_MODELS/ORANGES_mobileNet_model2.h5"), "img_size": (224, 224)},
+    "Pepper Bell": {"path": os.path.join(BASE_DIR, "APP_MODELS/PEPPER_mobileNet_model2.h5"), "img_size": (224, 224)},
+    "Soybean": {"path": os.path.join(BASE_DIR, "APP_MODELS/soybean_model.h5"), "img_size": (224, 224)},
+    "Onion": {"path": os.path.join(BASE_DIR, "APP_MODELS/ONION_mobileNet_model.h5"), "img_size": (224, 224)},
+    "Cabbage": {"path": os.path.join(BASE_DIR, "APP_MODELS/CABBAGE_mobileNet_model7.h5"), "img_size": (224, 224)},
 }
 
-# ⚠️ IMPORTANT: DEFINE THE SPECIFIC CLASS NAMES FOR EACH MODEL
-# This list MUST match the class order used during the training of the specific model.
+
+# ⚠️ IMPORTANT: DEFINE THE SPECIFIC CLASS NAMES FOR EACH MODEL (Remains the same as your input)
 CLASS_NAMES_MAPPING = {
     "Potato": ['Potato Early Blight', 'Potato Late Blight', 'Potato Healthy'],
     "Tomato": ['Tomato Bacterial Spot', 'Tomato Early Blight', 'Tomato Healthy', 'Tomato late blight',
@@ -151,21 +151,21 @@ st.markdown(hide_pages_css, unsafe_allow_html=True)
 # 3. UTILITY FUNCTIONS (CSS Injection remains unchanged)
 # ==============================================================================
 
-
-
 # ---------------------------------------------------
-# 3.1. DYNAMIC MODEL LOADING FUNCTION (NEW/MODIFIED)
+# 3.1. DYNAMIC MODEL LOADING FUNCTION (MODIFIED)
 # ---------------------------------------------------
 @st.cache_resource
 def load_specific_model(plant_name):
     """
     Dynamically loads the specific Keras model based on the selected plant name.
     """
-    if plant_name not in MODEL_MAPPING:
+    # Check the NEW DYNAMIC_MODEL_MAPPING structure
+    if plant_name not in DYNAMIC_MODEL_MAPPING:
         st.error(f"Configuration Error: No model file path found for '{plant_name}'.")
         return "DummyModel"
     
-    model_path = MODEL_MAPPING[plant_name]
+    # Retrieve the model path from the new dict structure
+    model_path = DYNAMIC_MODEL_MAPPING[plant_name]["path"]
     
     if not os.path.exists(model_path):
         st.warning(f"Model file not found at path: {model_path}. Using Dummy Model.")
@@ -180,7 +180,7 @@ def load_specific_model(plant_name):
         return "DummyModel" # Return the dummy model string on failure
 
 # ---------------------------------------------------
-# 3.2. CSS Injection execution (moved here)
+# 3.2. CSS Injection execution 
 # ---------------------------------------------------
 def encode_image_to_base64(path):
     """Reads a local image and encodes it to a Base64 Data URL string."""
@@ -212,7 +212,6 @@ def inject_custom_css(file_path, base64_url):
     [data-testid="stVerticalBlock"] > div:nth-child(1) {{
         background-image: none ;
         background-color: transparent ;
-        /* Revert to default padding/color for main content */
         padding: 0 ;
         margin-bottom: 0 ;
         color: inherit ;
@@ -244,7 +243,7 @@ def inject_custom_css(file_path, base64_url):
             if CSS_PLACEHOLDER in css_content:
                 final_css = css_content.replace(CSS_PLACEHOLDER, base64_url) + img_base64_css
             else:
-                 final_css = css_content + img_base64_css
+                final_css = css_content + img_base64_css
                  
         st.markdown(f'<style>{final_css}</style>', unsafe_allow_html=True)
     except FileNotFoundError:
@@ -259,44 +258,37 @@ inject_custom_css(CSS_PATH, img_base64_url)
 
 
 # ==============================================================================
-# 5. LOAD MODEL (REPLACED WITH DYNAMIC LOADING)
+# 5. MODEL LOADING STATUS
 # ==============================================================================
-
-# We no longer load the single model at the start.
-# The model variable is now determined in the prediction loop.
-# Keeping the function name for reference, but removing the auto-call.
-# model = load_trained_model(SINGLE_MODEL_PATH)
-st.success("✅ Machine Learning Infrastructure Initialized.") # Simple success message
+st.success("✅ Machine Learning Infrastructure Initialized.") 
 
 
 # ==============================================================================
-# 6. PREDICTION FUNCTION (MODIFIED)
+# 6. PREDICTION FUNCTION (MODIFIED TO USE DYNAMIC IMG_SIZE)
 # ==============================================================================
 def preprocess_and_predict(img_data, model, class_names, img_size):
     """
     Preprocesses the image data and returns the prediction or a mock prediction 
     if the model is a DummyModel.
-    'model' is now the Keras object or the string 'DummyModel'.
+    'img_size' is the dynamic target size (e.g., (224, 224) or (124, 124)).
     """
     
     # --- MOCK MODEL LOGIC ---
     if model == "DummyModel":
+        # (Mock logic remains the same)
         time.sleep(1)
         
         selected_plant = st.session_state.selected_plant if st.session_state.selected_plant else "Tomato"
         plant_prefix = selected_plant.split(' ')[0].lower()
         
-        # Filter for relevant mock classes (using the passed class_names list)
         relevant_classes = [c for c in class_names if c.lower().startswith(plant_prefix)]
         
         if not relevant_classes:
             return "No Relevant Class Found", 0.0, np.zeros(len(class_names))
 
-        # Randomly choose a healthy or diseased class from the relevant list
         healthy_options = [c for c in relevant_classes if 'healthy' in c.lower()]
         diseased_options = [c for c in relevant_classes if 'healthy' not in c.lower()]
         
-        # 60% chance of predicting a disease if options exist
         if np.random.rand() < 0.6 and diseased_options:
             predicted_class = np.random.choice(diseased_options)
         elif healthy_options:
@@ -314,7 +306,7 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
             pass 
         return predicted_class, confidence, raw_predictions
 
-    # --- REAL MODEL PROCESSING (Now using the dynamically loaded model object) ---
+    # --- REAL MODEL PROCESSING ---
     try:
         # Image loading logic remains
         if isinstance(img_data, io.BytesIO):
@@ -326,7 +318,9 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
         else:
             img = Image.open(img_data).convert('RGB')
 
-        img = img.resize(img_size)
+        # CRITICAL FIX: Use the dynamically provided img_size for resizing
+        img = img.resize(img_size) 
+        
         img_array = image.img_to_array(img)
         img_array = np.expand_dims(img_array, axis=0)
         img_array = img_array / 255.0 
@@ -335,7 +329,7 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
         predictions = model.predict(img_array, verbose=0)[0]
         predicted_index = np.argmax(predictions)
         confidence = predictions[predicted_index]
-        predicted_class = class_names[predicted_index] # Uses the specific plant's class names
+        predicted_class = class_names[predicted_index] 
 
         return predicted_class, confidence, predictions
     except Exception as e:
@@ -360,7 +354,7 @@ st.markdown(
 
 
 # ==============================================================================
-# 8. INPUT AND ANALYSIS SECTION (MODIFIED)
+# 8. INPUT AND ANALYSIS SECTION (MODIFIED TRIGGER)
 # ==============================================================================
 
 if st.session_state.selected_plant:
@@ -379,9 +373,9 @@ if st.session_state.selected_plant:
         
         col_cam, col_upload = st.columns(2)
         
-        # 1. Camera Input: Using a custom key and label for CSS targeting
+        # 1. Camera Input
         camera_img = col_cam.camera_input(
-            label="Capture Photo", # Simplified label
+            label="Capture Photo", 
             key="camera_input"
         )
         
@@ -415,13 +409,16 @@ if st.session_state.selected_plant:
         with result_col:
             st.markdown("<br>", unsafe_allow_html=True)
             
-            # Prediction button (Styled to look like a Markdown Block)
+            # Prediction button
             if st.button(f'Diagnose {selected_plant} Leaf Now', key='diagnose_button', use_container_width=True):
                 st.session_state.analysis_run = True 
                 
                 # --- NEW DYNAMIC MODEL LOGIC HERE ---
-                # 1. Load the model specific to the selected plant (uses cache)
                 current_model = load_specific_model(selected_plant)
+                
+                # 1. NEW STEP: Retrieve the required image size from the DYNAMIC_MODEL_MAPPING
+                # Uses (224, 224) as a safe fallback if the configuration is missing
+                required_img_size = DYNAMIC_MODEL_MAPPING.get(selected_plant, {}).get("img_size", (224, 224))
                 
                 # 2. Get the specific class names for the selected plant
                 current_class_names = CLASS_NAMES_MAPPING.get(selected_plant, [])
@@ -429,9 +426,12 @@ if st.session_state.selected_plant:
                 if not current_class_names:
                     st.error(f"Configuration Error: Class names not found for {selected_plant}.")
                 else:
-                    with st.spinner(f'Running analysis for {selected_plant} leaf with specialized model...'):
+                    with st.spinner(f'Running analysis for {selected_plant} leaf with specialized model (Size: {required_img_size})...'):
                         predicted_class, confidence, raw_predictions = preprocess_and_predict(
-                            input_data, current_model, current_class_names, IMG_SIZE
+                            input_data, 
+                            current_model, 
+                            current_class_names, 
+                            required_img_size # <--- PASS THE DYNAMIC SIZE
                         )
 
                     st.session_state.prediction_result = {
@@ -440,7 +440,6 @@ if st.session_state.selected_plant:
                         "raw_predictions": raw_predictions,
                         "class_names_used": current_class_names # Save the class names used
                     }
-                    # State change automatically triggers rerun.
     
     # --- Display Results if analysis_run is True and results are available ---
     if st.session_state.analysis_run and st.session_state.prediction_result:
@@ -540,7 +539,6 @@ if st.session_state.selected_plant:
 
 # --- Initial Message if no plant is selected (The New Home Page) ---
 else:
-    # ... (Your existing Home Page/Marketing Block code remains here) ...
     st.markdown(
     """
     <div class="custom-info-box">
@@ -615,7 +613,7 @@ else:
 
 
 # ==============================================================================
-# 9. SIDEBAR INSTRUCTIONS & NAVIGATION (MODIFIED)
+# 9. SIDEBAR INSTRUCTIONS & NAVIGATION
 # ==============================================================================
 
 # --- Sidebar Content ---

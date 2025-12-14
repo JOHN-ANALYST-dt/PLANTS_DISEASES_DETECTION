@@ -156,13 +156,13 @@ hide_pages_css = """
 
 /* 2. STICKY TOP NAVIGATION BAR CONTAINER */
 .top-nav-container {
-    position: sticky;
+    position: fixed;
     top: 0;
-    left: 0; 
+    left: 0; /* Align left edge of the screen */
     /* Account for sidebar width (approx 210px in default wide mode) */
     width: calc(100% - 220px); 
     height: 60px;
-    background: light-green;
+    background: linear-gradient(135deg, #145a32, #0b3d2e);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -198,23 +198,13 @@ hide_pages_css = """
     color: #ffffff !important;
 }
 
+/* Active tab style - Use specific keys for selection */
+/* Streamlit converts button label to a key hash. We can't easily target the active button by class
+   since Streamlit doesn't apply one. We use the custom on_click logic for visual state. */
+
 /* 3. Push page content down */
 .main-content {
-    /* Adjusted margin to account for the status message */
-    margin-top: 100px; 
-}
-
-/* NEW: Style and position the Success message container */
-[data-testid="stSuccess"] {
-    position: fixed;
-    top: 60px; /* Directly below the 60px high .top-nav-container */
-    left: 0;
-    width: calc(100% - 220px);
-    margin-left: 220px;
-    z-index: 9998; /* Below the nav bar */
-    border-radius: 0; /* Remove rounded corners */
-    padding: 8px 1rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-top: 70px; /* Must be larger than .top-nav-container height */
 }
 </style>
 """
@@ -275,9 +265,8 @@ inject_custom_css(CSS_PATH, img_base64_url)
 
 
 # ==============================================================================
-# 5. MODEL LOADING STATUS (Message is placed here)
+# 5. MODEL LOADING STATUS
 # ==============================================================================
-# This status message will now be positioned directly under the navigation bar via custom CSS
 st.success("✅ Machine Learning Infrastructure Initialized.") 
 
 
@@ -335,35 +324,68 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
 
 
 # ==============================================================================
-# 7. MAIN NAVIGATION BAR
+# 7. MAIN NAVIGATION BAR (NEW STICKY HEADER)
 # ==============================================================================
 
+# Use a markdown block with a class to apply the fixed position CSS
 st.markdown('<div class="top-nav-container">', unsafe_allow_html=True)
 col1, col2, col3 = st.columns(3)
 
-# Function to update button styling for active state (since we can't use CSS classes easily)
-def style_active_button(key):
-    # This style is injected to override the default button style for the active tab
-    active_style = '{background: #2ecc71!important; color: #0f2f1c!important; font-weight: 700;}'
-    st.markdown(f'<style> [data-testid="stColumn"] > div > button[key="{key}"] {active_style} </style>', unsafe_allow_html=True)
+# Function to render a styled button based on active state
+def nav_button(col, label, key, target_tab):
+    is_active = st.session_state.active_tab == target_tab
+    btn_class = "st-emotion-cache-19k8h6q" # Default Streamlit button class - hard to override
+    
+    
+    
+    # Custom HTML for styling the button based on active state
+    button_html = f"""
+    <button 
+        class="{btn_class} {'active' if is_active else ''}" 
+        style="
+            background: {"#0ee066" if is_active else 'transparent'};
+            color: {'#0f2f1c' if is_active else 'rgba(255,255,255,0.7)'};
+            font-weight: 700;
+            border: none;
+            padding: 8px 18px;
+            cursor: pointer;
+            transition: all 0.25s ease-in-out;
+            border-radius: 12px;
+            box-shadow: {'0 0 10px rgba(46, 204, 113, 0.6)' if is_active else 'none'};
+            width: 100%;
+        "
+    >
+    {label}
+    </button>
+    """
+    
+    
+    # to handle the session state update via its internal callback system.
+    with col:
+        if st.button(label, key=key, on_click=set_main_tab, args=(target_tab,), use_container_width=True):
+            pass # Action is handled by on_click
 
 with col1:
-    if st.button("🏠 Home", key="nav_home", on_click=reset_app, use_container_width=True):
-        pass
+    # Home button logic
+    if st.button("🏠 Home", key="nav_home", use_container_width=True):
+        reset_app() # This function resets all and sets active_tab to Home
     if st.session_state.active_tab == "Home":
-        style_active_button("nav_home")
+        st.markdown('<style> [data-testid="stColumn"] > div > button[key="nav_home"] {background: grey; color: white; font-weight: 700;}</style>', unsafe_allow_html=True)
 
 with col2:
-    if st.button("🔬 Diagnosis", key="nav_diagnosis", on_click=set_main_tab, args=("Diagnosis",), use_container_width=True):
-        pass
+    # Diagnosis button logic
+    if st.button("🔬 Diagnosis", key="nav_diagnosis", use_container_width=True):
+        set_main_tab("Diagnosis")
     if st.session_state.active_tab == "Diagnosis":
-        style_active_button("nav_diagnosis")
+        st.markdown('<style> [data-testid="stColumn"] > div > button[key="nav_diagnosis"] {background: grey; color: white; font-weight: 700;}</style>', unsafe_allow_html=True)
 
 with col3:
-    if st.button("ℹ️ About Us", key="nav_about", on_click=set_main_tab, args=("About Us",), use_container_width=True):
-        pass
+    # About Us button logic
+    if st.button("ℹ️ About Us", key="nav_about", use_container_width=True):
+        set_main_tab("About Us")
     if st.session_state.active_tab == "About Us":
-        style_active_button("nav_about")
+        st.markdown('<style> [data-testid="stColumn"] > div > button[key="nav_about"] {background: grey; color: white; font-weight: 700;}</style>', unsafe_allow_html=True)
+
 
 st.markdown('</div>', unsafe_allow_html=True)
 
@@ -458,9 +480,12 @@ elif st.session_state.active_tab == "Diagnosis":
             unsafe_allow_html=True
         )
     else:
-        # Diagnosis Active Page
+        # Diagnosis Active Page (Use the existing logic from your input)
         selected_plant = st.session_state.selected_plant
         st.markdown("---") 
+        
+        # ... (Rest of the Input/Analysis code for Diagnosis) ...
+        # NOTE: I am using the existing logic structure from your input, just placed here.
         
         with st.container(border=True): 
             st.markdown(
@@ -615,17 +640,17 @@ elif st.session_state.active_tab == "About Us":
         """
         <div class="about-container">
             <p>
- AgroVision AI is built to help farmers spot crop diseases early, using a simple photo of a plant leaf.<br>
+ AgroVision AI is built to help farmers spot crop diseases early, using a simple photo of a plant leaf.
 Whether you are growing potatoes, tomatoes, cabbages, maize, beans, mangoes, or bananas, the system checks the leaf and helps identify common problems like leaf blight, rust, spots, pests damage, and nutrient stress before the disease spreads across your farm.
-After identifying a problem, AgroVision AI guides you on what to do next, including:<br>
+After identifying a problem, AgroVision AI guides you on what to do next, including:
 
-      1. Recommended treatments that farmers commonly use<br>
+      1. Recommended treatments that farmers commonly use
 
-      2. How and when to apply sprays or remedies<br>
+    2. How and when to apply sprays or remedies
 
-      3. Simple prevention tips to protect healthy plants<br>
+      3. Simple prevention tips to protect healthy plants
 
-      4. Good farming practices to reduce future outbreaks<br>
+      4. Good farming practices to reduce future outbreaks
 
 Our aim is to support farmers with clear and practical advice, not complicated science.
 By acting early, farmers can save crops, reduce losses, and improve yields, even with limited resources.
@@ -673,6 +698,7 @@ st.sidebar.markdown(
 )
 st.sidebar.markdown("---")
 
+# Note: The 'New Analysis / Home' button now uses the central reset_app function
 st.sidebar.button(
     label="New Analysis / Home",
     key="sidebar_home_button",
@@ -695,6 +721,13 @@ st.sidebar.markdown(
 for plant in ALL_PLANTS:
     is_selected = st.session_state.selected_plant == plant
     
+    # We use a custom style to highlight the selected button visually
+    btn_style = (
+        "background-color: #2ecc71; color: #0f2f1c; font-weight: bold; border: 2px solid #FF9900;" 
+        if is_selected 
+        else ""
+    )
+    
     st.sidebar.button(
         label=plant,
         key=f"plant_btn_{plant}",
@@ -702,8 +735,9 @@ for plant in ALL_PLANTS:
         args=(plant,),
         type="secondary",
         use_container_width=True,
+        # Inject custom style using markdown for visual feedback
     )
     if is_selected:
-         # Highlight the selected sidebar button
-         active_sidebar_style = 'background-color: #2ecc71; color: #0f2f1c; font-weight: bold; border: 2px solid #FF9900;'
-         st.sidebar.markdown(f'<style> [data-testid="stSidebar"] button[key="plant_btn_{plant}"] {{ {active_sidebar_style} }} </style>', unsafe_allow_html=True)
+         st.sidebar.markdown(f'<style> [data-testid="stSidebar"] button[key="plant_btn_{plant}"] {{ {btn_style} }} </style>', unsafe_allow_html=True)
+
+st.sidebar.markdown("---")

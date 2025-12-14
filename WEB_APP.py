@@ -343,8 +343,8 @@ def nav_button(col, label, key, target_tab):
     <button 
         class="{btn_class} {'active' if is_active else ''}" 
         style="
-            background: {"#0ee066" if is_active else 'transparent'}!important;
-            color: {'#0f2f1c' if is_active else 'rgba(255,255,255,0.7)'}!important;
+            background: {"#0ee066" if is_active else 'transparent'};
+            color: {'#0f2f1c' if is_active else 'rgba(255,255,255,0.7)'};
             font-weight: 700;
             border: none;
             padding: 8px 18px;
@@ -646,7 +646,7 @@ After identifying a problem, AgroVision AI guides you on what to do next, includ
 
       1. Recommended treatments that farmers commonly use
 
-      2. How and when to apply sprays or remedies
+    2. How and when to apply sprays or remedies
 
       3. Simple prevention tips to protect healthy plants
 

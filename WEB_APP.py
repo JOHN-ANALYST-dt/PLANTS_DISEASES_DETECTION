@@ -554,9 +554,9 @@ if st.session_state.selected_plant:
 # --- Initial Message if no plant is selected (The New Home Page) ---
 else:
     def render_diagnosis_landing():
-    st.markdown(
+        st.markdown(
     """
-    <div class="custom-info-box">
+         <div class="custom-info-box">
         👈 <strong>Select a crop</strong> from the sidebar to begin the leaf disease diagnosis.
     </div>
     """,

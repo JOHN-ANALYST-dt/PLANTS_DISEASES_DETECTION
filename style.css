@@ -122,11 +122,11 @@ div[data-testid="stCameraInput"] > div:first-child > button {
 
 /* Ensure the titles inside the box are clear */
 .intervention-box h4 {
-    color: white !important;
+    color: white 
 }
 
 .text-white {
-    color: white !important; 
+    color: white 
    
 }
 .sidebar2-instruction-box {
@@ -404,20 +404,20 @@ div[data-testid="stImageCaption"] {
 
 /* --- 3. STYLING FOR THE NEW ANALYSIS BUTTON ('new_analysis_button') --- */
 div[data-testid*="new_analysis_button"] button {
-    background-color: #1abc9c !important; 
-    color: white !important;
-    font-size: 1.1em !important;
-    padding: 12px 25px !important;
-    border-radius: 8px !important;
-    border: 2px solid #16a085 !important;
-    font-weight: bold !important;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3) !important;
-    transition: all 0.2s ease !important;
+    background-color: #1abc9c;
+    color: white ;
+    font-size: 1.1em ;
+    padding: 12px 25px ;
+    border-radius: 8px ;
+    border: 2px solid #16a085 ;
+    font-weight: bold ;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3) ;
+    transition: all 0.2s ease;
 }
 
 div[data-testid*="new_analysis_button"] button:hover {
-    background-color: #16a085 !important;
-    border-color: #117864 !important;
+    background-color: #16a085 ;
+    border-color: #117864 ;
 }
 
 /* --- 4. NEW: STYLING FOR THE HOME PAGE MARKETING BLOCK --- */

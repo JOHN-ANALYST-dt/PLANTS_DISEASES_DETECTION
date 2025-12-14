@@ -650,7 +650,6 @@ for plant in ALL_PLANTS:
 
     is_selected = st.session_state.selected_plant == plant
     btn_class = "plant-btn-selected" if is_selected else "plant-btn"
-    st.sidebar.markdown(f'<div class="{btn_class}">', unsafe_allow_html=True)
     st.sidebar.button(
         label=plant,
         key=f"plant_btn_{plant}",
@@ -659,4 +658,4 @@ for plant in ALL_PLANTS:
         type="secondary",
         use_container_width=True
     )
-    st.sidebar.markdown("</div>", unsafe_allow_html=True)
+    

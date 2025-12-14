@@ -447,8 +447,9 @@ if st.session_state.selected_plant:
             for i, action in enumerate(intervention_data['action']):
                 st.markdown(f"**{i+1}.** {action}")
             st.markdown('</div>', unsafe_allow_html=True)
-            st.sidebar.markdown("---")
+            
         with col2:
+            st.sidebar.markdown("---")
             st.markdown(f"""
             <div class="confid">
                 <h3>📊 Top Prediction Scores (Scoped to {selected_plant})</h3>

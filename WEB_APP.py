@@ -336,14 +336,14 @@ def nav_button(col, label, key, target_tab):
     is_active = st.session_state.active_tab == target_tab
     btn_class = "st-emotion-cache-19k8h6q" # Default Streamlit button class - hard to override
     
-    # We use CSS to hide the default button appearance and rely on a custom style
+    
     
     # Custom HTML for styling the button based on active state
     button_html = f"""
     <button 
         class="{btn_class} {'active' if is_active else ''}" 
         style="
-            background: {'#2ecc71' if is_active else 'transparent'}!important;
+            background: {"#0ee066" if is_active else 'transparent'}!important;
             color: {'#0f2f1c' if is_active else 'rgba(255,255,255,0.7)'}!important;
             font-weight: 700;
             border: none;
@@ -359,7 +359,7 @@ def nav_button(col, label, key, target_tab):
     </button>
     """
     
-    # This renders the custom HTML button, but we still need the Streamlit button
+    
     # to handle the session state update via its internal callback system.
     with col:
         if st.button(label, key=key, on_click=set_main_tab, args=(target_tab,), use_container_width=True):
@@ -370,21 +370,21 @@ with col1:
     if st.button("🏠 Home", key="nav_home", use_container_width=True):
         reset_app() # This function resets all and sets active_tab to Home
     if st.session_state.active_tab == "Home":
-        st.markdown('<style> [data-testid="stColumn"] > div > button[key="nav_home"] {background: #2ecc71!important; color: #0f2f1c!important; font-weight: 700;}</style>', unsafe_allow_html=True)
+        st.markdown('<style> [data-testid="stColumn"] > div > button[key="nav_home"] {background: grey; color: white; font-weight: 700;}</style>', unsafe_allow_html=True)
 
 with col2:
     # Diagnosis button logic
     if st.button("🔬 Diagnosis", key="nav_diagnosis", use_container_width=True):
         set_main_tab("Diagnosis")
     if st.session_state.active_tab == "Diagnosis":
-        st.markdown('<style> [data-testid="stColumn"] > div > button[key="nav_diagnosis"] {background: #2ecc71!important; color: #0f2f1c!important; font-weight: 700;}</style>', unsafe_allow_html=True)
+        st.markdown('<style> [data-testid="stColumn"] > div > button[key="nav_diagnosis"] {background: grey; color: white; font-weight: 700;}</style>', unsafe_allow_html=True)
 
 with col3:
     # About Us button logic
     if st.button("ℹ️ About Us", key="nav_about", use_container_width=True):
         set_main_tab("About Us")
     if st.session_state.active_tab == "About Us":
-        st.markdown('<style> [data-testid="stColumn"] > div > button[key="nav_about"] {background: #2ecc71!important; color: #0f2f1c!important; font-weight: 700;}</style>', unsafe_allow_html=True)
+        st.markdown('<style> [data-testid="stColumn"] > div > button[key="nav_about"] {background: grey; color: white; font-weight: 700;}</style>', unsafe_allow_html=True)
 
 
 st.markdown('</div>', unsafe_allow_html=True)
@@ -640,17 +640,17 @@ elif st.session_state.active_tab == "About Us":
         """
         <div class="about-container">
             <p>
- AgroVision AI is built to help farmers spot crop diseases early, using a simple photo of a plant leaf.<br>
+ AgroVision AI is built to help farmers spot crop diseases early, using a simple photo of a plant leaf.
 Whether you are growing potatoes, tomatoes, cabbages, maize, beans, mangoes, or bananas, the system checks the leaf and helps identify common problems like leaf blight, rust, spots, pests damage, and nutrient stress before the disease spreads across your farm.
-After identifying a problem, AgroVision AI guides you on what to do next, including:<br>
+After identifying a problem, AgroVision AI guides you on what to do next, including:
 
-      1. Recommended treatments that farmers commonly use<br>
+      1. Recommended treatments that farmers commonly use
 
-      2. How and when to apply sprays or remedies<br>
+      2. How and when to apply sprays or remedies
 
-      3. Simple prevention tips to protect healthy plants<br>
+      3. Simple prevention tips to protect healthy plants
 
-      4. Good farming practices to reduce future outbreaks<br>
+      4. Good farming practices to reduce future outbreaks
 
 Our aim is to support farmers with clear and practical advice, not complicated science.
 By acting early, farmers can save crops, reduce losses, and improve yields, even with limited resources.

@@ -539,7 +539,7 @@ div[data-testid*="new_analysis_button"] button:hover {
 }
 
    .about-container {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgb(32, 173, 32);
     border-radius: 16px;
     padding: 1.4rem 1.6rem;
     max-width: 900px;
@@ -547,6 +547,15 @@ div[data-testid*="new_analysis_button"] button:hover {
     text-align: center;
     color: white;
     box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+}
+.top-nav-container {
+    background: linear-gradient(135deg, #0f5132, #198754, #4ade80);
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.15);
+    margin-bottom: 20px;
+    position: sticky;
 }
 
 

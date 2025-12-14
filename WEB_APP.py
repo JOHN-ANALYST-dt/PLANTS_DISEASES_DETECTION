@@ -44,7 +44,7 @@ ALL_PLANTS = VEGETABLE_CLASSES + FRUIT_CLASSES
 
 
 DYNAMIC_MODEL_MAPPING = {
-    "Potato": {"path": os.path.join(BASE_DIR, "APP_MODELS/_model.h5"), "img_size": (224, 224)}, # Default
+    "Potato": {"path": os.path.join(BASE_DIR, "APP_MODELS/POTATO_MODEL.h5"), "img_size": (224, 224)}, # Default
     "Tomato": {"path": os.path.join(BASE_DIR, "APP_MODELS/TOMATO_mobileNet_model.h5"), "img_size": (128,128)},
     "Apple": {"path": os.path.join(BASE_DIR, "APP_MODELS/APPLE_mobileNet_model.h5"), "img_size": (224, 224)},
     
@@ -114,6 +114,9 @@ FULL_CLASS_NAMES_REFERENCE = [
 # --- 2.1. STREAMLIT PAGE CONFIG ---
 st.set_page_config(page_title=TITLE, layout="wide")
 
+if "active_tab" not in st.session_state:
+    st.session_state.active_tab = "Home"
+
 # --- 2.2. SESSION STATE INITIALIZATION (CRITICAL FOR NAVIGATION) ---
 if 'selected_plant' not in st.session_state:
     st.session_state.selected_plant = None
@@ -156,9 +159,48 @@ hide_pages_css = """
 st.markdown(hide_pages_css, unsafe_allow_html=True)
 
 
-# ==============================================================================
-# 3. UTILITY FUNCTIONS (CSS Injection remains unchanged)
-# ==============================================================================
+st.markdown('<div class="top-nav">', unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    if st.button("🏠 Home", key="nav_home"):
+        st.session_state.active_tab = "Home"
+
+with col2:
+    if st.button("🔬 Diagnosis", key="nav_diagnosis"):
+        st.session_state.active_tab = "Diagnosis"
+
+with col3:
+    if st.button("ℹ️ About Us", key="nav_about"):
+        st.session_state.active_tab = "About Us"
+
+st.markdown("</div>", unsafe_allow_html=True)
+
+#######------------------------------##############
+st.markdown('<div class="main-content">', unsafe_allow_html=True)
+
+if st.session_state.active_tab == "Home":
+    st.header("🏠 Welcome to AgroVision AI")
+    st.write("Protect your crops with AI-powered disease detection.")
+
+elif st.session_state.active_tab == "Diagnosis":
+    st.header("🔬 Crop Disease Diagnosis")
+    st.write("Upload or capture a leaf image to diagnose diseases.")
+    # 👉 PUT YOUR EXISTING DIAGNOSIS LOGIC HERE
+
+elif st.session_state.active_tab == "About Us":
+    st.header("ℹ️ About AgroVision AI")
+    st.write("""
+    AgroVision AI helps farmers detect crop diseases early using
+    machine learning and computer vision.
+    """)
+
+st.markdown("</div>", unsafe_allow_html=True)
+
+
+######----------------###############
+
 
 # ---------------------------------------------------
 # 3.1. DYNAMIC MODEL LOADING FUNCTION (MODIFIED)

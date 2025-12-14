@@ -645,27 +645,28 @@ st.sidebar.markdown(
     unsafe_allow_html=True
 )
 
-# 1. Prepare the options list
-options_list = ["--- Select a Crop ---"] + ALL_PLANTS
 
-# Determine the index of the currently selected plant
-if st.session_state.selected_plant in ALL_PLANTS:
-    default_index = options_list.index(st.session_state.selected_plant)
-else:
-    default_index = 0
+for plant in ALL_PLANTS:
 
-# 2. Create the Dropdown Selector
-selected_option = st.sidebar.selectbox(
-    label="Choose a crop from the list below:",
-    options=options_list,
-    index=default_index,
-    key="plant_selector_dropdown",
-    label_visibility="collapsed"
-)
+    is_selected = st.session_state.selected_plant == plant
+    btn_class = "plant-btn-selected" if is_selected else "plant-btn"
 
-# 3. Update the session state based on the selection
-if selected_option and selected_option != "--- Select a Crop ---":
-    if st.session_state.selected_plant != selected_option:
-        set_plant(selected_option)
+    st.sidebar.markdown(f'<div class="{btn_class}">', unsafe_allow_html=True)
 
-st.sidebar.markdown("---")
+    st.sidebar.button(
+
+        label=plant,
+
+        key=f"plant_btn_{plant}",
+
+        on_click=set_plant,
+
+        args=(plant,),
+
+        type="secondary",
+
+        use_container_width=True
+
+    )
+
+    st.sidebar.markdown("</div>", unsafe_allow_html=True)

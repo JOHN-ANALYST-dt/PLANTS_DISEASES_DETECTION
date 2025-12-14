@@ -420,6 +420,7 @@ if st.session_state.selected_plant:
                 <h3>🔬 Diagnosis Result</h3>
             </div>
             """,unsafe_allow_html=True)
+            st.sidebar.markdown("---")
 
             if 'Healthy' in final_diagnosis:
                 st.success(f"**Status:** {final_diagnosis}")
@@ -446,7 +447,7 @@ if st.session_state.selected_plant:
             for i, action in enumerate(intervention_data['action']):
                 st.markdown(f"**{i+1}.** {action}")
             st.markdown('</div>', unsafe_allow_html=True)
-            
+            st.sidebar.markdown("---")
         with col2:
             st.markdown(f"""
             <div class="confid">

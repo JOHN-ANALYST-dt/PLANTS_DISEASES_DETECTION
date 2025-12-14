@@ -1,6 +1,6 @@
 import streamlit as st
 import tensorflow as tf
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import load_model # Used for the single model fallback
 from tensorflow.keras.preprocessing import image
 import numpy as np
 import io
@@ -9,8 +9,10 @@ import os
 import pathlib
 import base64
 import time
+import pandas as pd # Added for clear results visualization
 
 # Assuming 'intervention.py' exists in the same directory
+# NOTE: Ensure intervention.py handles the new per-plant classes
 from intervention import get_interventions
 
 # ==============================================================================
@@ -21,11 +23,11 @@ from intervention import get_interventions
 BASE_DIR = pathlib.Path(__file__).parent 
 
 # Paths and Constants
-MODEL_PATH = os.path.join(BASE_DIR, "leaf_disease_mobilenet_final2.h5")
+# NOTE: MODEL_PATH is now only used as a fallback/example.
+# The actual models are loaded via MODEL_MAPPING.
+SINGLE_MODEL_PATH = os.path.join(BASE_DIR, "leaf_disease_mobilenet_final2.h5")
 REJECTION_THRESHOLD = 0.50
-# FIXED ML ERROR: Set to (128, 128) as per model requirements
 IMG_SIZE = (224, 224) 
-
 TITLE = "AgroVision AI : Crop Disease Detector"
 
 # Background Image Setup: Ensure these files are in the same directory
@@ -33,8 +35,57 @@ BACKGROUND_IMAGE_PATH = os.path.join(BASE_DIR, 'vege2.jpeg')
 CSS_PATH = os.path.join(BASE_DIR, 'style.css') 
 CSS_PLACEHOLDER = "BACKGROUND_IMAGE_PLACEHOLDER" 
 
-# Define the full list of class names (MUST match training order)
-FULL_CLASS_NAMES = [
+# --- Categorization for Sidebar ---
+VEGETABLE_CLASSES = ['Corn', 'Potato', 'Tomato', 'Pepper Bell', 'Soybean', 'Onion', 'Cabbage']
+FRUIT_CLASSES = ['Apple', 'Grape', 'Cherry', 'Strawberry', 'Raspberry', 'Peach', 'Orange']
+ALL_PLANTS = VEGETABLE_CLASSES + FRUIT_CLASSES
+
+# ==============================================================================
+# 1.1. 🧠 DYNAMIC MODEL AND CLASS MAPPINGS (THE CORE CHANGE)
+# ==============================================================================
+
+# ⚠️ IMPORTANT: UPDATE THESE PATHS TO YOUR TRAINED MODEL FILES!
+# These models must be trained ONLY on their specific classes.
+MODEL_MAPPING = {
+    "Potato": os.path.join(BASE_DIR, "APP_MODELS/_model.h5"),
+    "Tomato": os.path.join(BASE_DIR, "APP_MODELS/TOMATO_mobileNet_model.h5"),
+    "Apple": os.path.join(BASE_DIR, "APP_MODELS/APPLE_mobileNet_model7.h5"),
+    "Corn": os.path.join(BASE_DIR, "APP_MODELS/CORN_mobileNet_model7.h5"),
+    "Grape": os.path.join(BASE_DIR, "APP_MODELS/GRAPES_mobileNet_model7.h5"),
+    "Cherry": os.path.join(BASE_DIR, "APP_MODELS/CHERRY_mobileNet_model7.h5"),
+    "Strawberry": os.path.join(BASE_DIR, "APP_MODELS/STRAWBERRY_mobileNet_model.h5"),
+    "Raspberry": os.path.join(BASE_DIR, "APP_MODELS/RASPBERRY_mobileNet_model.h5"),
+    "Peach": os.path.join(BASE_DIR, "APP_MODELS/peach_model.h5"),
+    "Orange": os.path.join(BASE_DIR, "APP_MODELS/ORANGES_mobileNet_model2.h5"),
+    "Pepper Bell": os.path.join(BASE_DIR, "APP_MODELS/PEPPER_mobileNet_model2.h5"),
+    "Soybean": os.path.join(BASE_DIR, "APP_MODELS/soybean_model.h5"),
+    "Onion": os.path.join(BASE_DIR, "APP_MODELS/ONION_mobileNet_model.h5"),
+    "Cabbage": os.path.join(BASE_DIR, "APP_MODELS/CABBAGE_mobileNet_model7.h5"),
+}
+
+# ⚠️ IMPORTANT: DEFINE THE SPECIFIC CLASS NAMES FOR EACH MODEL
+# This list MUST match the class order used during the training of the specific model.
+CLASS_NAMES_MAPPING = {
+    "Potato": ['Potato Early Blight', 'Potato Late Blight', 'Potato Healthy'],
+    "Tomato": ['Tomato Bacterial Spot', 'Tomato Early Blight', 'Tomato Healthy', 'Tomato late blight',
+               'Tomato leaf mold', 'Tomato septoria leaf spot', 'Tomato spider mites Two-spotted spider mite',
+               'Tomato Target Spot', 'Tomato Yellow Leaf Curl Virus', 'Tomato mosaic virus'],
+    "Apple": ['Apple Scab', 'Apple Black Rot', 'Apple Cedar Rust', 'Apple Healthy'],
+    "Corn": ['Corn Common Rust', 'Corn Northern leaf blight', 'Corn Cercospora Leaf Spot gray leaf spot', 'Corn Healthy'],
+    "Grape": ['Grape Black Rot', 'Grape Esca (Black Measles)', 'Grape Leaf Blight (Isariopsis Leaf Spot)', 'Grape Healthy'],
+    "Cherry": ['Cherry Powdery Mildew', 'Cherry Healthy'],
+    "Strawberry": ['Strawberry Leaf Scorch', 'Strawberry Healthy'],
+    "Raspberry": ['raspberry healthy', 'raspberry leaf spot'],
+    "Peach": ['peach healthy', 'peach bacterial spot', 'peach leaf curl', 'peach powdery mildew', 'peach leaf disease'],
+    "Orange": ['orange citrus greening', 'orange leaf curl', 'orange leaf disease', 'orange leaf spot', 'Orange Healthy'],
+    "Pepper Bell": ['Pepper Bell Bacterial Spot', 'Pepper Bell Healthy'],
+    "Soybean": ['soybean healthy', 'soybean frog eye leaf spot', 'soybean rust', 'soybean powdery mildew'],
+    "Onion": ['onion downy mildew', 'onion healthy leaf', 'onion leaf blight', 'onion purple blotch','onion thrips damage'],
+    "Cabbage": ['cabbage black rot','cabbage healthy','cabbage clubroot','cabbage downy mildew','cabbage leaf disease'],
+}
+
+# We no longer use FULL_CLASS_NAMES for prediction, but keep it for reference or potential UI elements
+FULL_CLASS_NAMES_REFERENCE = [
     'Apple Scab', 'Apple Black Rot', 'Apple Cedar Rust', 
     'cabbage black rot','cabbage healthy','cabbage clubroot','cabbage downy mildew','cabbage leaf disease',
     'Corn Common Rust', 'Corn Northern leaf blight', 'Corn Cercospora Leaf Spot gray leaf spot',
@@ -54,25 +105,6 @@ FULL_CLASS_NAMES = [
     'orange citrus greening', 'orange leaf curl', 'orange leaf disease', 'orange leaf spot',
     'onion downy mildew', 'onion healthy leaf', 'onion leaf blight', 'onion purple blotch','onion thrips damage'
 ]
-
-# Function to update the selected plant in session state
-def set_plant(plant_name):
-    st.session_state.selected_plant = plant_name
-    st.session_state.analysis_run = False # Reset analysis when a new plant is selected
-    st.session_state.prediction_result = None
-    
-# NEW FUNCTION: Reset the entire analysis flow
-def reset_app():
-    st.session_state.selected_plant = None
-    st.session_state.analysis_run = False
-    st.session_state.prediction_result = None
-    st.rerun() # Trigger a rerun to go back to the welcome state
-
-
-# --- Categorization for Sidebar ---
-VEGETABLE_CLASSES = ['Corn', 'Potato', 'Tomato', 'Pepper Bell', 'Soybean', 'Onion', 'Cabbage']
-FRUIT_CLASSES = ['Apple', 'Grape', 'Cherry', 'Strawberry', 'Raspberry', 'Peach', 'Orange']
-ALL_PLANTS = VEGETABLE_CLASSES + FRUIT_CLASSES
 
 
 # ==============================================================================
@@ -96,6 +128,13 @@ def set_plant(plant_name):
     st.session_state.analysis_run = False # Reset analysis when a new plant is selected
     st.session_state.prediction_result = None
     
+# NEW FUNCTION: Reset the entire analysis flow
+def reset_app():
+    st.session_state.selected_plant = None
+    st.session_state.analysis_run = False
+    st.session_state.prediction_result = None
+    st.rerun() # Trigger a rerun to go back to the welcome state
+    
 # --- 2.3. HIDE DEFAULT STREAMLIT PAGE SELECTOR ---
 hide_pages_css = """
 <style>
@@ -109,9 +148,40 @@ st.markdown(hide_pages_css, unsafe_allow_html=True)
 
 
 # ==============================================================================
-# 3. UTILITY FUNCTIONS
+# 3. UTILITY FUNCTIONS (CSS Injection remains unchanged)
 # ==============================================================================
 
+
+
+# ---------------------------------------------------
+# 3.1. DYNAMIC MODEL LOADING FUNCTION (NEW/MODIFIED)
+# ---------------------------------------------------
+@st.cache_resource
+def load_specific_model(plant_name):
+    """
+    Dynamically loads the specific Keras model based on the selected plant name.
+    """
+    if plant_name not in MODEL_MAPPING:
+        st.error(f"Configuration Error: No model file path found for '{plant_name}'.")
+        return "DummyModel"
+    
+    model_path = MODEL_MAPPING[plant_name]
+    
+    if not os.path.exists(model_path):
+        st.warning(f"Model file not found at path: {model_path}. Using Dummy Model.")
+        return "DummyModel" 
+    
+    try:
+        # Load the Keras model
+        model = tf.keras.models.load_model(model_path)
+        return model
+    except Exception as e:
+        st.error(f"Failed to load model from {model_path}: {e}")
+        return "DummyModel" # Return the dummy model string on failure
+
+# ---------------------------------------------------
+# 3.2. CSS Injection execution (moved here)
+# ---------------------------------------------------
 def encode_image_to_base64(path):
     """Reads a local image and encodes it to a Base64 Data URL string."""
     if not os.path.exists(path):
@@ -136,8 +206,6 @@ def inject_custom_css(file_path, base64_url):
     """
     Reads local CSS, replaces the placeholder with the Base64 URL, 
     and injects the final styles into the Streamlit app.
-    
-    MODIFIED: Removes background from main content and applies it to the sidebar.
     """
     img_base64_css = f"""
     /* 1. REMOVE background from main content area (stVerticalBlock) */
@@ -185,70 +253,56 @@ def inject_custom_css(file_path, base64_url):
     except Exception as e:
         st.error(f"Error injecting CSS: {e}")
 
-
 # --- 4. BACKGROUND IMAGE & CSS INJECTION ---
 img_base64_url = encode_image_to_base64(BACKGROUND_IMAGE_PATH)
 inject_custom_css(CSS_PATH, img_base64_url)
 
 
 # ==============================================================================
-# 4.2. CUSTOM CSS for Buttons, Captions, and HOME PAGE Marketing Block
+# 5. LOAD MODEL (REPLACED WITH DYNAMIC LOADING)
 # ==============================================================================
 
-
-
-# ==============================================================================
-# 5. LOAD MODEL
-# ==============================================================================
-@st.cache_resource
-def load_trained_model(path):
-    """Loads the model from the .h5 file or simulates a load."""
-    time.sleep(1) # Simulate loading time
-    
-    # Check if the model file actually exists
-    if not os.path.exists(path):
-        st.error(f"Model file not found at path: {path}")
-        st.warning("Using **mock model** for demonstration.")
-        return "DummyModel"
-    
-    try:
-        model = load_model(path)
-        st.success("✅ Machine Learning Model Loaded Successfully!")
-        return model
-    except Exception as e:
-        st.error(f"Error loading model: {e}")
-        st.warning("Using **mock model** for demonstration.")
-        return "DummyModel"
-
-model = load_trained_model(MODEL_PATH)
+# We no longer load the single model at the start.
+# The model variable is now determined in the prediction loop.
+# Keeping the function name for reference, but removing the auto-call.
+# model = load_trained_model(SINGLE_MODEL_PATH)
+st.success("✅ Machine Learning Infrastructure Initialized.") # Simple success message
 
 
 # ==============================================================================
-# 6. PREDICTION FUNCTION
+# 6. PREDICTION FUNCTION (MODIFIED)
 # ==============================================================================
 def preprocess_and_predict(img_data, model, class_names, img_size):
     """
     Preprocesses the image data and returns the prediction or a mock prediction 
     if the model is a DummyModel.
+    'model' is now the Keras object or the string 'DummyModel'.
     """
+    
+    # --- MOCK MODEL LOGIC ---
     if model == "DummyModel":
         time.sleep(1)
         
-        # Mock prediction logic: Use selected plant for a more relevant mock result
         selected_plant = st.session_state.selected_plant if st.session_state.selected_plant else "Tomato"
         plant_prefix = selected_plant.split(' ')[0].lower()
         
-        # Filter for relevant mock classes
+        # Filter for relevant mock classes (using the passed class_names list)
         relevant_classes = [c for c in class_names if c.lower().startswith(plant_prefix)]
         
         if not relevant_classes:
             return "No Relevant Class Found", 0.0, np.zeros(len(class_names))
 
         # Randomly choose a healthy or diseased class from the relevant list
-        if np.random.rand() < 0.6:
-            predicted_class = np.random.choice([c for c in relevant_classes if 'healthy' not in c.lower()])
+        healthy_options = [c for c in relevant_classes if 'healthy' in c.lower()]
+        diseased_options = [c for c in relevant_classes if 'healthy' not in c.lower()]
+        
+        # 60% chance of predicting a disease if options exist
+        if np.random.rand() < 0.6 and diseased_options:
+            predicted_class = np.random.choice(diseased_options)
+        elif healthy_options:
+             predicted_class = np.random.choice(healthy_options)
         else:
-            predicted_class = np.random.choice([c for c in relevant_classes if 'healthy' in c.lower()] or relevant_classes)
+            predicted_class = np.random.choice(relevant_classes)
             
         confidence = np.random.uniform(0.75, 0.95)
             
@@ -260,7 +314,7 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
             pass 
         return predicted_class, confidence, raw_predictions
 
-    # Real model processing (if model were available)
+    # --- REAL MODEL PROCESSING (Now using the dynamically loaded model object) ---
     try:
         # Image loading logic remains
         if isinstance(img_data, io.BytesIO):
@@ -268,25 +322,24 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
         elif isinstance(img_data, Image.Image):
             img = img_data
         elif hasattr(img_data, 'getvalue'): # For Streamlit uploaded file object
-            img = Image.open(img_data).convert('RGB')
+             img = Image.open(io.BytesIO(img_data.getvalue())).convert('RGB')
         else:
-             raise ValueError("Invalid image input type")
+            img = Image.open(img_data).convert('RGB')
 
         img = img.resize(img_size)
         img_array = image.img_to_array(img)
         img_array = np.expand_dims(img_array, axis=0)
         img_array = img_array / 255.0 
 
-        predictions = model.predict(img_array)[0]
+        # Prediction uses the specific Keras model object
+        predictions = model.predict(img_array, verbose=0)[0]
         predicted_index = np.argmax(predictions)
         confidence = predictions[predicted_index]
-        predicted_class = class_names[predicted_index]
+        predicted_class = class_names[predicted_index] # Uses the specific plant's class names
 
         return predicted_class, confidence, predictions
     except Exception as e:
-        # This will now hopefully display the error clearly *above* the button
-        st.error(f"Prediction failed: Exception encountered when calling Sequential.call(). Error: {e}")
-        # Ensures a NumPy array is returned for unpacking
+        st.error(f"Prediction failed: Exception encountered. Error: {e}")
         return "Prediction Error", 0.0, np.zeros(len(class_names))
 
 
@@ -296,27 +349,25 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
 
 
 st.markdown(
-        f"""
-        <div class="title-container1">
-            <div class="big-font">{TITLE}</div>
-            <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
-        </div>
-        """, 
-        unsafe_allow_html=True
-    )
+    f"""
+    <div class="title-container1">
+        <div class="big-font">{TITLE}</div>
+        <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
+    </div>
+    """, 
+    unsafe_allow_html=True
+)
 
 
 # ==============================================================================
-# 8. INPUT AND ANALYSIS SECTION
+# 8. INPUT AND ANALYSIS SECTION (MODIFIED)
 # ==============================================================================
 
 if st.session_state.selected_plant:
-    # This assignment runs only when a plant is selected
     selected_plant = st.session_state.selected_plant
     st.markdown("---") 
     
     
-    # This entire block MUST be indented under the 'if' condition
     # ----------------------------------------------------------------------
     with st.container(border=True): 
         st.markdown(
@@ -341,13 +392,11 @@ if st.session_state.selected_plant:
             key="uploader_input"
         )
     # ----------------------------------------------------------------------
-    # END: New Input Box
-    # ----------------------------------------------------------------------
     
     # --- Logic: Determine Input and Execute Prediction ---
     input_data = None
     if camera_img is not None:
-        input_data = Image.open(camera_img)
+        input_data = camera_img # Streamlit object directly
     elif uploaded_file is not None:
         input_data = uploaded_file
         
@@ -355,8 +404,8 @@ if st.session_state.selected_plant:
     if input_data is not None:
         st.markdown("---")
         st.markdown("""<div class="analysis">
-                        <h3>Image Selected for Analysis</h3>
-                    </div>""", unsafe_allow_html=True)
+                            <h3>Image Selected for Analysis</h3>
+                        </div>""", unsafe_allow_html=True)
         
         image_col, result_col = st.columns([1, 1])
 
@@ -364,26 +413,34 @@ if st.session_state.selected_plant:
             st.image(input_data, caption=f'{selected_plant} Leaf Ready for Analysis.', use_column_width=True)
             
         with result_col:
-            # Added spacing to ensure the button is visible below the image/other elements
             st.markdown("<br>", unsafe_allow_html=True)
             
             # Prediction button (Styled to look like a Markdown Block)
             if st.button(f'Diagnose {selected_plant} Leaf Now', key='diagnose_button', use_container_width=True):
                 st.session_state.analysis_run = True 
                 
-                with st.spinner(f'Running analysis for {selected_plant} leaf...'):
-                    # The unpacking line is here. The fix ensures 3 values are always returned.
-                    predicted_class, confidence, raw_predictions = preprocess_and_predict(
-                        input_data, model, FULL_CLASS_NAMES, IMG_SIZE
-                    )
-
-                st.session_state.prediction_result = {
-                    "predicted_class": predicted_class,
-                    "confidence": confidence,
-                    "raw_predictions": raw_predictions
-                }
+                # --- NEW DYNAMIC MODEL LOGIC HERE ---
+                # 1. Load the model specific to the selected plant (uses cache)
+                current_model = load_specific_model(selected_plant)
                 
-                # State change automatically triggers rerun.
+                # 2. Get the specific class names for the selected plant
+                current_class_names = CLASS_NAMES_MAPPING.get(selected_plant, [])
+                
+                if not current_class_names:
+                    st.error(f"Configuration Error: Class names not found for {selected_plant}.")
+                else:
+                    with st.spinner(f'Running analysis for {selected_plant} leaf with specialized model...'):
+                        predicted_class, confidence, raw_predictions = preprocess_and_predict(
+                            input_data, current_model, current_class_names, IMG_SIZE
+                        )
+
+                    st.session_state.prediction_result = {
+                        "predicted_class": predicted_class,
+                        "confidence": confidence,
+                        "raw_predictions": raw_predictions,
+                        "class_names_used": current_class_names # Save the class names used
+                    }
+                    # State change automatically triggers rerun.
     
     # --- Display Results if analysis_run is True and results are available ---
     if st.session_state.analysis_run and st.session_state.prediction_result:
@@ -395,13 +452,13 @@ if st.session_state.selected_plant:
 
         if confidence < REJECTION_THRESHOLD:
             final_diagnosis = "Uncertain Prediction - Please try again with a clearer image."
-        elif predicted_class == "Prediction Error":
+        elif predicted_class == "Prediction Error" or predicted_class == "No Relevant Class Found":
             final_diagnosis = "Prediction Error - Model could not process image."
         else:
-            # Check if the prediction matches the selected plant
+            # The cross-validation warning is less necessary now, but kept for robustness
             plant_prefix = selected_plant.lower().split(' ')[0]
             if not predicted_class.lower().startswith(plant_prefix):
-                 st.warning(f"⚠️ The model detected an issue primarily found in other crops (e.g., '{predicted_class}'). Showing results for **{selected_plant}**.")
+                 st.warning(f"⚠️ **Model Confusion:** The prediction '{predicted_class}' does not match the selected crop. Review the scores below.")
                  
             final_diagnosis = predicted_class
         
@@ -452,38 +509,26 @@ if st.session_state.selected_plant:
             
             st.markdown(f"""
             <div class="confid">
-                <h3>📊 Top Prediction Scores (Scoped to {selected_plant})</h3>
+                <h3>📊 Prediction Scores (Scoped to {selected_plant})</h3>
             </div>""", unsafe_allow_html=True)
             
-            # --- CRITICAL CHANGE: Filter Scores by Selected Plant ---
+            # --- Display Scores using the specific class names ---
             raw_predictions = results['raw_predictions']
+            class_names_used = results['class_names_used']
             
-            # Only proceed with sorting/display if raw_predictions is a valid numpy array (not None or 0s from error)
             if raw_predictions is not None and np.any(raw_predictions):
-                class_scores = list(zip(FULL_CLASS_NAMES, raw_predictions))
-                plant_prefix = selected_plant.lower().split(' ')[0] 
+                class_scores = list(zip(class_names_used, raw_predictions))
+                class_scores.sort(key=lambda x: x[1], reverse=True)
                 
-                # Filter scores to only include classes relevant to the selected plant (e.g., 'cabbage black rot' for 'Cabbage')
-                filtered_scores = [
-                    (c, s) for c, s in class_scores if c.lower().startswith(plant_prefix)
-                ]
+                # Display all results in a data frame
+                scores_df = pd.DataFrame(class_scores, columns=['Class', 'Probability'])
+                scores_df['Probability'] = (scores_df['Probability'] * 100).round(2).astype(str) + '%'
                 
-                filtered_scores.sort(key=lambda x: x[1], reverse=True)
-                
-                top_n = 5
-                top_classes = [score[0] for score in filtered_scores[:top_n]]
-                top_confidences = [score[1] for score in filtered_scores[:top_n]]
-
-                chart_data = {
-                    'Class': top_classes, 
-                    'Confidence': [f"{c*100:.2f}%" for c in top_confidences]
-                }
-                st.dataframe(chart_data, use_container_width=True)
+                st.dataframe(scores_df, use_container_width=True, hide_index=True)
             else:
-                 st.info("No detailed prediction scores are available due to an error or uncertainty.")
+                st.info("No detailed prediction scores are available due to an error or uncertainty.")
 
-            # --- INSERT THE NEW REFRESHER BUTTON CODE HERE ---
-            # This button is now styled by 'new_analysis_button' CSS
+            # --- REFRESHER BUTTON ---
             st.button(
                 label="🚀 Start New Analysis / Choose New Plant",
                 key="new_analysis_button",
@@ -495,6 +540,7 @@ if st.session_state.selected_plant:
 
 # --- Initial Message if no plant is selected (The New Home Page) ---
 else:
+    # ... (Your existing Home Page/Marketing Block code remains here) ...
     st.markdown(
     """
     <div class="custom-info-box">
@@ -521,7 +567,7 @@ else:
     # 2. Metric Icons (using columns)
     col_diseases, col_plants, col_accuracy = st.columns(3)
     
-    total_classes = len(FULL_CLASS_NAMES)
+    total_classes = len(FULL_CLASS_NAMES_REFERENCE)
     total_plants = len(ALL_PLANTS)
     
     with col_diseases:
@@ -567,13 +613,10 @@ else:
     unsafe_allow_html=True
 )
 
-  
 
 # ==============================================================================
-# 9. SIDEBAR INSTRUCTIONS & NAVIGATION
+# 9. SIDEBAR INSTRUCTIONS & NAVIGATION (MODIFIED)
 # ==============================================================================
-
-
 
 # --- Sidebar Content ---
 st.sidebar.markdown(
@@ -586,24 +629,14 @@ st.sidebar.markdown(
 )
 st.sidebar.markdown("---")
 
-# This button is now styled by the default Streamlit theme, but its type is 'primary'
 st.sidebar.button(
     label="New Analysis / Home",
     key="sidebar_home_button",
     on_click=reset_app,
     help="Click to go back to the main app interface and clear all selections.",
-    type="primary", # Makes the button stand out
+    type="primary",
     use_container_width=True
 )
-
-
-# ---------- Sidebar navigation (Buttons to update state) ----------
-
-# ==============================================================================
-# 9. SIDEBAR NAVIGATION (Simplified Dropdown List)
-# ==============================================================================
-
-# --- Optional: Display a custom header using one of your defined CSS classes ---
 
 st.sidebar.markdown(
     """
@@ -614,35 +647,27 @@ st.sidebar.markdown(
     unsafe_allow_html=True
 )
 
-
-
 # 1. Prepare the options list
-# Add a prompt to the start of the list if no plant is currently selected
 options_list = ["--- Select a Crop ---"] + ALL_PLANTS
 
-# Determine the index of the currently selected plant, or the default "Select a Crop"
+# Determine the index of the currently selected plant
 if st.session_state.selected_plant in ALL_PLANTS:
     default_index = options_list.index(st.session_state.selected_plant)
 else:
-    default_index = 0 # Default to the "Select a Crop" prompt
+    default_index = 0
 
 # 2. Create the Dropdown Selector
-# We use a unique key for the selectbox
 selected_option = st.sidebar.selectbox(
     label="Choose a crop from the list below:",
     options=options_list,
     index=default_index,
     key="plant_selector_dropdown",
-    label_visibility="collapsed" # Use the custom header above instead
+    label_visibility="collapsed"
 )
 
 # 3. Update the session state based on the selection
-# This acts as the replacement for the on_click logic of the old buttons
 if selected_option and selected_option != "--- Select a Crop ---":
-    # Only update if the selection actually changes
     if st.session_state.selected_plant != selected_option:
-        # Call the existing set_plant function to handle state reset (analysis_run, etc.)
         set_plant(selected_option)
 
 st.sidebar.markdown("---")
-# ... (rest of sidebar content continues here)

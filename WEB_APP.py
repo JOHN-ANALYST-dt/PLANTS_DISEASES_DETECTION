@@ -142,12 +142,12 @@ def inject_custom_css(file_path, base64_url):
     img_base64_css = f"""
     /* 1. REMOVE background from main content area (stVerticalBlock) */
     [data-testid="stVerticalBlock"] > div:nth-child(1) {{
-        background-image: none !important;
-        background-color: transparent !important;
+        background-image: none ;
+        background-color: transparent ;
         /* Revert to default padding/color for main content */
-        padding: 0 !important;
-        margin-bottom: 0 !important;
-        color: inherit !important; 
+        padding: 0 ;
+        margin-bottom: 0 ;
+        color: inherit ;
     }}
     
     /* 2. APPLY background image to the entire sidebar (top to bottom) */
@@ -165,7 +165,7 @@ def inject_custom_css(file_path, base64_url):
     
     /* 3. Ensure sidebar content (text, buttons, etc.) is readable over the dark image */
     [data-testid="stSidebar"] * {{
-        color: white;
+        color: darkgreen;
     }}
     
     /* Ensure the main title container looks correct now that the main background is gone */

@@ -163,14 +163,9 @@ def inject_custom_css(file_path, base64_url):
         background-position: center;
     }}
     
-    /* 3. Ensure sidebar content (text, buttons, etc.) is readable over the dark image */
-    [data-testid="stSidebar"] * {{
-        color: darkgreen;
-    }}
-    
     /* Ensure the main title container looks correct now that the main background is gone */
     .title-container {{
-        background: transparent !important;
+        background: transparent;
     }}
     """
     

@@ -280,7 +280,7 @@ def generate_gemini_response(prompt):
             model=model_name,
             contents=contents,
             config=genai.types.GenerateContentConfig(
-                system_instruction="You are an expert agricultural consultant and plant disease specialist. Provide helpful, practical, and safe advice to farmers in a clear and friendly tone. Always prioritize organic or common farming remedies where possible."
+                system_instruction="You are an expert agricultural consultant and plant disease specialist. Provide helpful, practical, and safe advice to farmers in a clear and friendly tone. Always prioritize organic or common farming remedies where possible,yap."
             )
         )
         return response.text

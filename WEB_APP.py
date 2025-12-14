@@ -411,7 +411,7 @@ if st.session_state.selected_plant:
             <h3>🔍 Analysis Results for {selected_plant}</h3>
         </div>
         """, unsafe_allow_html=True)
-        st.markdown("....")
+        
         col1, col2 = st.columns([1, 2]) 
         
         with col1:

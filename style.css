@@ -482,48 +482,44 @@ div[data-testid*="new_analysis_button"] button:hover {
 
 
 
+/* Custom Button Classes for Plants */
+/* ===================================== */
+/* FORCE SIDEBAR PLANT BUTTON STYLING */
+/* ===================================== */
 
-
-/* Wrapper around each button */
-.plant-btn,
-.plant-btn-selected {
-    margin-bottom: 8px;
+/* NORMAL PLANT BUTTON */
+.plant-btn div[data-testid="stButton"] > button {
+    background: linear-gradient(135deg, #7ee3a1, #4caf50) !important;
+    color: white !important;
+    font-weight: 800 !important;
+    font-size: 0.95rem !important;
+    border-radius: 10px !important;
+    border: none !important;
+    padding: 12px !important;
+    box-shadow: 0 4px 10px rgba(0, 128, 0, 0.4) !important;
+    transition: all 0.2s ease-in-out !important;
 }
 
-/* Base button styling (light green + white text) */
-.plant-btn button {
-    background: linear-gradient(135deg, #6fdc8c, #4caf50) ;
-    color: white ;
-    font-weight: 700 ;
-    font-size: 0.95rem ;
-    border-radius: 10px ;
-    border: none;
-    padding: 10px 12px ;
-    box-shadow: 0 3px 8px rgba(0, 128, 0, 0.25) ;
-    transition: all 0.25s ease-in-out;
+/* HOVER */
+.plant-btn div[data-testid="stButton"] > button:hover {
+    background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
+    transform: scale(1.03);
 }
 
-/* Hover effect */
-.plant-btn button:hover {
-    background: linear-gradient(135deg, #4caf50, #2e7d32) ;
-    transform: scale(1.02);
-}
-
-/* ============================= */
+/* ===================================== */
 /* SELECTED PLANT BUTTON */
-/* ============================= */
+/* ===================================== */
 
-.plant-btn-selected button {
-    background: linear-gradient(135deg, #2e7d32, #1b5e20) ;
-    color: #ffffff ;
-    font-weight: 900 ;
-    border: 2px solid #a5d6a7 ;
-    box-shadow: 0 0 12px rgba(76, 175, 80, 0.9) ;
+.plant-btn-selected div[data-testid="stButton"] > button {
+    background: linear-gradient(135deg, #2e7d32, #1b5e20) !important;
+    color: white !important;
+    font-weight: 900 !important;
+    border: 2px solid #a5d6a7 !important;
+    box-shadow: 0 0 14px rgba(76, 175, 80, 0.9) !important;
 }
 
-/* Selected hover */
-.plant-btn-selected button:hover {
-    background: linear-gradient(135deg, #1b5e20, #145a32) ;
-    transform: scale(1.02);
+/* SELECTED HOVER */
+.plant-btn-selected div[data-testid="stButton"] > button:hover {
+    background: linear-gradient(135deg, #1b5e20, #145a32) !important;
 }
 

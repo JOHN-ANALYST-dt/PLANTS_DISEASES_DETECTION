@@ -136,7 +136,7 @@ def reset_app():
     st.session_state.selected_plant = None
     st.session_state.analysis_run = False
     st.session_state.prediction_result = None
-    st.rerun() # Trigger a rerun to go back to the welcome state
+ 
 
 
 
@@ -159,101 +159,6 @@ hide_pages_css = """
 st.markdown(hide_pages_css, unsafe_allow_html=True)
 
 
-st.markdown('<div class="top-nav">', unsafe_allow_html=True)
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    if st.button("🏠 Home", key="nav_home"):
-        st.session_state.active_tab = "Home"
-
-with col2:
-    if st.button("🔬 Diagnosis", key="nav_diagnosis"):
-        st.session_state.active_tab = "Diagnosis"
-
-with col3:
-    if st.button("ℹ️ About Us", key="nav_about"):
-        st.session_state.active_tab = "About Us"
-
-st.markdown("</div>", unsafe_allow_html=True)
-
-#######------------------------------##############
-st.markdown('<div class="main-content">', unsafe_allow_html=True)
-
-if st.session_state.active_tab == "Home":
-    st.header("🏠 Welcome to AgroVision AI")
-    st.write("Protect your crops with AI-powered disease detection.")
-
-elif st.session_state.active_tab == "Diagnosis":
-    st.header("🔬 Crop Disease Diagnosis")
-    st.write("Upload or capture a leaf image to diagnose diseases.")
-    # 👉 PUT YOUR EXISTING DIAGNOSIS LOGIC HERE
-
-elif st.session_state.active_tab == "About Us":
-    st.header("ℹ️ About AgroVision AI")
-    st.write("""
-    AgroVision AI helps farmers detect crop diseases early using
-    machine learning and computer vision.
-    """)
-
-st.markdown("</div>", unsafe_allow_html=True)
-
-
-######----------------###############
-
-st.markdown("""
-<style>
-/* ===============================
-   🧭 TOP NAVIGATION BAR
-   =============================== */
-
-.top-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 64px;
-    background: linear-gradient(135deg, #145a32, #0b3d2e);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-    z-index: 9999;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
-}
-
-/* Nav buttons */
-.top-nav button {
-    background: transparent;
-    border: none;
-    color: rgba(255,255,255,0.85);
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 8px 18px;
-    border-radius: 12px;
-    transition: all 0.25s ease-in-out;
-}
-
-/* Hover */
-.top-nav button:hover {
-    background: rgba(255,255,255,0.15);
-    color: #ffffff;
-}
-
-/* Active tab */
-.top-nav .active {
-    background: #2ecc71;
-    color: #0f2f1c;
-    box-shadow: 0 6px 16px rgba(46, 204, 113, 0.6);
-}
-
-/* Push page content below navbar */
-.main-content {
-    margin-top: 90px;
-}
-</style>
-""", unsafe_allow_html=True)
 
 
 
@@ -449,17 +354,18 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
 # 7. STREAMLIT APP INTERFACE (MAIN CONTENT)
 # ==============================================================================
 
-
-st.markdown(
-    f"""
-    <div class="title-container1">
+def render_home_page():
+    st.markdown(
+     f"""
+     <div class="title-container1">
         <div class="big-font">{TITLE}</div>
         <div class="subheader-font">Real Time Crop Disease Diagnosis</div>
-    </div>
+     </div>
     """, 
-    unsafe_allow_html=True
-)
+     unsafe_allow_html=True
+    )
 
+########-----------#########
 
 # ==============================================================================
 # 8. INPUT AND ANALYSIS SECTION (MODIFIED TRIGGER)
@@ -647,6 +553,7 @@ if st.session_state.selected_plant:
 
 # --- Initial Message if no plant is selected (The New Home Page) ---
 else:
+    def render_diagnosis_landing():
     st.markdown(
     """
     <div class="custom-info-box">
@@ -706,7 +613,150 @@ else:
                 <p>Prediction Accuracy</p>
             </div>
         """, unsafe_allow_html=True)
+
+#######------------------------------##############
+def render_about_us_bottom():
+    # Spacer to push content down
+    st.markdown(
+        """
+        <div style="height: 35vh;"></div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # About Us content
+    st.markdown(
+        """
+        <div class="about-container">
+            <h3>ℹ️ About AgroVision AI</h3>
+            <p>
+ AgroVision AI is built to help farmers spot crop diseases early, using a simple photo of a plant leaf.<br>
+Whether you are growing potatoes, tomatoes, cabbages, maize, beans, mangoes, or bananas, the system checks the leaf and helps identify common problems like leaf blight, rust, spots, pests damage, and nutrient stress before the disease spreads across your farm.
+After identifying a problem, AgroVision AI guides you on what to do next, including:<br>
+
+      1. Recommended treatments that farmers commonly use<br>
+
+      2. How and when to apply sprays or remedies<br>
+
+      3. Simple prevention tips to protect healthy plants<br>
+
+      4. Good farming practices to reduce future outbreaks<br>
+
+Our aim is to support farmers with clear and practical advice, not complicated science.
+By acting early, farmers can save crops, reduce losses, and improve yields, even with limited resources.
+
+AgroVision AI is designed to be easy to use, reliable, and farmer friendly, helping you make better decisions and protect your harvest with confidence.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+#########------------------------------##############
         
+    st.markdown("---")
+    
+    st.markdown('<div class="top-nav">', unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    if st.button("🏠 Home", key="nav_home"):
+        reset_app()
+        st.session_state.active_tab = "Home"
+
+
+with col2:
+    if st.button("🔬 Diagnosis", key="nav_diagnosis"):
+        st.session_state.active_tab = "Diagnosis"
+with col3:
+    if st.button("ℹ️ About Us", key="nav_about"):
+        st.session_state.active_tab = "About Us"
+
+st.markdown("</div>", unsafe_allow_html=True)
+
+#######------------------------------##############
+st.markdown('<div class="main-content">', unsafe_allow_html=True)
+
+if st.session_state.active_tab == "Home":
+    render_home_page()
+
+elif st.session_state.active_tab == "Diagnosis":
+    # If no plant is selected yet, show the instruction box
+    if st.session_state.selected_plant is None:
+        render_diagnosis_landing()
+    else:
+        # 👉 PUT YOUR EXISTING DIAGNOSIS LOGIC HERE
+        st.markdown("### 🔬 Crop Disease Diagnosis")
+
+elif st.session_state.active_tab == "About Us":
+    render_about_us_bottom()
+
+st.markdown("</div>", unsafe_allow_html=True)
+
+
+######----------------###############
+
+st.markdown("""
+<style>
+/* ===============================
+   🧭 TOP NAVIGATION BAR
+   =============================== */
+
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 64px;
+    background: linear-gradient(135deg, #145a32, #0b3d2e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    z-index: 9999;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+}
+
+/* Nav buttons */
+.top-nav button {
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.85);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 18px;
+    border-radius: 12px;
+    transition: all 0.25s ease-in-out;
+}
+
+/* Hover */
+.top-nav button:hover {
+    background: rgba(255,255,255,0.15);
+    color: #ffffff;
+}
+
+/* Active tab */
+.top-nav .active {
+    background: #2ecc71;
+    color: #0f2f1c;
+    box-shadow: 0 6px 16px rgba(46, 204, 113, 0.6);
+}
+
+/* Push page content below navbar */
+.main-content {
+    margin-top: 90px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
+##########-----------##########
+
+
+
+
     st.markdown("---")
     
     # 3. Footer Markdown 
@@ -771,3 +821,6 @@ for plant in ALL_PLANTS:
         use_container_width=True
     )
     
+
+
+

@@ -560,7 +560,7 @@ else:
     st.markdown(
     """
     <div class="footer-container">
-        <div class="footer-title">🌿 Protecting Your Harvest</div>
+        <div class="footer-title">Protecting Your Harvest</div>
         <div class="footer-text">
             Understanding plant diseases is the first step to healthier crops and better yields.<br>
             Our AI-powered platform helps farmers identify and treat diseases early.

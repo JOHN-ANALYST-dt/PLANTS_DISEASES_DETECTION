@@ -602,30 +602,47 @@ st.sidebar.button(
 
 # ---------- Sidebar navigation (Buttons to update state) ----------
 
+# ==============================================================================
+# 9. SIDEBAR NAVIGATION (Simplified Dropdown List)
+# ==============================================================================
 
+# --- Optional: Display a custom header using one of your defined CSS classes ---
 st.sidebar.markdown(
     """
     <div class="sidebar2">
-        <h3>SELECT PLANT FOR PREDICTION</h3>
+        <h3>SELECT CROP FOR DIAGNOSIS</h3>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-for plant in ALL_PLANTS:
-    is_selected = st.session_state.selected_plant == plant
+# 1. Prepare the options list
+# Add a prompt to the start of the list if no plant is currently selected
+options_list = ["--- Select a Crop ---"] + ALL_PLANTS
 
-    btn_class = "plant-btn-selected" if is_selected else "plant-btn"
+# Determine the index of the currently selected plant, or the default "Select a Crop"
+if st.session_state.selected_plant in ALL_PLANTS:
+    default_index = options_list.index(st.session_state.selected_plant)
+else:
+    default_index = 0 # Default to the "Select a Crop" prompt
 
-    st.sidebar.markdown(f'<div class="{btn_class}">', unsafe_allow_html=True)
+# 2. Create the Dropdown Selector
+# We use a unique key for the selectbox
+selected_option = st.sidebar.selectbox(
+    label="Choose a crop from the list below:",
+    options=options_list,
+    index=default_index,
+    key="plant_selector_dropdown",
+    label_visibility="collapsed" # Use the custom header above instead
+)
 
-    st.sidebar.button(
-        label=plant,
-        key=f"plant_btn_{plant}",
-        on_click=set_plant,
-        args=(plant,),
-        type="secondary",
-        use_container_width=True
-    )
+# 3. Update the session state based on the selection
+# This acts as the replacement for the on_click logic of the old buttons
+if selected_option and selected_option != "--- Select a Crop ---":
+    # Only update if the selection actually changes
+    if st.session_state.selected_plant != selected_option:
+        # Call the existing set_plant function to handle state reset (analysis_run, etc.)
+        set_plant(selected_option)
 
-    st.sidebar.markdown("</div>", unsafe_allow_html=True)
+st.sidebar.markdown("---")
+# ... (rest of sidebar content continues here)

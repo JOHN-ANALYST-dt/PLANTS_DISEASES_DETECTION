@@ -571,7 +571,7 @@ else:
     with col_diseases:
         st.markdown(f"""
             <div class='metric-item'>
-                <p style='font-size: 2.5em; margin: 0;'>🦠</p>
+                <i class="fa-solid fa-virus">Disease Classes</i>
                 <h4>{total_classes}+</h4>
                 <p>Disease Classes</p>
             </div>

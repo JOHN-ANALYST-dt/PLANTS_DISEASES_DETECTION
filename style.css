@@ -187,6 +187,7 @@ div[data-testid="stCameraInput"] > div:first-child > button {
             color: white;
             font-family: 'Segoe UI', sans-serif;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #456a8a, #2e4c63);
             margin-bottom: 15px;
             margin-right: 10px;
 }
@@ -215,12 +216,13 @@ div[data-testid="stCameraInput"] > div:first-child > button {
             font-size:bold;
 }
 .confid{
-         padding: 10px;
+            padding: 10px;
             border-radius: 12px;
             text-align: center;
             color: white;
             font-family: 'Segoe UI', sans-serif;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #456a8a, #2e4c63);
             margin-bottom: 15px;
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);

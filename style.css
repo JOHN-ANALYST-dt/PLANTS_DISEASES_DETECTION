@@ -539,9 +539,64 @@ div[data-testid*="new_analysis_button"] button:hover {
 }
 
    
+/* Expander container */
+[data-testid="stSidebar"] .stExpander {
+    background: linear-gradient(135deg, rgba(20,90,50,0.85), rgba(15,60,40,0.9));
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+}
 
+/* Expander header */
+[data-testid="stSidebar"] .stExpander > details > summary {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #eafaf1;
+}
 
+/* Chat container */
+.ai-chat-box {
+    background: rgba(255,255,255,0.92);
+    border-radius: 12px;
+    padding: 10px;
+    overflow-y: auto;
+}
 
+/* User message bubble */
+.ai-user {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: #0b2f1d;
+    padding: 8px 12px;
+    border-radius: 12px 12px 2px 12px;
+    margin: 6px 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* AI message bubble */
+.ai-bot {
+    background: #f4fef7;
+    color: #145a32;
+    padding: 8px 12px;
+    border-radius: 12px 12px 12px 2px;
+    margin: 6px 0;
+    font-size: 0.9rem;
+    border-left: 4px solid #2ecc71;
+}
+
+/* Input box */
+[data-testid="stTextInput"] input {
+    border-radius: 10px !important;
+    border: 2px solid #2ecc71 !important;
+    padding: 10px;
+    font-size: 0.9rem;
+}
+
+/* Spinner text */
+[data-testid="stSpinner"] {
+    color: #eafaf1 !important;
+    font-weight: 600;
+}
 
 
 

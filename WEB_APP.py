@@ -28,7 +28,7 @@ from intervention import get_interventions
 BASE_DIR = pathlib.Path(__file__).parent 
 
 # Paths and Constants
-REJECTION_THRESHOLD = 0.50
+REJECTION_THRESHOLD = 0.70
 TITLE = "AgroVision AI : Crop Disease Detector"
 
 # Background Image Setup: Ensure these files are in the same directory
@@ -717,44 +717,48 @@ st.sidebar.button(
     type="primary",
     use_container_width=True
 )
+# --- AI CONSULTANT SECTION (Styled & Plant-Themed) ---
+st.sidebar.markdown("### 🌱 AI Crop Health Consultant")
 
-# --- AI CONSULTANT SECTION IN SIDEBAR (Restored) ---
-st.sidebar.markdown("---")
-with st.sidebar.expander("💬 **Ask the AI Consultant**", expanded=False):
-    
-    # Display chat history 
-    chat_container = st.container(height=300, border=True) # Container for scrollable chat
-    
+with st.sidebar.expander("💬 Ask the AI Consultant", expanded=False):
+
+    chat_container = st.container(height=320)
+
     with chat_container:
-        # Re-display all messages
+        st.markdown('<div class="ai-chat-box">', unsafe_allow_html=True)
+
         for message in st.session_state.chat_history:
-            role = "🧑‍🌾" if message["role"] == "user" else "🤖"
-            st.markdown(f"**{role}** {message['content']}")
-            
-    # User input for the chat
-    user_prompt = st.text_input("Ask a question about your crops...", key="chat_input_sidebar")
-    
+            if message["role"] == "user":
+                st.markdown(
+                    f'<div class="ai-user">🧑‍🌾 {message["content"]}</div>',
+                    unsafe_allow_html=True
+                )
+            else:
+                st.markdown(
+                    f'<div class="ai-bot">🤖 {message["content"]}</div>',
+                    unsafe_allow_html=True
+                )
+
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    user_prompt = st.text_input(
+        "Ask about diseases, treatment, or prevention…",
+        key="chat_input_sidebar"
+    )
+
     if user_prompt:
-        
-        # 1. Add user message to history
-        st.session_state.chat_history.append({"role": "user", "content": user_prompt})
-        
-        # 2. Generate the AI response
-        with st.spinner("AI Consultant is thinking..."):
-            # Ensure the full prompt is passed for the current turn
-            full_prompt = user_prompt 
-            # This calls the function defined in the Utility section (section 3)
-            full_response = generate_gemini_response(full_prompt) 
-        
-        # 3. Add AI response to history
-        st.session_state.chat_history.append({"role": "assistant", "content": full_response})
-        
-        # Force rerun to update the displayed chat history immediately
-        st.experimental_rerun()
-# --------------------------------------------------
+        st.session_state.chat_history.append(
+            {"role": "user", "content": user_prompt}
+        )
 
+        with st.spinner("🌿 AI Consultant is analyzing your question..."):
+            response = generate_gemini_response(user_prompt)
 
-st.sidebar.markdown("---")
+        st.session_state.chat_history.append(
+            {"role": "assistant", "content": response}
+        )
+
+        st.rerun()
 
 
 st.sidebar.markdown(

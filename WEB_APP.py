@@ -12,8 +12,9 @@ import time
 import pandas as pd 
 
 # --- Gemini API Imports ---
-import google.generativeai as genai 
-from google.generativeai.errors import APIError
+import google.generativeai as genai
+from google.generativeai.types import HarmCategory, HarmBlockThreshold
+
 # --------------------------
 
 # Assuming 'intervention.py' exists in the same directory

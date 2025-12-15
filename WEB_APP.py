@@ -11,6 +11,11 @@ import base64
 import time
 import pandas as pd 
 
+# --- Gemini API Imports ---
+import google.generativeai as genai 
+from google.generativeai.errors import APIError
+# --------------------------
+
 # Assuming 'intervention.py' exists in the same directory
 from intervention import get_interventions
 
@@ -22,7 +27,6 @@ from intervention import get_interventions
 BASE_DIR = pathlib.Path(__file__).parent 
 
 # Paths and Constants
-SINGLE_MODEL_PATH = os.path.join(BASE_DIR, "leaf_disease_mobilenet_final2.h5")
 REJECTION_THRESHOLD = 0.50
 TITLE = "AgroVision AI : Crop Disease Detector"
 
@@ -32,12 +36,12 @@ CSS_PATH = os.path.join(BASE_DIR, 'style.css')
 CSS_PLACEHOLDER = "BACKGROUND_IMAGE_PLACEHOLDER" 
 
 # --- Categorization for Sidebar ---
-VEGETABLE_CLASSES = ['Corn', 'Potato', 'Tomato', 'Pepper Bell', 'Soybean', 'Onion', 'Cabbage',"Skumawiki","Tobacco"]
+VEGETABLE_CLASSES = ['Corn', 'Potato', 'Tomato', 'Pepper Bell', 'Soybean', 'Onion', 'Cabbage', "Skumawiki", "Tobacco"]
 FRUIT_CLASSES = ['Apple', 'Grape', 'Cherry', 'Strawberry', 'Raspberry', 'Peach', 'Orange']
 ALL_PLANTS = VEGETABLE_CLASSES + FRUIT_CLASSES
 
 # ==============================================================================
-# 1.1. 🧠 DYNAMIC MODEL, CLASS, AND SIZE MAPPINGS (UNCHANGED)
+# 1.1. 🧠 DYNAMIC MODEL, CLASS, AND SIZE MAPPINGS (INCLUDES NEW PLANTS)
 # ==============================================================================
 
 DYNAMIC_MODEL_MAPPING = {
@@ -82,9 +86,9 @@ CLASS_NAMES_MAPPING = {
 }
 
 FULL_CLASS_NAMES_REFERENCE = [
-    'Apple Scab', 'Apple Black Rot', 'Apple Cedar Rust', 
+    'Apple Scab', 'Apple Black Rot', 'Apple Cedar Rust', 'Apple Healthy',
     'cabbage black rot','cabbage healthy','cabbage clubroot','cabbage downy mildew','cabbage leaf disease',
-    'Corn Common Rust', 'Corn Northern leaf blight', 'Corn Cercospora Leaf Spot gray leaf spot',
+    'Corn Common Rust', 'Corn Northern leaf blight', 'Corn Cercospora Leaf Spot gray leaf spot', 'Corn Healthy',
     'Potato Early Blight', 'Potato Late Blight', 'Potato Healthy',
     'Tomato Bacterial Spot', 'Tomato Early Blight', 'Tomato Healthy', 'Tomato late blight',
     'Tomato leaf mold', 'Tomato septoria leaf spot', 'Tomato spider mites Two-spotted spider mite',
@@ -93,58 +97,62 @@ FULL_CLASS_NAMES_REFERENCE = [
     'Grape Black Rot', 'Grape Esca (Black Measles)', 'Grape Leaf Blight (Isariopsis Leaf Spot)', 'Grape Healthy',
     'Cherry Powdery Mildew', 'Cherry Healthy',
     'Strawberry Leaf Scorch', 'Strawberry Healthy',
-    'skumawiki leaf disease', 'skumawiki healthy',
-    'soybean healthy', 'soybean frog eye leaf spot', 'soybean rust', 'soybean powdery mildew',
-    'tobacco healthy leaf', 'tobacco black shank', 'tobacco leaf disease', 'tobacco mosaic virus',
     'raspberry healthy', 'raspberry leaf spot',
     'peach healthy', 'peach bacterial spot', 'peach leaf curl', 'peach powdery mildew', 'peach leaf disease',
-    'orange citrus greening', 'orange leaf curl', 'orange leaf disease', 'orange leaf spot',
-    'onion downy mildew', 'onion healthy leaf', 'onion leaf blight', 'onion purple blotch','onion thrips damage'
+    'orange citrus greening', 'orange leaf curl', 'orange leaf disease', 'orange leaf spot', 'Orange Healthy',
+    'onion downy mildew', 'onion healthy leaf', 'onion leaf blight', 'onion purple blotch','onion thrips damage',
+    'skumawiki leaf disease', 'skumawiki healthy',
+    'tobacco healthy leaf', 'tobacco black shank', 'tobacco leaf disease', 'tobacco mosaic virus',
 ]
 
 
 # ==============================================================================
-# 2. APP SETUP (MUST BE FIRST EXECUTABLE COMMANDS)
+# 2. APP SETUP & SESSION STATE
 # ==============================================================================
 
-# --- 2.1. STREAMLIT PAGE CONFIG ---
 st.set_page_config(page_title=TITLE, layout="wide")
 
-# --- 2.2. SESSION STATE INITIALIZATION (CRITICAL FOR NAVIGATION) ---
 if "active_tab" not in st.session_state:
-    st.session_state.active_tab = "Home" # Set initial tab
+    st.session_state.active_tab = "Home"
 if 'selected_plant' not in st.session_state:
     st.session_state.selected_plant = None
 if 'analysis_run' not in st.session_state:
     st.session_state.analysis_run = False
 if 'prediction_result' not in st.session_state:
     st.session_state.prediction_result = None
-    
-# Function to update the selected plant in session state
+# --- Initialize Chat History (Restored) ---
+if 'chat_history' not in st.session_state:
+    st.session_state.chat_history = [
+        {"role": "assistant", "content": "Hello! I am your AI Consultant. Ask me any question about crop health, pests, or specific treatments."}
+    ]
+# ------------------------------------
+
 def set_plant(plant_name):
     st.session_state.selected_plant = plant_name
     st.session_state.analysis_run = False
     st.session_state.prediction_result = None
-    st.session_state.active_tab = "Diagnosis" # Always switch to Diagnosis when a plant is selected
+    st.session_state.active_tab = "Diagnosis"
     
-# Function to set the main navigation tab
 def set_main_tab(tab_name):
     st.session_state.active_tab = tab_name
     
-#  Reset the entire analysis flow and go to Home
+# NEW FUNCTION: Reset the entire analysis flow and go to Home
 def reset_app():
     st.session_state.selected_plant = None
     st.session_state.analysis_run = False
     st.session_state.prediction_result = None
     st.session_state.active_tab = "Home"
+    # Reset chat history for a fresh start
+    st.session_state.chat_history = [
+        {"role": "assistant", "content": "Hello! I am your AI Consultant. Ask me any question about crop health, pests, or specific treatments."}
+    ]
  
-# --- 2.3. HIDE DEFAULT STREAMLIT PAGE SELECTOR & Inject CSS ---
+# --- CSS INJECTION & SETUP ---
 st.markdown("""
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 """, unsafe_allow_html=True)
  
-# CSS Injection block
 hide_pages_css = """
 <style>
 /* Hide the default Streamlit page selector (sidebar pages menu) */
@@ -152,7 +160,7 @@ hide_pages_css = """
     display: none !important;
 }
 
-/* 1. Remove padding/margin from the Streamlit header area (critical for fixed nav) */
+/* 1. Adjust padding/margin for fixed nav */
 .main > div {
     padding-top: 0rem !important;
     padding-bottom: 1rem;
@@ -162,8 +170,7 @@ hide_pages_css = """
 .top-nav-container {
     position: fixed;
     top: 0;
-    left: 0; /* Align left edge of the screen */
-    /* Account for sidebar width (approx 210px in default wide mode) */
+    left: 0; 
     width: calc(100% - 220px); 
     height: 60px;
     background: linear-gradient(135deg, #145a32, #0b3d2e);
@@ -172,18 +179,10 @@ hide_pages_css = """
     justify-content: center;
     z-index: 9999; 
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    margin-left: 220px; /* Offset for the sidebar */
+    margin-left: 220px; 
 }
 
-/* Hide the st.columns wrapper elements that contain the buttons */
-.top-nav-container .st-emotion-cache-1kyx2bd {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-}
-
-/* Nav buttons style */
+/* Nav button appearance */
 .top-nav-container button {
     background: transparent !important;
     border: none !important;
@@ -202,21 +201,36 @@ hide_pages_css = """
     color: #ffffff !important;
 }
 
-/* Active tab style - Use specific keys for selection */
-/* Streamlit converts button label to a key hash. We can't easily target the active button by class
-   since Streamlit doesn't apply one. We use the custom on_click logic for visual state. */
-
-/* 3. Push page content down */
+/* 3. Push page content down (below nav + status bar) */
 .main-content {
-    margin-top: 70px; /* Must be larger than .top-nav-container height */
+    margin-top: 70px; 
+}
+
+/* 4. Style and position the Success message container */
+[data-testid="stSuccess"] {
+    position: fixed;
+    top: 60px; /* Directly below the 60px high .top-nav-container */
+    left: 0;
+    width: calc(100% - 220px);
+    margin-left: 220px;
+    z-index: 9998; 
+    border-radius: 0; 
+    padding: 8px 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+/* Style the sidebar expander for the chat */
+[data-testid="stSidebar"] [data-testid="stExpander"] {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px;
 }
 </style>
 """
 st.markdown(hide_pages_css, unsafe_allow_html=True)
 
-# ---------------------------------------------------
-# 3. UTILITY FUNCTIONS (Model Loading, CSS Injection)
-# ---------------------------------------------------
+# ==============================================================================
+# 3. UTILITY FUNCTIONS (Model Loading, CSS, GEMINI)
+# ==============================================================================
 
 @st.cache_resource
 def load_specific_model(plant_name):
@@ -227,8 +241,60 @@ def load_specific_model(plant_name):
     try:
         model = tf.keras.models.load_model(model_path)
         return model
-    except Exception as e:
+    except Exception:
         return "DummyModel" 
+
+# --- Gemini API Functions (Restored) ---
+@st.cache_resource
+def get_gemini_client():
+    """Initializes and returns the Gemini client."""
+    try:
+        # Client automatically uses the key from st.secrets
+        # Ensure 'gemini_api_key' is in your .streamlit/secrets.toml
+        client = genai.Client(api_key=st.secrets["gemini_api_key"]) 
+        return client
+    except Exception:
+        return None
+    
+def generate_gemini_response(prompt):
+    client = get_gemini_client()
+    if not client:
+        return "Sorry, the AI consultant service is currently unavailable. Check the API key setup in `.streamlit/secrets.toml`."
+
+    model_name = 'gemini-2.5-flash' 
+    
+    # Construct conversation history for context
+    contents = []
+    for msg in st.session_state.chat_history:
+        # Skip the initial assistant message for the API call unless it's the first message
+        if msg["role"] == "assistant" and len(contents) == 0:
+            continue
+            
+        role = "user" if msg["role"] == "user" else "model"
+        contents.append(
+            genai.types.Content(
+                role=role,
+                parts=[genai.types.Part.from_text(msg["content"])]
+            )
+        )
+    # The current user prompt must be the last entry with role="user"
+    contents.append(genai.types.Content(role="user", parts=[genai.types.Part.from_text(prompt)]))
+
+
+    try:
+        response = client.models.generate_content(
+            model=model_name,
+            contents=contents,
+            config=genai.types.GenerateContentConfig(
+                system_instruction="You are an expert agricultural consultant and plant disease specialist. Provide helpful, practical, and safe advice to farmers in a clear and friendly tone. Always prioritize organic or common farming remedies where possible."
+            )
+        )
+        return response.text
+    except APIError as e:
+        return f"An API Error occurred: {e}"
+    except Exception as e:
+        return f"An unexpected error occurred: {e}"
+# ----------------------------
 
 def encode_image_to_base64(path):
     if not os.path.exists(path): return "none"
@@ -239,7 +305,7 @@ def encode_image_to_base64(path):
             data = f.read()
             encoded_string = base64.b64encode(data).decode('utf-8')
         return f"data:{mime_type};base64,{encoded_string}"
-    except Exception as e:
+    except Exception:
         return "none"
 
 def inject_custom_css(file_path, base64_url):
@@ -275,11 +341,12 @@ st.success("✅ Machine Learning Infrastructure Initialized.")
 
 
 # ==============================================================================
-# 6. PREDICTION FUNCTION (UNCHANGED)
+# 6. PREDICTION FUNCTION 
 # ==============================================================================
 def preprocess_and_predict(img_data, model, class_names, img_size):
     """Preprocesses the image data and returns the prediction or a mock prediction."""
     
+    # --- Dummy Model Logic (for testing when actual models are not available) ---
     if model == "DummyModel":
         time.sleep(1)
         selected_plant = st.session_state.selected_plant if st.session_state.selected_plant else "Tomato"
@@ -306,6 +373,7 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
             pass 
         return predicted_class, confidence, raw_predictions
 
+    # --- Actual Prediction Logic ---
     try:
         if isinstance(img_data, io.BytesIO): img = Image.open(img_data).convert('RGB')
         elif isinstance(img_data, Image.Image): img = img_data
@@ -328,68 +396,39 @@ def preprocess_and_predict(img_data, model, class_names, img_size):
 
 
 # ==============================================================================
-# 7. MAIN NAVIGATION BAR (NEW STICKY HEADER)
+# 7. MAIN NAVIGATION BAR
 # ==============================================================================
 
 # Use a markdown block with a class to apply the fixed position CSS
 st.markdown('<div class="top-nav-container">', unsafe_allow_html=True)
 col1, col2, col3 = st.columns(3)
 
-# Function to render a styled button based on active state
-def nav_button(col, label, key, target_tab):
-    is_active = st.session_state.active_tab == target_tab
-    btn_class = "st-emotion-cache-19k8h6q" # Default Streamlit button class - hard to override
-    
-    
-    
-    # Custom HTML for styling the button based on active state
-    button_html = f"""
-    <button 
-        class="{btn_class} {'active' if is_active else ''}" 
-        style="
-            background: {"#0ee066" if is_active else 'transparent'};
-            color: {'#0f2f1c' if is_active else 'rgba(255,255,255,0.7)'};
-            font-weight: 700;
-            border: none;
-            padding: 8px 18px;
-            cursor: pointer;
-            transition: all 0.25s ease-in-out;
-            border-radius: 12px;
-            box-shadow: {'0 0 10px rgba(46, 204, 113, 0.6)' if is_active else 'none'};
-            width: 100%;
-        "
-    >
-    {label}
-    </button>
-    """
-    
-    
-    # to handle the session state update via its internal callback system.
-    with col:
-        if st.button(label, key=key, on_click=set_main_tab, args=(target_tab,), use_container_width=True):
-            pass # Action is handled by on_click
+# Function to render a styled button based on active state (using custom styling logic)
+def style_nav_button(key, is_active):
+    # This function uses markdown to inject CSS specifically targeting the button key 
+    # to apply the active style, as direct Streamlit styling is limited in fixed containers.
+    if is_active:
+        active_style = '{background: #2ecc71!important; color: #0f2f1c!important; font-weight: 700; box-shadow: 0 0 10px rgba(46, 204, 113, 0.6);}'
+        st.markdown(f'<style> [data-testid="stColumn"] > div > button[key="{key}"] {active_style} </style>', unsafe_allow_html=True)
+    # The default/non-active styling is already handled by the global CSS for .top-nav-container button
 
 with col1:
     # Home button logic
     if st.button("🏠 Home", key="nav_home", use_container_width=True):
         reset_app() # This function resets all and sets active_tab to Home
-    if st.session_state.active_tab == "Home":
-        st.markdown('<style> [data-testid="stColumn"] > div > button[key="nav_home"] {background: grey; color: white; font-weight: 700;}</style>', unsafe_allow_html=True)
+    style_nav_button("nav_home", st.session_state.active_tab == "Home")
 
 with col2:
     # Diagnosis button logic
-    if st.button("🔬 Diagnosis", key="nav_diagnosis", use_container_width=True):
-        set_main_tab("Diagnosis")
-    if st.session_state.active_tab == "Diagnosis":
-        st.markdown('<style> [data-testid="stColumn"] > div > button[key="nav_diagnosis"] {background: grey; color: white; font-weight: 700;}</style>', unsafe_allow_html=True)
+    if st.button("🔬 Diagnosis", key="nav_diagnosis", on_click=set_main_tab, args=("Diagnosis",), use_container_width=True):
+        pass
+    style_nav_button("nav_diagnosis", st.session_state.active_tab == "Diagnosis")
 
 with col3:
     # About Us button logic
-    if st.button("ℹ️ About Us", key="nav_about", use_container_width=True):
-        set_main_tab("About Us")
-    if st.session_state.active_tab == "About Us":
-        st.markdown('<style> [data-testid="stColumn"] > div > button[key="nav_about"] {background: grey; color: white; font-weight: 700;}</style>', unsafe_allow_html=True)
-
+    if st.button("ℹ️ About Us", key="nav_about", on_click=set_main_tab, args=("About Us",), use_container_width=True):
+        pass
+    style_nav_button("nav_about", st.session_state.active_tab == "About Us")
 
 st.markdown('</div>', unsafe_allow_html=True)
 
@@ -484,12 +523,9 @@ elif st.session_state.active_tab == "Diagnosis":
             unsafe_allow_html=True
         )
     else:
-        # Diagnosis Active Page (Use the existing logic from your input)
+        # Diagnosis Active Page 
         selected_plant = st.session_state.selected_plant
         st.markdown("---") 
-        
-        # ... (Rest of the Input/Analysis code for Diagnosis) ...
-        # NOTE: I am using the existing logic structure from your input, just placed here.
         
         with st.container(border=True): 
             st.markdown(
@@ -523,8 +559,8 @@ elif st.session_state.active_tab == "Diagnosis":
         if input_data is not None:
             st.markdown("---")
             st.markdown("""<div class="analysis">
-                                <h3>Image Selected for Analysis</h3>
-                            </div>""", unsafe_allow_html=True)
+                                 <h3>Image Selected for Analysis</h3>
+                             </div>""", unsafe_allow_html=True)
             
             image_col, result_col = st.columns([1, 1])
 
@@ -565,10 +601,8 @@ elif st.session_state.active_tab == "Diagnosis":
             predicted_class = results['predicted_class']
             confidence = results['confidence']
 
-            if confidence < REJECTION_THRESHOLD or predicted_class == "Prediction Error" or predicted_class == "No Relevant Class Found":
-                final_diagnosis = "Uncertain Prediction - Please try again with a clearer image."
-            else:
-                final_diagnosis = predicted_class
+            is_uncertain = confidence < REJECTION_THRESHOLD or predicted_class in ["Prediction Error", "No Relevant Class Found"]
+            final_diagnosis = "Uncertain Prediction - Please try again with a clearer image." if is_uncertain else predicted_class
             
             st.markdown(f""" 
             <div class="analysis">
@@ -586,7 +620,7 @@ elif st.session_state.active_tab == "Diagnosis":
                 """,unsafe_allow_html=True)
 
                 if 'Healthy' in final_diagnosis: st.success(f"**Status:** {final_diagnosis}") ; st.balloons()
-                elif 'Uncertain' in final_diagnosis or 'Error' in final_diagnosis: st.warning(f"**Status:** {final_diagnosis}")
+                elif is_uncertain: st.warning(f"**Status:** {final_diagnosis}")
                 else: st.error(f"**Disease Detected:** {final_diagnosis}")
                 
                 st.info(f"**Confidence:** {confidence*100:.2f}%")
@@ -650,7 +684,7 @@ After identifying a problem, AgroVision AI guides you on what to do next, includ
 
       1. Recommended treatments that farmers commonly use
 
-    2. How and when to apply sprays or remedies
+      2. How and when to apply sprays or remedies
 
       3. Simple prevention tips to protect healthy plants
 
@@ -672,7 +706,7 @@ st.markdown("</div>", unsafe_allow_html=True) # Close .main-content
 
 st.markdown("---")
     
-# 3. Footer Markdown 
+# 3. Footer Markdown
 st.markdown(
     """
     <div class="footer-container">
@@ -688,7 +722,7 @@ st.markdown(
 
 
 # ==============================================================================
-# 9. SIDEBAR INSTRUCTIONS & NAVIGATION
+# 9. SIDEBAR INSTRUCTIONS & NAVIGATION (WITH CHATBOT)
 # ==============================================================================
 
 # --- Sidebar Content ---
@@ -712,6 +746,45 @@ st.sidebar.button(
     use_container_width=True
 )
 
+# --- AI CONSULTANT SECTION IN SIDEBAR (Restored) ---
+st.sidebar.markdown("---")
+with st.sidebar.expander("💬 **Ask the AI Consultant**", expanded=False):
+    
+    # Display chat history 
+    chat_container = st.container(height=300, border=True) # Container for scrollable chat
+    
+    with chat_container:
+        # Re-display all messages
+        for message in st.session_state.chat_history:
+            role = "🧑‍🌾" if message["role"] == "user" else "🤖"
+            st.markdown(f"**{role}** {message['content']}")
+            
+    # User input for the chat
+    user_prompt = st.text_input("Ask a question about your crops...", key="chat_input_sidebar")
+    
+    if user_prompt:
+        
+        # 1. Add user message to history
+        st.session_state.chat_history.append({"role": "user", "content": user_prompt})
+        
+        # 2. Generate the AI response
+        with st.spinner("AI Consultant is thinking..."):
+            # Ensure the full prompt is passed for the current turn
+            full_prompt = user_prompt 
+            # This calls the function defined in the Utility section (section 3)
+            full_response = generate_gemini_response(full_prompt) 
+        
+        # 3. Add AI response to history
+        st.session_state.chat_history.append({"role": "assistant", "content": full_response})
+        
+        # Force rerun to update the displayed chat history immediately
+        st.experimental_rerun()
+# --------------------------------------------------
+
+
+st.sidebar.markdown("---")
+
+
 st.sidebar.markdown(
     """
     <div class="sidebar2">
@@ -725,13 +798,6 @@ st.sidebar.markdown(
 for plant in ALL_PLANTS:
     is_selected = st.session_state.selected_plant == plant
     
-    # We use a custom style to highlight the selected button visually
-    btn_style = (
-        "background-color: #2ecc71; color: #0f2f1c; font-weight: bold; border: 2px solid #FF9900;" 
-        if is_selected 
-        else ""
-    )
-    
     st.sidebar.button(
         label=plant,
         key=f"plant_btn_{plant}",
@@ -739,9 +805,8 @@ for plant in ALL_PLANTS:
         args=(plant,),
         type="secondary",
         use_container_width=True,
-        # Inject custom style using markdown for visual feedback
     )
+    # Highlight selected button using the custom style injection
     if is_selected:
-         st.sidebar.markdown(f'<style> [data-testid="stSidebar"] button[key="plant_btn_{plant}"] {{ {btn_style} }} </style>', unsafe_allow_html=True)
-
-st.sidebar.markdown("---")
+        btn_style = "background-color: #2ecc71; color: #0f2f1c; font-weight: bold; border: 2px solid #FF9900;"
+        st.sidebar.markdown(f'<style> [data-testid="stSidebar"] button[key="plant_btn_{plant}"] {{ {btn_style} }} </style>', unsafe_allow_html=True)

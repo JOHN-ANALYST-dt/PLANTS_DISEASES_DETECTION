@@ -250,6 +250,9 @@ genai.configure(api_key=st.secrets["gemini_api_key"])
 
 @st.cache_resource
 def get_gemini_model():
+    """
+    Loads the Gemini model with plant-friendly instructions.
+    """
     return genai.GenerativeModel(
         model_name="gemini-1.5-flash",
         system_instruction=(
@@ -259,12 +262,20 @@ def get_gemini_model():
     )
 
 def generate_gemini_response(prompt):
+    """
+    Generates a white-colored, user-friendly AI response.
+    """
     model = get_gemini_model()
     try:
         response = model.generate_content(prompt)
-        return response.text
+        text = response.text if response and response.text else "No response generated."
+
+        # Wrap text in white color for dark/plant-themed sidebar
+        return f'<span style="color:white">{text}</span>'
+
     except Exception as e:
-        return f"AI Error: {e}"
+        return f'<span style="color:white">AI Error: {e}</span>'
+
 
 # ----------------------------
 

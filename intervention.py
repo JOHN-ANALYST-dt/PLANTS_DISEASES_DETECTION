@@ -7,7 +7,7 @@
 INTERVENTIONS = {
     # -------------------------- HEALTHY STATUS --------------------------
     "Healthy": {
-        "title": "🎉 Status: HEALTHY!",
+        "title": "Status: HEALTHY!",
         "action": [
             "**Farm Insight:** Your crop is currently thriving and free from these common diseases. Keep up the excellent work!",
             "**Recommended Action:** Maintain optimal growing conditions: consistent watering, balanced nutrients, and good air circulation.",
@@ -15,7 +15,7 @@ INTERVENTIONS = {
         ]
     },
     "cabbage healthy": {
-        "title": "🎉 Status: Cabbage is HEALTHY!",
+        "title": "Status: Cabbage is HEALTHY!",
         "action": [
             "**Farm Insight:** Cabbage plants show no signs of clubroot or black rot. Continue monitoring.",
             "**Recommended Action:** Ensure soil pH is maintained (7.0-7.2) to naturally suppress clubroot.",
@@ -23,7 +23,7 @@ INTERVENTIONS = {
         ]
     },
     "potato healthy": {
-        "title": "🎉 Status: Potato is HEALTHY!",
+        "title": " Status: Potato is HEALTHY!",
         "action": [
             "**Farm Insight:** No signs of early or late blight detected. The canopy looks strong.",
             "**Recommended Action:** Hill your potato rows to protect developing tubers from light and pests.",
@@ -31,7 +31,7 @@ INTERVENTIONS = {
         ]
     },
     "Tomato Healthy": {
-        "title": "🎉 Status: Tomato is HEALTHY!",
+        "title": " Status: Tomato is HEALTHY!",
         "action": [
             "**Farm Insight:** Your tomatoes are free from bacterial and viral threats. Encourage vigorous growth.",
             "**Recommended Action:** Prune suckers and lower leaves to improve air flow and prevent ground splash.",
@@ -39,7 +39,7 @@ INTERVENTIONS = {
         ]
     },
     "Pepper Bell Healthy": {
-        "title": "🎉 Status: Pepper is HEALTHY!",
+        "title": " Status: Pepper is HEALTHY!",
         "action": [
             "**Farm Insight:** Excellent growth. The pepper plant shows no signs of bacterial spot.",
             "**Recommended Action:** Ensure consistent moisture to prevent blossom-end rot.",
@@ -47,7 +47,7 @@ INTERVENTIONS = {
         ]
     },
     "Grape Healthy": {
-        "title": "🎉 Status: Grape is HEALTHY!",
+        "title": " Status: Grape is HEALTHY!",
         "action": [
             "**Farm Insight:** The vine and foliage appear strong and ready for fruit production.",
             "**Recommended Action:** Maintain a well-managed trellis system to maximize sun exposure and air circulation.",
@@ -55,7 +55,7 @@ INTERVENTIONS = {
         ]
     },
     "Cherry Healthy": {
-        "title": "🎉 Status: Cherry is HEALTHY!",
+        "title": " Status: Cherry is HEALTHY!",
         "action": [
             "**Farm Insight:** No signs of powdery mildew. The tree is in good condition.",
             "**Recommended Action:** Monitor soil for adequate drainage, as wet feet stress the tree.",
@@ -63,7 +63,7 @@ INTERVENTIONS = {
         ]
     },
     "Strawberry Healthy": {
-        "title": "🎉 Status: Strawberry is HEALTHY!",
+        "title": " Status: Strawberry is HEALTHY!",
         "action": [
             "**Farm Insight:** Leaves are free of scorch and fungal spots. Focus on berry quality.",
             "**Recommended Action:** Renew the mulch layer (straw) to keep berries clean and suppress weeds.",
@@ -71,27 +71,27 @@ INTERVENTIONS = {
         ]
     },
     "skumawiki healthy": {
-        "title": "🎉 Status: Skumawiki is HEALTHY!",
+        "title": " Status: Skumawiki is HEALTHY!",
         "action": ["Maintain current care practices.", "Ensure adequate water during dry periods."]
     },
     "soybean healthy": {
-        "title": "🎉 Status: Soybean is HEALTHY!",
+        "title": " Status: Soybean is HEALTHY!",
         "action": ["Ensure adequate soil nutrition, particularly potassium.", "Scout for insect pests, which can transmit viruses."]
     },
     "tobacco healthy leaf": {
-        "title": "🎉 Status: Tobacco is HEALTHY!",
+        "title": " Status: Tobacco is HEALTHY!",
         "action": ["Avoid handling plants when wet to prevent bacterial spread.", "Ensure proper ventilation in curing barns."]
     },
     "raspberry healthy": {
-        "title": "🎉 Status: Raspberry is HEALTHY!",
+        "title": " Status: Raspberry is HEALTHY!",
         "action": ["Maintain rows at a manageable width.", "Ensure good trellising for canes to improve air flow."]
     },
     "peach healthy": {
-        "title": "🎉 Status: Peach is HEALTHY!",
+        "title": " Status: Peach is HEALTHY!",
         "action": ["Apply dormant oil in late winter to manage overwintering pests.", "Thin fruit to prevent branch breakage and improve size."]
     },
     "onion healthy leaf": {
-        "title": "🎉 Status: Onion is HEALTHY!",
+        "title": " Status: Onion is HEALTHY!",
         "action": ["Ensure excellent soil drainage.", "Use drip irrigation to keep the bulb neck dry."]
     },
     

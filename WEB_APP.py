@@ -32,7 +32,7 @@ CSS_PATH = os.path.join(BASE_DIR, 'style.css')
 CSS_PLACEHOLDER = "BACKGROUND_IMAGE_PLACEHOLDER" 
 
 # --- Categorization for Sidebar ---
-VEGETABLE_CLASSES = ['Corn', 'Potato', 'Tomato', 'Pepper Bell', 'Soybean', 'Onion', 'Cabbage']
+VEGETABLE_CLASSES = ['Corn', 'Potato', 'Tomato', 'Pepper Bell', 'Soybean', 'Onion', 'Cabbage',"Skumawiki","Tobacco"]
 FRUIT_CLASSES = ['Apple', 'Grape', 'Cherry', 'Strawberry', 'Raspberry', 'Peach', 'Orange']
 ALL_PLANTS = VEGETABLE_CLASSES + FRUIT_CLASSES
 
@@ -49,12 +49,14 @@ DYNAMIC_MODEL_MAPPING = {
     "Cherry": {"path": os.path.join(BASE_DIR, "APP_MODELS/CHERRY_mobileNet_model7.h5"), "img_size": (248,248)},
     "Strawberry": {"path": os.path.join(BASE_DIR, "APP_MODELS/STRAWBERRY_mobileNet_model.h5"), "img_size": (224, 224)},
     "Raspberry": {"path": os.path.join(BASE_DIR, "APP_MODELS/RASPBERRY_mobileNet_model.h5"), "img_size": (224, 224)},
-    "Peach": {"path": os.path.join(BASE_DIR, "APP_MODELS/peach_model.h5"), "img_size": (224, 224)},
+    "Peach": {"path": os.path.join(BASE_DIR, "APP_MODELS/PEACH_MODEL.h5"), "img_size": (224, 224)},
     "Orange": {"path": os.path.join(BASE_DIR, "APP_MODELS/ORANGE_MODEL.h5"), "img_size": (224,224)},
     "Pepper Bell": {"path": os.path.join(BASE_DIR, "APP_MODELS/PEPPER_mobileNet_model7.h5"), "img_size": (224, 224)},
-    "Soybean": {"path": os.path.join(BASE_DIR, "APP_MODELS/soybean_model.h5"), "img_size": (224, 224)},
+    "Soybean": {"path": os.path.join(BASE_DIR, "APP_MODELS/SOYBEAN_MODEL.h5"), "img_size": (224, 224)},
     "Onion": {"path": os.path.join(BASE_DIR, "APP_MODELS/ONION_mobileNet_model.h5"), "img_size": (224, 224)},
     "Cabbage": {"path": os.path.join(BASE_DIR, "APP_MODELS/CABBAGE_mobileNet_model7.h5"), "img_size": (248,248)},
+    "Skumawiki": {"path": os.path.join(BASE_DIR, "APP_MODELS/SKUMAWIKI_mobileNet_model2.h5"), "img_size": (224,224)},
+    "Tobacco": {"path": os.path.join(BASE_DIR, "APP_MODELS/TOBACCO_MODEL.h5"), "img_size": (224,224)},
 }
 
 
@@ -76,6 +78,7 @@ CLASS_NAMES_MAPPING = {
     "Onion": ['onion downy mildew', 'onion healthy leaf', 'onion leaf blight', 'onion purple blotch','onion thrips damage'],
     "Cabbage": ['cabbage black rot','cabbage healthy','cabbage clubroot','cabbage downy mildew','cabbage leaf disease'],
     "Skumawiki": ['skumawiki leaf disease', 'skumawiki healthy'],
+    "Tobacco":['tobacco healthy leaf', 'tobacco black shank', 'tobacco leaf disease', 'tobacco mosaic virus',]
 }
 
 FULL_CLASS_NAMES_REFERENCE = [
@@ -128,7 +131,7 @@ def set_plant(plant_name):
 def set_main_tab(tab_name):
     st.session_state.active_tab = tab_name
     
-# NEW FUNCTION: Reset the entire analysis flow and go to Home
+#  Reset the entire analysis flow and go to Home
 def reset_app():
     st.session_state.selected_plant = None
     st.session_state.analysis_run = False

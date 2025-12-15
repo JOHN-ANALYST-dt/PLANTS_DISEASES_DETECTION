@@ -6,4 +6,4 @@ pillow
 opencv-python-headless
 h5py
 google-generativeai
-
+google-genai

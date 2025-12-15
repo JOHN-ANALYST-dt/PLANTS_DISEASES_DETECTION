@@ -245,55 +245,26 @@ def load_specific_model(plant_name):
         return "DummyModel" 
 
 # --- Gemini API Functions (Restored) ---
+genai.configure(api_key=st.secrets["gemini_api_key"])
+
 @st.cache_resource
-def get_gemini_client():
-    """Initializes and returns the Gemini client."""
-    try:
-        # Client automatically uses the key from st.secrets
-        # Ensure 'gemini_api_key' is in your .streamlit/secrets.toml
-        client = genai.Client(api_key=st.secrets["gemini_api_key"]) 
-        return client
-    except Exception:
-        return None
-    
+def get_gemini_model():
+    return genai.GenerativeModel(
+        model_name="gemini-1.5-flash",
+        system_instruction=(
+            "You are an expert agricultural consultant and plant disease specialist. "
+            "Give safe, practical, farmer-friendly advice."
+        )
+    )
+
 def generate_gemini_response(prompt):
-    client = get_gemini_client()
-    if not client:
-        return "Sorry, the AI consultant service is currently unavailable. Check the API key setup in `.streamlit/secrets.toml`."
-
-    model_name = 'gemini-2.5-flash' 
-    
-    # Construct conversation history for context
-    contents = []
-    for msg in st.session_state.chat_history:
-        # Skip the initial assistant message for the API call unless it's the first message
-        if msg["role"] == "assistant" and len(contents) == 0:
-            continue
-            
-        role = "user" if msg["role"] == "user" else "model"
-        contents.append(
-            genai.types.Content(
-                role=role,
-                parts=[genai.types.Part.from_text(msg["content"])]
-            )
-        )
-    # The current user prompt must be the last entry with role="user"
-    contents.append(genai.types.Content(role="user", parts=[genai.types.Part.from_text(prompt)]))
-
-
+    model = get_gemini_model()
     try:
-        response = client.models.generate_content(
-            model=model_name,
-            contents=contents,
-            config=genai.types.GenerateContentConfig(
-                system_instruction="You are an expert agricultural consultant and plant disease specialist. Provide helpful, practical, and safe advice to farmers in a clear and friendly tone. Always prioritize organic or common farming remedies where possible."
-            )
-        )
+        response = model.generate_content(prompt)
         return response.text
-    except APIError as e:
-        return f"An API Error occurred: {e}"
     except Exception as e:
-        return f"An unexpected error occurred: {e}"
+        return f"AI Error: {e}"
+
 # ----------------------------
 
 def encode_image_to_base64(path):

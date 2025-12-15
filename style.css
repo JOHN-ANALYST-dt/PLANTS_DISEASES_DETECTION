@@ -597,8 +597,12 @@ div[data-testid*="new_analysis_button"] button:hover {
     color: #eafaf1 !important;
     font-weight: 600;
 }
-
-
+.ai-bot{
+    color: white;
+}
+.ai-user{
+    color: white;
+}
 
 
 

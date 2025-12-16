@@ -13,12 +13,20 @@ import pandas as pd
 
 # --- Gemini API Imports ---
 import google.generativeai as genai
-from google.generativeai.types import HarmCategory, HarmBlockThreshold
+# Note: Removed unused import 'from google.generativeai.types import HarmCategory, HarmBlockThreshold'
 
 # --------------------------
 
 # Assuming 'intervention.py' exists in the same directory
-from intervention import get_interventions
+try:
+    from intervention import get_interventions
+except ImportError:
+    # Define a dummy function for local testing if the file is missing
+    def get_interventions(disease_name):
+        return {
+            "title": f"No specific intervention found for {disease_name}.",
+            "action": ["Consult a local agricultural expert.", "Check soil and water conditions."]
+        }
 
 # ==============================================================================
 # 1. CONFIGURATION & CONSTANTS
@@ -42,7 +50,7 @@ FRUIT_CLASSES = ['Apple', 'Grape', 'Cherry', 'Strawberry', 'Raspberry', 'Peach',
 ALL_PLANTS = VEGETABLE_CLASSES + FRUIT_CLASSES
 
 # ==============================================================================
-# 1.1. 🧠 DYNAMIC MODEL, CLASS, AND SIZE MAPPINGS (INCLUDES NEW PLANTS)
+# 1.1. 🧠 DYNAMIC MODEL, CLASS, AND SIZE MAPPINGS
 # ==============================================================================
 
 DYNAMIC_MODEL_MAPPING = {
@@ -113,21 +121,23 @@ FULL_CLASS_NAMES_REFERENCE = [
 
 st.set_page_config(page_title=TITLE, layout="wide")
 
-if "active_tab" not in st.session_state:
-    st.session_state.active_tab = "Home"
-if 'selected_plant' not in st.session_state:
-    st.session_state.selected_plant = None
-if 'analysis_run' not in st.session_state:
-    st.session_state.analysis_run = False
-if 'prediction_result' not in st.session_state:
-    st.session_state.prediction_result = None
-# --- Initialize Chat History (Restored) ---
+# Initialize Session State
+if "active_tab" not in st.session_state: st.session_state.active_tab = "Home"
+if 'selected_plant' not in st.session_state: st.session_state.selected_plant = None
+if 'analysis_run' not in st.session_state: st.session_state.analysis_run = False
+if 'prediction_result' not in st.session_state: st.session_state.prediction_result = None
 if 'chat_history' not in st.session_state:
     st.session_state.chat_history = [
         {"role": "assistant", "content": "Hello! I am your AI Consultant. Ask me any question about crop health, pests, or specific treatments."}
     ]
-# ------------------------------------
+# Check for API key (use get() with a default value for safe access)
+if st.secrets.get("gemini_api_key"):
+    st.session_state.gemini_api_key = st.secrets["gemini_api_key"]
+else:
+    st.session_state.gemini_api_key = "DUMMY_KEY" # Used for error handling in the chat function
 
+
+# --- CALLBACKS AND STATE MANAGEMENT ---
 def set_plant(plant_name):
     st.session_state.selected_plant = plant_name
     st.session_state.analysis_run = False
@@ -137,7 +147,6 @@ def set_plant(plant_name):
 def set_main_tab(tab_name):
     st.session_state.active_tab = tab_name
     
-# NEW FUNCTION: Reset the entire analysis flow and go to Home
 def reset_app():
     st.session_state.selected_plant = None
     st.session_state.analysis_run = False
@@ -147,87 +156,29 @@ def reset_app():
     st.session_state.chat_history = [
         {"role": "assistant", "content": "Hello! I am your AI Consultant. Ask me any question about crop health, pests, or specific treatments."}
     ]
- 
-# --- CSS INJECTION & SETUP ---
-st.markdown("""
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-""", unsafe_allow_html=True)
- 
-hide_pages_css = """
-<style>
-/* Hide the default Streamlit page selector (sidebar pages menu) */
-[data-testid="stSidebarNav"] ul {
-    display: none !important;
-}
 
-/* 1. Adjust padding/margin for fixed nav */
-.main > div {
-    padding-top: 0rem !important;
-    padding-bottom: 1rem;
-}
+def handle_chat_submit():
+    """Handles the user prompt submission and AI response generation."""
+    # Access the text input value directly via its key
+    user_prompt = st.session_state.chat_input_text
+    
+    # Check if a prompt was submitted and the key is configured
+    if user_prompt and st.session_state.get("gemini_api_key") != "DUMMY_KEY":
+        
+        # 1. Add user message to history
+        st.session_state.chat_history.append({"role": "user", "content": user_prompt})
+        
+        # 2. Generate the AI response
+        full_response = generate_gemini_response(user_prompt) 
+        
+        # 3. Add AI response to history
+        st.session_state.chat_history.append({"role": "assistant", "content": full_response})
 
-/* 2. STICKY TOP NAVIGATION BAR CONTAINER */
-.top-nav-container {
-    position: fixed;
-    top: 0;
-    left: 0; 
-    width: calc(100% - 220px); 
-    height: 60px;
-    background: linear-gradient(135deg, #145a32, #0b3d2e);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    margin-left: 220px; 
-}
+        # 4. Clear the text input key (form handles the visual clear)
+        st.session_state.chat_input_text = ""
+    elif st.session_state.get("gemini_api_key") == "DUMMY_KEY":
+        st.session_state.chat_history.append({"role": "assistant", "content": "🤖 <span style='color:white'>Error: Gemini API key is not configured. Cannot generate response.</span>"})
 
-/* Nav button appearance */
-.top-nav-container button {
-    background: transparent !important;
-    border: none !important;
-    color: rgba(255,255,255,0.7) !important;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 8px 18px;
-    transition: all 0.25s ease-in-out;
-    width: 100%;
-}
-
-/* Nav button hover effect */
-.top-nav-container button:hover {
-    background: rgba(255,255,255,0.15) !important;
-    color: #ffffff !important;
-}
-
-/* 3. Push page content down (below nav + status bar) */
-.main-content {
-    margin-top: 70px; 
-}
-
-/* 4. Style and position the Success message container */
-[data-testid="stSuccess"] {
-    position: fixed;
-    top: 60px; /* Directly below the 60px high .top-nav-container */
-    left: 0;
-    width: calc(100% - 220px);
-    margin-left: 220px;
-    z-index: 9998; 
-    border-radius: 0; 
-    padding: 8px 1rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-/* Style the sidebar expander for the chat */
-[data-testid="stSidebar"] [data-testid="stExpander"] {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 10px;
-}
-</style>
-"""
-st.markdown(hide_pages_css, unsafe_allow_html=True)
 
 # ==============================================================================
 # 3. UTILITY FUNCTIONS (Model Loading, CSS, GEMINI)
@@ -245,41 +196,41 @@ def load_specific_model(plant_name):
     except Exception:
         return "DummyModel" 
 
-##############-------------#############
-# --- GEMINI AI SETUP ---
+# --- Gemini API Setup ---
+if st.session_state.get("gemini_api_key") != "DUMMY_KEY":
+    genai.configure(api_key=st.session_state["gemini_api_key"])
+else:
+    # Use a dummy configure call if API key is missing to avoid an error
+    genai.configure(api_key="DUMMY_API_KEY_FOR_TEST")
 
-#  Session init (MUST COME FIRST)
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
-
-# Gemini config (SAFE)
-genai.configure(api_key=st.secrets["gemini_api_key"])
 
 @st.cache_resource
 def get_gemini_model():
+    """Loads the Gemini model with plant-friendly instructions."""
     return genai.GenerativeModel(
         model_name="gemini-1.5-flash",
         system_instruction=(
             "You are an expert agricultural consultant and plant disease specialist. "
-            "Give safe, practical, farmer-friendly advice."
+            "Give safe, practical, farmer-friendly advice. Keep responses concise."
         )
     )
 
 def generate_gemini_response(prompt):
+    """Generates a white-colored, user-friendly AI response."""
+    if st.session_state.get("gemini_api_key") == "DUMMY_KEY":
+        return f'<span style="color:white">AI Error: Gemini API key is missing. Cannot consult.</span>'
+        
     model = get_gemini_model()
     try:
         response = model.generate_content(prompt)
         text = response.text if response and response.text else "No response generated."
+        # Wrap text in white color for dark/plant-themed sidebar
         return f'<span style="color:white">{text}</span>'
+
     except Exception as e:
         return f'<span style="color:white">AI Error: {e}</span>'
 
-
-
-
-
-# ----------------------------
-
+# --- CSS and Image Encoding Utilities ---
 def encode_image_to_base64(path):
     if not os.path.exists(path): return "none"
     try:
@@ -293,6 +244,7 @@ def encode_image_to_base64(path):
         return "none"
 
 def inject_custom_css(file_path, base64_url):
+    # This logic assumes your style.css exists and handles the background image injection
     img_base64_css = f"""
     [data-testid="stSidebar"] > div:first-child {{
         background-image: 
@@ -303,15 +255,89 @@ def inject_custom_css(file_path, base64_url):
     .title-container {{ background: transparent; }}
     """
     try:
+        # Load external CSS file content
         with open(file_path) as f:
             css_content = f.read()
+            # Replace placeholder and append dynamic CSS
             if CSS_PLACEHOLDER in css_content:
                 final_css = css_content.replace(CSS_PLACEHOLDER, base64_url) + img_base64_css
             else:
                 final_css = css_content + img_base64_css
         st.markdown(f'<style>{final_css}</style>', unsafe_allow_html=True)
     except FileNotFoundError:
+        # If external CSS file is missing, just inject the dynamic background CSS
         st.markdown(f'<style>{img_base64_css}</style>', unsafe_allow_html=True)
+    
+    # Inject Streamlit-specific layout CSS
+    st.markdown("""
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <style>
+        /* Hide the default Streamlit page selector (sidebar pages menu) */
+        [data-testid="stSidebarNav"] ul {
+            display: none !important;
+        }
+        /* 1. Adjust padding/margin for fixed nav */
+        .main > div {
+            padding-top: 0rem !important;
+            padding-bottom: 1rem;
+        }
+        /* 2. STICKY TOP NAVIGATION BAR CONTAINER */
+        .top-nav-container {
+            position: fixed;
+            top: 0;
+            left: 0; 
+            width: calc(100% - 220px); 
+            height: 60px;
+            background: linear-gradient(135deg, #145a32, #0b3d2e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin-left: 220px; 
+        }
+        /* Nav button appearance */
+        .top-nav-container button {
+            background: transparent !important;
+            border: none !important;
+            color: rgba(255,255,255,0.7) !important;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 18px;
+            transition: all 0.25s ease-in-out;
+            width: 100%;
+        }
+        /* Nav button hover effect */
+        .top-nav-container button:hover {
+            background: rgba(255,255,255,0.15) !important;
+            color: #ffffff !important;
+        }
+        /* 3. Push page content down (below nav + status bar) */
+        .main-content {
+            margin-top: 70px; 
+        }
+        /* 4. Style and position the Success message container */
+        [data-testid="stSuccess"] {
+            position: fixed;
+            top: 60px; /* Directly below the 60px high .top-nav-container */
+            left: 0;
+            width: calc(100% - 220px);
+            margin-left: 220px;
+            z-index: 9998; 
+            border-radius: 0; 
+            padding: 8px 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        /* Style the sidebar expander for the chat */
+        [data-testid="stSidebar"] [data-testid="stExpander"] {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
 
 # --- 4. BACKGROUND IMAGE & CSS INJECTION ---
 img_base64_url = encode_image_to_base64(BACKGROUND_IMAGE_PATH)
@@ -389,8 +415,6 @@ col1, col2, col3 = st.columns(3)
 
 # Function to render a styled button based on active state (using custom styling logic)
 def style_nav_button(key, is_active):
-    # This function uses markdown to inject CSS specifically targeting the button key 
-    # to apply the active style, as direct Streamlit styling is limited in fixed containers.
     if is_active:
         active_style = '{background: #2ecc71!important; color: #0f2f1c!important; font-weight: 700; box-shadow: 0 0 10px rgba(46, 204, 113, 0.6);}'
         st.markdown(f'<style> [data-testid="stColumn"] > div > button[key="{key}"] {active_style} </style>', unsafe_allow_html=True)
@@ -534,17 +558,13 @@ elif st.session_state.active_tab == "Diagnosis":
                 key="uploader_input"
             )
         
-        input_data = None
-        if camera_img is not None:
-            input_data = camera_img
-        elif uploaded_file is not None:
-            input_data = uploaded_file
+        input_data = camera_img if camera_img is not None else uploaded_file
             
         if input_data is not None:
             st.markdown("---")
             st.markdown("""<div class="analysis">
-                                 <h3>Image Selected for Analysis</h3>
-                             </div>""", unsafe_allow_html=True)
+                            <h3>Image Selected for Analysis</h3>
+                        </div>""", unsafe_allow_html=True)
             
             image_col, result_col = st.columns([1, 1])
 
@@ -662,22 +682,21 @@ elif st.session_state.active_tab == "About Us":
         """
         <div class="about-container">
             <p>
- AgroVision AI is built to help farmers spot crop diseases early, using a simple photo of a plant leaf.
-Whether you are growing potatoes, tomatoes, cabbages, maize, beans, mangoes, or bananas, the system checks the leaf and helps identify common problems like leaf blight, rust, spots, pests damage, and nutrient stress before the disease spreads across your farm.
-After identifying a problem, AgroVision AI guides you on what to do next, including:
-
-      1. Recommended treatments that farmers commonly use
-
-      2. How and when to apply sprays or remedies
-
-      3. Simple prevention tips to protect healthy plants
-
-      4. Good farming practices to reduce future outbreaks
-
-Our aim is to support farmers with clear and practical advice, not complicated science.
-By acting early, farmers can save crops, reduce losses, and improve yields, even with limited resources.
-
-AgroVision AI is designed to be easy to use, reliable, and farmer friendly, helping you make better decisions and protect your harvest with confidence.
+    AgroVision AI is built to help farmers spot crop diseases early, using a simple photo of a plant leaf.
+    Whether you are growing potatoes, tomatoes, cabbages, maize, beans, mangoes, or bananas, the system checks the leaf and helps identify common problems like leaf blight, rust, spots, pests damage, and nutrient stress before the disease spreads across your farm.
+    After identifying a problem, AgroVision AI guides you on what to do next, including:
+    
+    <ol>
+        <li>Recommended treatments that farmers commonly use</li>
+        <li>How and when to apply sprays or remedies</li>
+        <li>Simple prevention tips to protect healthy plants</li>
+        <li>Good farming practices to reduce future outbreaks</li>
+    </ol>
+    
+    Our aim is to support farmers with clear and practical advice, not complicated science.
+    By acting early, farmers can save crops, reduce losses, and improve yields, even with limited resources.
+    
+    AgroVision AI is designed to be easy to use, reliable, and farmer friendly, helping you make better decisions and protect your harvest with confidence.
             </p>
         </div>
         """,
@@ -731,7 +750,6 @@ st.sidebar.button(
 )
 
 
-
 st.sidebar.markdown(
     """
     <div class="sidebar2">
@@ -759,14 +777,7 @@ for plant in ALL_PLANTS:
         st.sidebar.markdown(f'<style> [data-testid="stSidebar"] button[key="plant_btn_{plant}"] {{ {btn_style} }} </style>', unsafe_allow_html=True)
 
 
-        ###########-----------#########
-        #AI CONSULTANT CHATBOX
-
-        # --- AI CONSULTANT SECTION (Styled & Plant-Themed) ---
-
-
-
-
+# --- AI CONSULTANT SECTION (Styled & Plant-Themed) ---
 st.sidebar.markdown(
     """
     <div class="assistance">
@@ -778,40 +789,36 @@ st.sidebar.markdown(
 
 with st.sidebar.expander("💬 Ask the AI Consultant", expanded=False):
 
+    # A. Display Chat History
+    # Set a fixed height for the chat display container
     chat_container = st.container(height=320)
-
     with chat_container:
         st.markdown('<div class="ai-chat-box">', unsafe_allow_html=True)
-
+        # Display messages, using HTML formatting for roles/colors
         for message in st.session_state.chat_history:
             if message["role"] == "user":
                 st.markdown(
-                    f'<div class="ai-user"> {message["content"]}</div>',
+                    f'<div class="ai-user">🧑‍🌾 {message["content"]}</div>',
                     unsafe_allow_html=True
                 )
             else:
+                # The content from generate_gemini_response is already formatted with color
                 st.markdown(
-                    f'<div class="ai-bot"> {message["content"]}</div>',
+                    f'<div class="ai-bot">🤖 {message["content"]}</div>',
                     unsafe_allow_html=True
                 )
-
         st.markdown('</div>', unsafe_allow_html=True)
 
-    user_prompt = st.text_input(
-        "Ask about diseases, treatment, or prevention…",
-        key="chat_input_sidebar"
-    )
-
-    if user_prompt:
-        st.session_state.chat_history.append(
-            {"role": "user", "content": user_prompt}
+    # B. Input Section (Using st.form for stable submission)
+    with st.form("chat_form", clear_on_submit=True):
+        # Text input must be outside the submit button for the callback to work cleanly
+        user_prompt_input = st.text_input(
+            "Ask about diseases, treatment, or prevention…",
+            key="chat_input_text", # Dedicated key for the input value
+            label_visibility="collapsed"
         )
-
-        with st.spinner("🌿 AI Consultant is analyzing your question..."):
-            response = generate_gemini_response(user_prompt)
-
-        st.session_state.chat_history.append(
-            {"role": "assistant", "content": response}
+        st.form_submit_button(
+            "Send 💬",
+            on_click=handle_chat_submit, # Triggers the callback function
+            use_container_width=True
         )
-
-        st.rerun()

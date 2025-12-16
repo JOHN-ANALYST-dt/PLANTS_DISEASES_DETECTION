@@ -731,28 +731,11 @@ st.sidebar.button(
 # --- AI CONSULTANT SECTION (Styled & Plant-Themed) ---
 
 
-st.markdown(
-    """
-    <style>
-    /* AI Consultant Sidebar Title */
-    [data-testid="stSidebar"] h3 {
-        color: #ffffff !important;
-        background: linear-gradient(135deg, #1b5e20, #43a047);
-        padding: 12px 14px;
-        border-radius: 12px;
-        text-align: center;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-        margin-bottom: 12px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 
-st.sidebar.markdown("### 🌱 AI Crop Health Consultant")
+st.sidebar.markdown("""<div class="assistance"> 
+                    <h3>🌱 AI Crop Health Consultant</h3>
+                    </div>""")
 
 with st.sidebar.expander("💬 Ask the AI Consultant", expanded=False):
 

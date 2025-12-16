@@ -730,31 +730,6 @@ st.sidebar.button(
 )
 # --- AI CONSULTANT SECTION (Styled & Plant-Themed) ---
 
-st.markdown(
-    """
-    <style>
-    /* Sidebar title */
-    [data-testid="stSidebar"] h3 {
-        color: darkgreen ;
-        font-weight: 700;
-        text-color: white;
-    }
-
-    /* Expander label text */
-    [data-testid="stExpander"] summary {
-        color: darkgreen ;
-        font-weight: 600;
-    }
-
-    /* Expander arrow */
-    [data-testid="stExpander"] summary svg {
-        fill: darkgreen ;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 
 
 

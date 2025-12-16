@@ -605,7 +605,7 @@ div[data-testid*="new_analysis_button"] button:hover {
 }
  .assistance {
         background: linear-gradient(135deg, #1b5e20, #43a047);
-        padding: 14px 16px;
+        padding: 6px 10px;
         border-radius: 14px;
         margin-bottom: 14px;
         text-align: center;
@@ -616,10 +616,10 @@ div[data-testid*="new_analysis_button"] button:hover {
     /* Title text */
     .assistance h3 {
         color: #ffffff;
-        font-weight: 700;
+        font-weight: 500;
         letter-spacing: 0.6px;
         margin: 0;
-        font-size: 1.15rem;
+        font-size: 1.00rem;
         text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
     }
 

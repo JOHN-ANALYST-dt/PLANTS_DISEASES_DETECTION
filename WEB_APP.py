@@ -787,7 +787,7 @@ with st.sidebar.expander("💬 Ask the AI Consultant", expanded=False):
 
     # A. Display Chat History
     # Set a fixed height for the chat display container
-    chat_container = st.container(height=320)
+    chat_container = st.container
     with chat_container:
         st.markdown('<div class="ai-chat-box">', unsafe_allow_html=True)
         # Display messages, using HTML formatting for roles/colors

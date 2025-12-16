@@ -131,10 +131,7 @@ if 'chat_history' not in st.session_state:
         {"role": "assistant", "content": "Hello! I am your AI Consultant. Ask me any question about crop health, pests, or specific treatments."}
     ]
 # Check for API key (use get() with a default value for safe access)
-if st.secrets.get("gemini_api_key"):
-    st.session_state.gemini_api_key = st.secrets["gemini_api_key"]
-else:
-    st.session_state.gemini_api_key = "DUMMY_KEY" # Used for error handling in the chat function
+genai.configure(api_key=st.session_state.get("gemini_api_key", "DUMMY_KEY"))
 
 
 # --- CALLBACKS AND STATE MANAGEMENT ---
@@ -158,26 +155,25 @@ def reset_app():
     ]
 
 def handle_chat_submit():
-    """Handles the user prompt submission and AI response generation."""
-    # Access the text input value directly via its key
-    user_prompt = st.session_state.chat_input_text
-    
-    # Check if a prompt was submitted and the key is configured
-    if user_prompt and st.session_state.get("gemini_api_key") != "DUMMY_KEY":
-        
-        # 1. Add user message to history
-        st.session_state.chat_history.append({"role": "user", "content": user_prompt})
-        
-        # 2. Generate the AI response
-        full_response = generate_gemini_response(user_prompt) 
-        
-        # 3. Add AI response to history
-        st.session_state.chat_history.append({"role": "assistant", "content": full_response})
+    user_prompt = st.session_state.get("chat_input_text", "")
 
-        # 4. Clear the text input key (form handles the visual clear)
+    if user_prompt and st.session_state.get("gemini_api_key") != "DUMMY_KEY":
+        st.session_state.chat_history.append(
+            {"role": "user", "content": user_prompt}
+        )
+
+        full_response = generate_gemini_response(user_prompt)
+
+        st.session_state.chat_history.append(
+            {"role": "assistant", "content": full_response}
+        )
+
         st.session_state.chat_input_text = ""
+
     elif st.session_state.get("gemini_api_key") == "DUMMY_KEY":
-        st.session_state.chat_history.append({"role": "assistant", "content": "🤖 <span style='color:white'>Error: Gemini API key is not configured. Cannot generate response.</span>"})
+        st.session_state.chat_history.append(
+            {"role": "assistant", "content": "<span style='color:white'>⚠️ Gemini API key is missing.</span>"}
+        )
 
 
 # ==============================================================================

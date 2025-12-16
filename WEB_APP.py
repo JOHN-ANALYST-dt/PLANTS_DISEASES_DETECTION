@@ -735,12 +735,14 @@ st.markdown(
     <style>
     /* Sidebar title */
     [data-testid="stSidebar"] h3 {
-        color: white !important;
+        color: darkgreen ;
+        font-weight: 700;
+        text-color: white;
     }
 
     /* Expander label text */
     [data-testid="stExpander"] summary {
-        color: white !important;
+        color: white ;
         font-weight: 600;
     }
 

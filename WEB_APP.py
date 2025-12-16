@@ -734,8 +734,8 @@ st.sidebar.button(
 
 
 st.sidebar.markdown("""<div class="assistance"> 
-                    <h3>🌱 AI Crop Health Consultant</h3>
-                    </div>""")
+                            <h3>🌱 AI Crop Health Consultant</h3>
+                        </div>""")
 
 with st.sidebar.expander("💬 Ask the AI Consultant", expanded=False):
 

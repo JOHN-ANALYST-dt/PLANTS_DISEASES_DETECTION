@@ -245,14 +245,18 @@ def load_specific_model(plant_name):
     except Exception:
         return "DummyModel" 
 
-# --- Gemini API Functions (Restored) ---
+##############-------------#############
+# --- GEMINI AI SETUP ---
+
+#  Session init (MUST COME FIRST)
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
+# Gemini config (SAFE)
 genai.configure(api_key=st.secrets["gemini_api_key"])
 
 @st.cache_resource
 def get_gemini_model():
-    """
-    Loads the Gemini model with plant-friendly instructions.
-    """
     return genai.GenerativeModel(
         model_name="gemini-1.5-flash",
         system_instruction=(
@@ -262,19 +266,16 @@ def get_gemini_model():
     )
 
 def generate_gemini_response(prompt):
-    """
-    Generates a white-colored, user-friendly AI response.
-    """
     model = get_gemini_model()
     try:
         response = model.generate_content(prompt)
         text = response.text if response and response.text else "No response generated."
-
-        # Wrap text in white color for dark/plant-themed sidebar
         return f'<span style="color:white">{text}</span>'
-
     except Exception as e:
         return f'<span style="color:white">AI Error: {e}</span>'
+
+
+
 
 
 # ----------------------------
@@ -785,12 +786,12 @@ with st.sidebar.expander("💬 Ask the AI Consultant", expanded=False):
         for message in st.session_state.chat_history:
             if message["role"] == "user":
                 st.markdown(
-                    f'<div class="ai-user">🧑‍🌾 {message["content"]}</div>',
+                    f'<div class="ai-user"> {message["content"]}</div>',
                     unsafe_allow_html=True
                 )
             else:
                 st.markdown(
-                    f'<div class="ai-bot">🤖 {message["content"]}</div>',
+                    f'<div class="ai-bot"> {message["content"]}</div>',
                     unsafe_allow_html=True
                 )
 

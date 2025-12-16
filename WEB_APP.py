@@ -742,13 +742,13 @@ st.markdown(
 
     /* Expander label text */
     [data-testid="stExpander"] summary {
-        color: white ;
+        color: darkgreen ;
         font-weight: 600;
     }
 
     /* Expander arrow */
     [data-testid="stExpander"] summary svg {
-        fill: white !important;
+        fill: darkgreen ;
     }
     </style>
     """,

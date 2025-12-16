@@ -155,25 +155,26 @@ def reset_app():
     ]
 
 def handle_chat_submit():
-    user_prompt = st.session_state.get("chat_input_text", "")
-
+    """Handles the user prompt submission and AI response generation."""
+    # Access the text input value directly via its key
+    user_prompt = st.session_state.chat_input_text
+    
+    # Check if a prompt was submitted and the key is configured
     if user_prompt and st.session_state.get("gemini_api_key") != "DUMMY_KEY":
-        st.session_state.chat_history.append(
-            {"role": "user", "content": user_prompt}
-        )
+        
+        # 1. Add user message to history
+        st.session_state.chat_history.append({"role": "user", "content": user_prompt})
+        
+        # 2. Generate the AI response
+        full_response = generate_gemini_response(user_prompt) 
+        
+        # 3. Add AI response to history
+        st.session_state.chat_history.append({"role": "assistant", "content": full_response})
 
-        full_response = generate_gemini_response(user_prompt)
-
-        st.session_state.chat_history.append(
-            {"role": "assistant", "content": full_response}
-        )
-
+        # 4. Clear the text input key (form handles the visual clear)
         st.session_state.chat_input_text = ""
-
     elif st.session_state.get("gemini_api_key") == "DUMMY_KEY":
-        st.session_state.chat_history.append(
-            {"role": "assistant", "content": "<span style='color:white'>⚠️ Gemini API key is missing.</span>"}
-        )
+        st.session_state.chat_history.append({"role": "assistant", "content": "🤖 <span style='color:white'>Error: Gemini API key is not configured. Cannot generate response.</span>"})
 
 
 # ==============================================================================
@@ -787,7 +788,7 @@ with st.sidebar.expander("💬 Ask the AI Consultant", expanded=False):
 
     # A. Display Chat History
     # Set a fixed height for the chat display container
-    chat_container = st.container()
+    chat_container = st.container(height=320)
     with chat_container:
         st.markdown('<div class="ai-chat-box">', unsafe_allow_html=True)
         # Display messages, using HTML formatting for roles/colors

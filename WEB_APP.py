@@ -245,37 +245,43 @@ def load_specific_model(plant_name):
     except Exception:
         return "DummyModel" 
 
-# --- Gemini API Functions (Restored) ---
-genai.configure(api_key=st.secrets["gemini_api_key"])
+
+
+# ---------- SESSION INIT ----------
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
+# ---------- GEMINI CONFIG ----------
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
 @st.cache_resource
 def get_gemini_model():
-    """
-    Loads the Gemini model with plant-friendly instructions.
-    """
     return genai.GenerativeModel(
         model_name="gemini-1.5-flash",
-        system_instruction=(
-            "You are an expert agricultural consultant and plant disease specialist. "
-            "Give safe, practical, farmer-friendly advice."
-        )
+        system_instruction="You are an expert agricultural consultant."
     )
 
 def generate_gemini_response(prompt):
-    """
-    Generates a white-colored, user-friendly AI response.
-    """
     model = get_gemini_model()
-    try:
-        response = model.generate_content(prompt)
-        text = response.text if response and response.text else "No response generated."
+    return model.generate_content(prompt).text
 
-        # Wrap text in white color for dark/plant-themed sidebar
-        return f'<span style="color:white">{text}</span>'
+# ---------- UI ----------
+st.sidebar.markdown("### 🌱 AI Crop Health Consultant")
 
-    except Exception as e:
-        return f'<span style="color:white">AI Error: {e}</span>'
+user_prompt = st.text_input("Ask the AI Consultant...")
 
+if user_prompt:
+    st.session_state.chat_history.append(
+        {"role": "user", "content": user_prompt}
+    )
+
+    response = generate_gemini_response(user_prompt)
+
+    st.session_state.chat_history.append(
+        {"role": "assistant", "content": response}
+    )
+
+    st.rerun()
 
 # ----------------------------
 
@@ -729,52 +735,6 @@ st.sidebar.button(
     use_container_width=True
 )
 # --- AI CONSULTANT SECTION (Styled & Plant-Themed) ---
-
-
-
-
-st.sidebar.markdown("### 🌱 AI Crop Health Consultant")
-
-with st.sidebar.expander("💬 Ask the AI Consultant", expanded=False):
-
-    chat_container = st.container(height=320)
-
-    with chat_container:
-        st.markdown('<div class="ai-chat-box">', unsafe_allow_html=True)
-
-        for message in st.session_state.chat_history:
-            if message["role"] == "user":
-                st.markdown(
-                    f'<div class="ai-user">🧑‍🌾 {message["content"]}</div>',
-                    unsafe_allow_html=True
-                )
-            else:
-                st.markdown(
-                    f'<div class="ai-bot">🤖 {message["content"]}</div>',
-                    unsafe_allow_html=True
-                )
-
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    user_prompt = st.text_input(
-        "Ask about diseases, treatment, or prevention…",
-        key="chat_input_sidebar"
-    )
-
-    if user_prompt:
-        st.session_state.chat_history.append(
-            {"role": "user", "content": user_prompt}
-        )
-
-        with st.spinner("🌿 AI Consultant is analyzing your question..."):
-            response = generate_gemini_response(user_prompt)
-
-        st.session_state.chat_history.append(
-            {"role": "assistant", "content": response}
-        )
-
-        st.rerun()
-
 
 st.sidebar.markdown(
     """

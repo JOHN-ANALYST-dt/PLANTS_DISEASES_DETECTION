@@ -131,7 +131,10 @@ if 'chat_history' not in st.session_state:
         {"role": "assistant", "content": "Hello! I am your AI Consultant. Ask me any question about crop health, pests, or specific treatments."}
     ]
 # Check for API key (use get() with a default value for safe access)
-genai.configure(api_key=st.session_state.get("gemini_api_key", "DUMMY_KEY"))
+if st.secrets.get("gemini_api_key"):
+    st.session_state.gemini_api_key = st.secrets["gemini_api_key"]
+else:
+    st.session_state.gemini_api_key = "DUMMY_KEY" # Used for error handling in the chat function
 
 
 # --- CALLBACKS AND STATE MANAGEMENT ---

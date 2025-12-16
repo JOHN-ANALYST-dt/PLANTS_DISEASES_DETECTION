@@ -598,10 +598,10 @@ div[data-testid*="new_analysis_button"] button:hover {
     font-weight: 600;
 }
 .ai-bot{
-    color: white;
+    color: black;
 }
 .ai-user{
-    color: white;
+    color: black;
 }
 
 

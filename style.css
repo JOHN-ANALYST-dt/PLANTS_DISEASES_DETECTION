@@ -479,7 +479,7 @@ div[data-testid*="new_analysis_button"] button:hover {
         rgba(20, 80, 50, 0.85)
     );
     border-radius: 18px;
-    padding: 0.9rem 0.3rem;
+    padding: 0.4rem 0.3rem;
     text-align: center;
     color: #ffffff;
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);

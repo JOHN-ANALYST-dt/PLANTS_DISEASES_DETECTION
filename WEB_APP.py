@@ -729,6 +729,33 @@ st.sidebar.button(
     use_container_width=True
 )
 # --- AI CONSULTANT SECTION (Styled & Plant-Themed) ---
+
+st.markdown(
+    """
+    <style>
+    /* Sidebar title */
+    [data-testid="stSidebar"] h3 {
+        color: white !important;
+    }
+
+    /* Expander label text */
+    [data-testid="stExpander"] summary {
+        color: white !important;
+        font-weight: 600;
+    }
+
+    /* Expander arrow */
+    [data-testid="stExpander"] summary svg {
+        fill: white !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+
+
 st.sidebar.markdown("### 🌱 AI Crop Health Consultant")
 
 with st.sidebar.expander("💬 Ask the AI Consultant", expanded=False):

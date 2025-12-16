@@ -728,7 +728,40 @@ st.sidebar.button(
     type="primary",
     use_container_width=True
 )
-# --- AI CONSULTANT SECTION (Styled & Plant-Themed) ---
+
+
+
+st.sidebar.markdown(
+    """
+    <div class="sidebar2">
+        <h3>SELECT CROP FOR DIAGNOSIS</h3>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# Use individual buttons for plant selection
+for plant in ALL_PLANTS:
+    is_selected = st.session_state.selected_plant == plant
+    
+    st.sidebar.button(
+        label=plant,
+        key=f"plant_btn_{plant}",
+        on_click=set_plant,
+        args=(plant,),
+        type="secondary",
+        use_container_width=True,
+    )
+    # Highlight selected button using the custom style injection
+    if is_selected:
+        btn_style = "background-color: #2ecc71; color: #0f2f1c; font-weight: bold; border: 2px solid #FF9900;"
+        st.sidebar.markdown(f'<style> [data-testid="stSidebar"] button[key="plant_btn_{plant}"] {{ {btn_style} }} </style>', unsafe_allow_html=True)
+
+
+        ###########-----------#########
+        #AI CONSULTANT CHATBOX
+
+        # --- AI CONSULTANT SECTION (Styled & Plant-Themed) ---
 
 
 
@@ -781,30 +814,3 @@ with st.sidebar.expander("💬 Ask the AI Consultant", expanded=False):
         )
 
         st.rerun()
-
-
-st.sidebar.markdown(
-    """
-    <div class="sidebar2">
-        <h3>SELECT CROP FOR DIAGNOSIS</h3>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-# Use individual buttons for plant selection
-for plant in ALL_PLANTS:
-    is_selected = st.session_state.selected_plant == plant
-    
-    st.sidebar.button(
-        label=plant,
-        key=f"plant_btn_{plant}",
-        on_click=set_plant,
-        args=(plant,),
-        type="secondary",
-        use_container_width=True,
-    )
-    # Highlight selected button using the custom style injection
-    if is_selected:
-        btn_style = "background-color: #2ecc71; color: #0f2f1c; font-weight: bold; border: 2px solid #FF9900;"
-        st.sidebar.markdown(f'<style> [data-testid="stSidebar"] button[key="plant_btn_{plant}"] {{ {btn_style} }} </style>', unsafe_allow_html=True)
